@@ -26,7 +26,7 @@ namespace SchoolDataImporter.Bll
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
-        public async Task<List<Learner>> ReadLearnersAsync(AppSettingsDatabase targetDatabase, CancellationToken cancellationToken)
+        public async Task<ICollection<Learner>> ReadLearnersAsync(AppSettingsDatabase targetDatabase, CancellationToken cancellationToken)
         {
             _logger.Debug("Call to ReadLearnersAsync with target database {fileName}", targetDatabase.FileName);
             cancellationToken.ThrowIfCancellationRequested();
@@ -74,6 +74,12 @@ namespace SchoolDataImporter.Bll
                 }
             }
             return result;
+        }
+
+        public async Task<ICollection<Staff>> ReadStaffDataAsync(AppSettingsDatabase targetDatabase, CancellationToken cancellationToken)
+        {
+            // throw new NotImplementedException();
+            return new List<Staff>();
         }
     }
 }

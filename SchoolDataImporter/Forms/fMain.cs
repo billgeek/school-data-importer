@@ -6,6 +6,8 @@ using SchoolDataImporter.Managers.Interfaces;
 using SchoolDataImporter.Models;
 using Serilog;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -23,11 +25,18 @@ namespace SchoolDataImporter.Forms
         private readonly IAdoDbConnectionManager _dbManager;
         private readonly ILogger _logger;
 
+        private IExportData _exportForm;
+
         private bool isProcessing = false;
         private CancellationTokenSource ctSource = new CancellationTokenSource();
 
-        public fMain(IQueryStatementEngine queryEngine, IAccessReader accessReader, IStringEncryption stringEncryption, IConfigurationManager configManager, IAdoDbConnectionManager dbManager, ILogger logger)
+        private ICollection<Learner> _learnerData;
+        private ICollection<Staff> _staffData;
+
+        public fMain(IExportData exportForm, IQueryStatementEngine queryEngine, IAccessReader accessReader, IStringEncryption stringEncryption, IConfigurationManager configManager, IAdoDbConnectionManager dbManager, ILogger logger)
         {
+            _exportForm = exportForm ?? throw new ArgumentNullException(nameof(exportForm));
+
             _queryEngine = queryEngine ?? throw new ArgumentNullException(nameof(queryEngine));
             _accessReader = accessReader ?? throw new ArgumentNullException(nameof(accessReader));
             _stringEncryption = stringEncryption ?? throw new ArgumentNullException(nameof(stringEncryption));
@@ -38,17 +47,27 @@ namespace SchoolDataImporter.Forms
             InitializeComponent();
         }
 
-        private async Task FetchQueriesAsync()
-        {
-            _configManager.Queries = await _queryEngine.FetchQueryStatementsAsync(CancellationToken.None);
-        }
-
         private async void fMain_Load(object sender, EventArgs e)
         {
             _logger.Debug("Call to fMain_Load");
+            LoadRecentConnections();
+        }
+
+        private async void fMain_Activated(object sender, EventArgs e)
+        {
+            pbProcessing.Visible = true;
+            lblCurrentOperation.Text = "Fetching Configuration from Remote Server...";
 
             await Task.Run(() => FetchQueriesAsync());
-            LoadRecentConnections();
+
+            lblCurrentOperation.Text = "";
+            pbProcessing.Visible = false;
+            cmdStart.Enabled = true;
+        }
+
+        private async Task FetchQueriesAsync()
+        {
+            _configManager.Queries = await _queryEngine.FetchQueryStatementsAsync(CancellationToken.None);
         }
 
         private void LoadRecentConnections()
@@ -155,12 +174,18 @@ namespace SchoolDataImporter.Forms
         {
             if (isProcessing)
             {
+                lblCurrentOperation.Text = "Cancelling the operation...";
+
                 ctSource.Cancel();
                 ResetUi();
             }
             else
             {
                 _logger.Verbose("User invoked start of process with db file {fileName}", cmbPreviousConnections.SelectedItem.ToString());
+                lblCurrentOperation.Text = "Reading Data...";
+
+                _learnerData = new List<Learner>();
+                _staffData = new List<Staff>();
                 isProcessing = true;
 
                 // Disable current controls to prevent user interaction...
@@ -174,9 +199,19 @@ namespace SchoolDataImporter.Forms
                 if (dbObject != null)
                 {
                     await Task.Run(() => ProcessDbFile(dbObject, ctSource.Token));
-                    ResetUi();
+                    ShowExportDataForm();
                 }
             }
+        }
+
+        private void ShowExportDataForm()
+        {
+            // If we get up to here, it means that the user didn't cancel anything
+            _exportForm.SetData(_learnerData, _staffData);
+            _exportForm.ShowForm();
+
+            Program.AppContext.MainForm = (Form)_exportForm;
+            Close();
         }
 
         private void ResetUi()
@@ -193,9 +228,11 @@ namespace SchoolDataImporter.Forms
 
             try
             {
-                var learners = await _accessReader.ReadLearnersAsync(dbObject, cancellationToken);
+                _learnerData = await _accessReader.ReadLearnersAsync(dbObject, cancellationToken);
+                _staffData = await _accessReader.ReadStaffDataAsync(dbObject, cancellationToken);
+
                 isProcessing = false;
-                cancellationToken.ThrowIfCancellationRequested();
+                cancellationToken.ThrowIfCancellationRequested();   // This will cause the "catch" below to be triggered if the user selected "Cancel"
             }
             catch (OperationCanceledException)
             {

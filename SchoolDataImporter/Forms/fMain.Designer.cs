@@ -46,6 +46,7 @@
             this.lblLastAccessText = new System.Windows.Forms.Label();
             this.lblCorrectDb = new System.Windows.Forms.Label();
             this.dlgOpenFile = new System.Windows.Forms.OpenFileDialog();
+            this.lblCurrentOperation = new System.Windows.Forms.Label();
             this.pnlSelectFile.SuspendLayout();
             this.pnlSelectFileTextContainer.SuspendLayout();
             this.pnlDbSelected.SuspendLayout();
@@ -134,23 +135,24 @@
             this.pnlDbSelected.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlDbSelected.Location = new System.Drawing.Point(10, 92);
             this.pnlDbSelected.Name = "pnlDbSelected";
-            this.pnlDbSelected.Size = new System.Drawing.Size(784, 152);
+            this.pnlDbSelected.Size = new System.Drawing.Size(784, 176);
             this.pnlDbSelected.TabIndex = 8;
             this.pnlDbSelected.Visible = false;
             // 
             // pnlProgressContainer
             // 
+            this.pnlProgressContainer.Controls.Add(this.lblCurrentOperation);
             this.pnlProgressContainer.Controls.Add(this.pbProcessing);
             this.pnlProgressContainer.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlProgressContainer.Location = new System.Drawing.Point(0, 108);
             this.pnlProgressContainer.Name = "pnlProgressContainer";
-            this.pnlProgressContainer.Padding = new System.Windows.Forms.Padding(0, 10, 0, 10);
-            this.pnlProgressContainer.Size = new System.Drawing.Size(784, 44);
+            this.pnlProgressContainer.Padding = new System.Windows.Forms.Padding(0, 10, 0, 0);
+            this.pnlProgressContainer.Size = new System.Drawing.Size(784, 68);
             this.pnlProgressContainer.TabIndex = 16;
             // 
             // pbProcessing
             // 
-            this.pbProcessing.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pbProcessing.Dock = System.Windows.Forms.DockStyle.Top;
             this.pbProcessing.Location = new System.Drawing.Point(0, 10);
             this.pbProcessing.Name = "pbProcessing";
             this.pbProcessing.Size = new System.Drawing.Size(784, 24);
@@ -172,6 +174,7 @@
             // cmdStart
             // 
             this.cmdStart.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.cmdStart.Enabled = false;
             this.cmdStart.Location = new System.Drawing.Point(300, 0);
             this.cmdStart.Name = "cmdStart";
             this.cmdStart.Size = new System.Drawing.Size(184, 32);
@@ -231,11 +234,21 @@
             // 
             this.dlgOpenFile.FileName = "openFileDialog1";
             // 
+            // lblCurrentOperation
+            // 
+            this.lblCurrentOperation.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblCurrentOperation.Location = new System.Drawing.Point(0, 34);
+            this.lblCurrentOperation.Name = "lblCurrentOperation";
+            this.lblCurrentOperation.Padding = new System.Windows.Forms.Padding(10);
+            this.lblCurrentOperation.Size = new System.Drawing.Size(784, 34);
+            this.lblCurrentOperation.TabIndex = 14;
+            this.lblCurrentOperation.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            // 
             // fMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(804, 254);
+            this.ClientSize = new System.Drawing.Size(804, 278);
             this.Controls.Add(this.pnlDbSelected);
             this.Controls.Add(this.pnlSelectFile);
             this.Controls.Add(this.lblSelectFileToOpen);
@@ -248,6 +261,7 @@
             this.Padding = new System.Windows.Forms.Padding(10);
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Import School Data";
+            this.Activated += new System.EventHandler(this.fMain_Activated);
             this.Load += new System.EventHandler(this.fMain_Load);
             this.pnlSelectFile.ResumeLayout(false);
             this.pnlSelectFileTextContainer.ResumeLayout(false);
@@ -279,6 +293,7 @@
         private System.Windows.Forms.OpenFileDialog dlgOpenFile;
         private System.Windows.Forms.Panel pnlProgressContainer;
         private System.Windows.Forms.ProgressBar pbProcessing;
+        private System.Windows.Forms.Label lblCurrentOperation;
     }
 }
 

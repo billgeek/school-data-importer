@@ -65,6 +65,7 @@
             this.Controls.Add(this.optMultipleRecipients);
             this.Name = "fExportData";
             this.Text = "Export Data";
+            this.Load += new System.EventHandler(this.fExportData_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 

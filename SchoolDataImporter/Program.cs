@@ -9,6 +9,8 @@ using System;
 using System.Windows.Forms;
 using SchoolDataImporter.Managers.Interfaces;
 using SchoolDataImporter.Forms.Interfaces;
+using System.Collections.Generic;
+using System.Threading;
 
 namespace SchoolDataImporter
 {
@@ -20,6 +22,8 @@ namespace SchoolDataImporter
         private static IServiceProvider _serviceProvider;
 
         private static Logger _logger;
+
+        public static ApplicationContext AppContext;
 
         /// <summary>
         /// The main entry point for the application.
@@ -38,7 +42,9 @@ namespace SchoolDataImporter
 
             // Show the form
             _logger.Information("Application Loaded and Ready");
-            Application.Run((Form)mainForm);
+
+            AppContext = new ApplicationContext((Form)mainForm);
+            Application.Run(AppContext);
         }
 
         private static void ConfigureServices()

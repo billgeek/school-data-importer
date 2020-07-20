@@ -13,6 +13,14 @@ namespace SchoolDataImporter.Bll.Interfaces
         /// <param name="targetDatabase">The target database object.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>A list of Learners.</returns>
-        Task<List<Learner>> ReadLearnersAsync(AppSettingsDatabase targetDatabase, CancellationToken cancellationToken);
+        Task<ICollection<Learner>> ReadLearnersAsync(AppSettingsDatabase targetDatabase, CancellationToken cancellationToken);
+
+        /// <summary>
+        /// Reads the staff from the Database asynchronously.
+        /// </summary>
+        /// <param name="targetDatabase">The target database object.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns>A list of Staff members.</returns>
+        Task<ICollection<Staff>> ReadStaffDataAsync(AppSettingsDatabase targetDatabase, CancellationToken cancellationToken);
     }
 }

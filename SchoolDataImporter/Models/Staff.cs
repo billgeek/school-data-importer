@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SchoolDataImporter.Models
 {
-    class Staff
+    public class Staff
     {
     }
 }
