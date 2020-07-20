@@ -5,9 +5,6 @@ namespace SchoolDataImporter.Models
     public class GoverningBody : BaseModel
     {
         public string GoverningBodyCode { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public string MobilePhoneNumber { get; set; }
         public string HomeLanguage { get; set; }
         public string Gender { get; set; }
         public string TypeOfMember { get; set; }

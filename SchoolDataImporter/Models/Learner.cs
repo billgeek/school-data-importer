@@ -5,14 +5,10 @@ namespace SchoolDataImporter.Models
     public class Learner : BaseModel
     {
         public string LearnerCode { get; set; }
-        public string LastName { get; set; }
-        public string FirstName { get; set; }
         public string NickName { get; set; }
         public string DateOfBirth { get; set; }
         public string IdNumber { get; set; }
         public string Gender { get; set; }
-        public string MobilePhoneCode { get; set; }
-        public string MobilePhoneNumber { get; set; }
         public string DateLeft { get; set; }
         public string HostelName { get; set; }
         public bool IsHostel { get; set; }
@@ -20,7 +16,6 @@ namespace SchoolDataImporter.Models
         public string Grade { get; set; }
         public string Class { get; set; }
         public string House { get; set; }
-
         public Parent Parent { get; set; }
 
         public override IDictionary<string, string> GetDataRowMap()

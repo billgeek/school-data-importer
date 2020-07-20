@@ -7,6 +7,11 @@ namespace SchoolDataImporter.Models
     /// </summary>
     public abstract class BaseModel
     {
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string MobilePhoneCode { get; set; }
+        public string MobilePhoneNumber { get; set; }
+
         /// <summary>
         /// The mapping between the row on the Database and the Object Model.
         /// </summary>

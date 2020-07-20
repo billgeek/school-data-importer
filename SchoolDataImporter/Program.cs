@@ -64,6 +64,8 @@ namespace SchoolDataImporter
 
             // Setup dependencies: UI
             services.AddTransient<IMain, fMain>();
+
+            // services.AddTransient<IExportData, fTest>();
             services.AddTransient<IExportData, fExportData>();
 
             // Setup dependencies: Business Logic Layer (BLL)
