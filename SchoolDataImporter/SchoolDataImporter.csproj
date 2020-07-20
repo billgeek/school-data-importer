@@ -106,6 +106,8 @@
     <Compile Include="Forms\fExportData.Designer.cs">
       <DependentUpon>fExportData.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Interfaces\IExportData.cs" />
+    <Compile Include="Forms\Interfaces\IMain.cs" />
     <Compile Include="Managers\ConfigurationManager.cs" />
     <Compile Include="Managers\Interfaces\IConfigurationManager.cs" />
     <Compile Include="Models\AppSettings.cs" />
@@ -126,6 +128,9 @@
     <Compile Include="Models\Staff.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Forms\fExportData.resx">
+      <DependentUpon>fExportData.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\fMain.resx">
       <DependentUpon>fMain.cs</DependentUpon>
     </EmbeddedResource>

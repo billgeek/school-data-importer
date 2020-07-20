@@ -8,6 +8,7 @@ using Serilog.Core;
 using System;
 using System.Windows.Forms;
 using SchoolDataImporter.Managers.Interfaces;
+using SchoolDataImporter.Forms.Interfaces;
 
 namespace SchoolDataImporter
 {
@@ -32,17 +33,12 @@ namespace SchoolDataImporter
             // Setup dependency injection
             ConfigureServices();
 
-            // Resolve dependencies
-            var queryEngine = _serviceProvider.GetService<IQueryStatementEngine>();
-            var accessReader = _serviceProvider.GetService<IAccessReader>();
-            var stringEncryption = _serviceProvider.GetService<IStringEncryption>();
-            var configManager = _serviceProvider.GetService<IConfigurationManager>();
-            var dbManager = _serviceProvider.GetService<IAdoDbConnectionManager>();
-            var logger = _serviceProvider.GetService<ILogger>();
+            // Resolve the main form from the service collection
+            var mainForm = _serviceProvider.GetService<IMain>();
 
             // Show the form
             _logger.Information("Application Loaded and Ready");
-            Application.Run(new fMain(queryEngine, accessReader, stringEncryption, configManager, dbManager, logger));
+            Application.Run((Form)mainForm);
         }
 
         private static void ConfigureServices()
@@ -59,6 +55,10 @@ namespace SchoolDataImporter
             _logger.Information("Starting Application");
 
             services.AddSingleton(typeof(ILogger), _logger);
+
+            // Setup dependencies: UI
+            services.AddTransient<IMain, fMain>();
+            services.AddTransient<IExportData, fExportData>();
 
             // Setup dependencies: Business Logic Layer (BLL)
             services.AddTransient<IAccessReader, AccessReader>();

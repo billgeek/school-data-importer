@@ -1,16 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using SchoolDataImporter.Forms.Interfaces;
 using System.Windows.Forms;
 
 namespace SchoolDataImporter.Forms
 {
-    public partial class fExportData : Form
+    public partial class fExportData : Form, IExportData
     {
         public fExportData()
         {

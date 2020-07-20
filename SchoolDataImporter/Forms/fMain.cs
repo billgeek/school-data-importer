@@ -1,6 +1,7 @@
 ﻿using Meziantou.Framework.Win32;
 using SchoolDataImporter.Bll.Interfaces;
 using SchoolDataImporter.Constants;
+using SchoolDataImporter.Forms.Interfaces;
 using SchoolDataImporter.Managers.Interfaces;
 using SchoolDataImporter.Models;
 using Serilog;
@@ -13,7 +14,7 @@ using System.Windows.Forms;
 
 namespace SchoolDataImporter.Forms
 {
-    public partial class fMain : Form
+    public partial class fMain : Form, IMain
     {
         private readonly IQueryStatementEngine _queryEngine;
         private readonly IAccessReader _accessReader;
