@@ -37,6 +37,7 @@
             this.cmdBrowseFile = new System.Windows.Forms.Button();
             this.pnlDbSelected = new System.Windows.Forms.Panel();
             this.pnlProgressContainer = new System.Windows.Forms.Panel();
+            this.lblCurrentOperation = new System.Windows.Forms.Label();
             this.pbProcessing = new System.Windows.Forms.ProgressBar();
             this.pnlStartContainer = new System.Windows.Forms.Panel();
             this.cmdStart = new System.Windows.Forms.Button();
@@ -46,7 +47,6 @@
             this.lblLastAccessText = new System.Windows.Forms.Label();
             this.lblCorrectDb = new System.Windows.Forms.Label();
             this.dlgOpenFile = new System.Windows.Forms.OpenFileDialog();
-            this.lblCurrentOperation = new System.Windows.Forms.Label();
             this.pnlSelectFile.SuspendLayout();
             this.pnlSelectFileTextContainer.SuspendLayout();
             this.pnlDbSelected.SuspendLayout();
@@ -150,6 +150,16 @@
             this.pnlProgressContainer.Size = new System.Drawing.Size(784, 68);
             this.pnlProgressContainer.TabIndex = 16;
             // 
+            // lblCurrentOperation
+            // 
+            this.lblCurrentOperation.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblCurrentOperation.Location = new System.Drawing.Point(0, 34);
+            this.lblCurrentOperation.Name = "lblCurrentOperation";
+            this.lblCurrentOperation.Padding = new System.Windows.Forms.Padding(10);
+            this.lblCurrentOperation.Size = new System.Drawing.Size(784, 34);
+            this.lblCurrentOperation.TabIndex = 14;
+            this.lblCurrentOperation.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            // 
             // pbProcessing
             // 
             this.pbProcessing.Dock = System.Windows.Forms.DockStyle.Top;
@@ -233,16 +243,6 @@
             // dlgOpenFile
             // 
             this.dlgOpenFile.FileName = "openFileDialog1";
-            // 
-            // lblCurrentOperation
-            // 
-            this.lblCurrentOperation.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblCurrentOperation.Location = new System.Drawing.Point(0, 34);
-            this.lblCurrentOperation.Name = "lblCurrentOperation";
-            this.lblCurrentOperation.Padding = new System.Windows.Forms.Padding(10);
-            this.lblCurrentOperation.Size = new System.Drawing.Size(784, 34);
-            this.lblCurrentOperation.TabIndex = 14;
-            this.lblCurrentOperation.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // fMain
             // 

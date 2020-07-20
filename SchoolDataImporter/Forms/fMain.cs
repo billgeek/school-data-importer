@@ -31,7 +31,9 @@ namespace SchoolDataImporter.Forms
         private CancellationTokenSource ctSource = new CancellationTokenSource();
 
         private ICollection<Learner> _learnerData;
-        private ICollection<Staff> _staffData;
+        private ICollection<Educator> _educatorData;
+        private ICollection<OtherStaff> _staffData;
+        private ICollection<GoverningBody> _governingBodyMembers;
 
         public fMain(IExportData exportForm, IQueryStatementEngine queryEngine, IAccessReader accessReader, IStringEncryption stringEncryption, IConfigurationManager configManager, IAdoDbConnectionManager dbManager, ILogger logger)
         {
@@ -185,7 +187,7 @@ namespace SchoolDataImporter.Forms
                 lblCurrentOperation.Text = "Reading Data...";
 
                 _learnerData = new List<Learner>();
-                _staffData = new List<Staff>();
+                _staffData = new List<OtherStaff>();
                 isProcessing = true;
 
                 // Disable current controls to prevent user interaction...
@@ -198,7 +200,27 @@ namespace SchoolDataImporter.Forms
                 var dbObject = _configManager.Settings.Databases.FirstOrDefault(db => db.FileName.Equals(txtDbFile.Text, StringComparison.InvariantCultureIgnoreCase));
                 if (dbObject != null)
                 {
-                    await Task.Run(() => ProcessDbFile(dbObject, ctSource.Token));
+                    lblCurrentOperation.Text = "Reading Learner Data...";
+                    await Task.Run(() => ReadLearnersAsync(dbObject, ctSource.Token));
+
+                    if (!ctSource.IsCancellationRequested)
+                    {
+                        lblCurrentOperation.Text = "Reading Educator Data...";
+                        await Task.Run(() => ReadEducatorsAsync(dbObject, ctSource.Token));
+                    }
+
+                    if (!ctSource.IsCancellationRequested)
+                    {
+                        lblCurrentOperation.Text = "Reading Other Staff Data...";
+                        await Task.Run(() => ReadOtherStaffAsync(dbObject, ctSource.Token));
+                    }
+
+                    if (!ctSource.IsCancellationRequested)
+                    {
+                        lblCurrentOperation.Text = "Reading Governing Body Data...";
+                        await Task.Run(() => ReadGoverningBodyAsync(dbObject, ctSource.Token));
+                    }
+
                     ShowExportDataForm();
                 }
             }
@@ -207,7 +229,7 @@ namespace SchoolDataImporter.Forms
         private void ShowExportDataForm()
         {
             // If we get up to here, it means that the user didn't cancel anything
-            _exportForm.SetData(_learnerData, _staffData);
+            _exportForm.SetData(_learnerData, _staffData, _governingBodyMembers, _educatorData);
             _exportForm.ShowForm();
 
             Program.AppContext.MainForm = (Form)_exportForm;
@@ -222,13 +244,49 @@ namespace SchoolDataImporter.Forms
             cmdStart.Text = "Start";
         }
 
-        private async Task ProcessDbFile(AppSettingsDatabase dbObject, CancellationToken cancellationToken)
+        private async Task ReadLearnersAsync(AppSettingsDatabase dbObject, CancellationToken cancellationToken)
         {
+            _logger.Debug("Call to ReadLearnersAsync");
             cancellationToken.ThrowIfCancellationRequested();
 
             try
             {
                 _learnerData = await _accessReader.ReadLearnersAsync(dbObject, cancellationToken);
+
+                isProcessing = false;
+                cancellationToken.ThrowIfCancellationRequested();   // This will cause the "catch" below to be triggered if the user selected "Cancel"
+            }
+            catch (OperationCanceledException)
+            {
+                _logger.Warning("User cancelled reading learners");
+            }
+        }
+
+        private async Task ReadEducatorsAsync(AppSettingsDatabase dbObject, CancellationToken cancellationToken)
+        {
+            _logger.Debug("Call to ReadEducatorsAsync");
+            cancellationToken.ThrowIfCancellationRequested();
+
+            try
+            {
+                _educatorData = await _accessReader.ReadEducatorsAsync(dbObject, cancellationToken);
+
+                isProcessing = false;
+                cancellationToken.ThrowIfCancellationRequested();   // This will cause the "catch" below to be triggered if the user selected "Cancel"
+            }
+            catch (OperationCanceledException)
+            {
+                _logger.Warning("User cancelled reading educators");
+            }
+        }
+
+        private async Task ReadOtherStaffAsync(AppSettingsDatabase dbObject, CancellationToken cancellationToken)
+        {
+            _logger.Debug("Call to ReadOtherStaffAsync");
+            cancellationToken.ThrowIfCancellationRequested();
+
+            try
+            {
                 _staffData = await _accessReader.ReadStaffDataAsync(dbObject, cancellationToken);
 
                 isProcessing = false;
@@ -236,7 +294,25 @@ namespace SchoolDataImporter.Forms
             }
             catch (OperationCanceledException)
             {
-                _logger.Warning("User cancelled processing of the DB file");
+                _logger.Warning("User cancelled reading other staff");
+            }
+        }
+
+        private async Task ReadGoverningBodyAsync(AppSettingsDatabase dbObject, CancellationToken cancellationToken)
+        {
+            _logger.Debug("Call to ReadGoverningBodyAsync");
+            cancellationToken.ThrowIfCancellationRequested();
+
+            try
+            {
+                _governingBodyMembers = await _accessReader.ReadGoverningBodyAsync(dbObject, cancellationToken);
+
+                isProcessing = false;
+                cancellationToken.ThrowIfCancellationRequested();   // This will cause the "catch" below to be triggered if the user selected "Cancel"
+            }
+            catch (OperationCanceledException)
+            {
+                _logger.Warning("User cancelled reading governing body");
             }
         }
 

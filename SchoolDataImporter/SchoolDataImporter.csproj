@@ -100,6 +100,9 @@
     <Compile Include="Bll\QueryStatementEngine.cs" />
     <Compile Include="Bll\StringEncryption.cs" />
     <Compile Include="Constants\Formats.cs" />
+    <Compile Include="Controls\GroupedRadioButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Forms\fExportData.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -120,12 +123,14 @@
     </Compile>
     <Compile Include="Managers\AdoDbConnectionManager.cs" />
     <Compile Include="Managers\Interfaces\IAdoDbConnectionManager.cs" />
+    <Compile Include="Models\Educator.cs" />
+    <Compile Include="Models\GoverningBody.cs" />
     <Compile Include="Models\Learner.cs" />
     <Compile Include="Models\BaseModel.cs" />
     <Compile Include="Models\Parent.cs" />
     <Compile Include="Models\QueryStatements.cs" />
     <Compile Include="Models\Spouse.cs" />
-    <Compile Include="Models\Staff.cs" />
+    <Compile Include="Models\OtherStaff.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Forms\fExportData.resx">

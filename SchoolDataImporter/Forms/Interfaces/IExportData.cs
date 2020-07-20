@@ -5,7 +5,7 @@ namespace SchoolDataImporter.Forms.Interfaces
 {
     public interface IExportData
     {
-        void SetData(ICollection<Learner> learnerDataSet, ICollection<Staff> staffDataSet);
+        void SetData(ICollection<Learner> learnerDataSet, ICollection<OtherStaff> staffDataSet, ICollection<GoverningBody> governingBodyDataSet, ICollection<Educator> educatorDataSet);
 
         void ShowForm();
     }

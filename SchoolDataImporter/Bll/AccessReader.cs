@@ -4,6 +4,7 @@ using SchoolDataImporter.Models;
 using Serilog;
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -28,7 +29,39 @@ namespace SchoolDataImporter.Bll
 
         public async Task<ICollection<Learner>> ReadLearnersAsync(AppSettingsDatabase targetDatabase, CancellationToken cancellationToken)
         {
-            _logger.Debug("Call to ReadLearnersAsync with target database {fileName}", targetDatabase.FileName);
+            _logger.Debug("Call to ReadLearnersAsync");
+            cancellationToken.ThrowIfCancellationRequested();
+
+            return await ReadDataSetAsync<Learner>(targetDatabase, cancellationToken);
+        }
+
+        public async Task<ICollection<OtherStaff>> ReadStaffDataAsync(AppSettingsDatabase targetDatabase, CancellationToken cancellationToken)
+        {
+            _logger.Debug("Call to ReadStaffDataAsync");
+            cancellationToken.ThrowIfCancellationRequested();
+
+            return await ReadDataSetAsync<OtherStaff>(targetDatabase, cancellationToken);
+        }
+
+        public async Task<ICollection<Educator>> ReadEducatorsAsync(AppSettingsDatabase targetDatabase, CancellationToken cancellationToken)
+        {
+            _logger.Debug("Call to ReadEducatorsAsync");
+            cancellationToken.ThrowIfCancellationRequested();
+
+            return await ReadDataSetAsync<Educator>(targetDatabase, cancellationToken);
+        }
+
+        public async Task<ICollection<GoverningBody>> ReadGoverningBodyAsync(AppSettingsDatabase targetDatabase, CancellationToken cancellationToken)
+        {
+            _logger.Debug("Call to ReadGoverningBodyAsync");
+            cancellationToken.ThrowIfCancellationRequested();
+
+            return await ReadDataSetAsync<GoverningBody>(targetDatabase, cancellationToken);
+        }
+
+        private async Task<ICollection<TReturnType>> ReadDataSetAsync<TReturnType>(AppSettingsDatabase targetDatabase, CancellationToken cancellationToken) where TReturnType : BaseModel
+        {
+            _logger.Debug("Call to ReadDataSetAsync with target database {fileName}", targetDatabase.FileName);
             cancellationToken.ThrowIfCancellationRequested();
 
             var statements = await _statementEngine.FetchQueryStatementsAsync(cancellationToken);
@@ -47,11 +80,34 @@ namespace SchoolDataImporter.Bll
                 }
             }
 
-            var reader = await _dbManager.ExecuteQueryAsync(statements.Learner, cancellationToken);
-            var result = new List<Learner>();
+            DbDataReader reader;
+            if (typeof(TReturnType) == typeof(Learner))
+            {
+                reader = await _dbManager.ExecuteQueryAsync(statements.Learner, cancellationToken);
+            }
+            else if (typeof(TReturnType) == typeof(OtherStaff))
+            {
+                reader = await _dbManager.ExecuteQueryAsync(statements.OtherStaff, cancellationToken);
+            }
+            else if (typeof(TReturnType) == typeof(GoverningBody))
+            {
+                reader = await _dbManager.ExecuteQueryAsync(statements.GoverningBody, cancellationToken);
+            }
+            else if (typeof(TReturnType) == typeof(Educator))
+            {
+                reader = await _dbManager.ExecuteQueryAsync(statements.Teacher, cancellationToken);
+            }
+            else
+            {
+                var ex = new Exception("Invalid return type specified for AccessReader.readDataSetAsync");
+                _logger.Error(ex, "Could not process data type.");
+                throw ex;
+            }
+
+            var result = new List<TReturnType>();
             var rowCounter = 0;
 
-            using (_logger.BeginTimedOperation("Read Learners from DB"))
+            using (_logger.BeginTimedOperation("Read Data Set from DB"))
             {
                 if (reader.HasRows)
                 {
@@ -60,26 +116,26 @@ namespace SchoolDataImporter.Bll
                         rowCounter++;
                         _logger.Debug("Mapping Learner row {rowNumber}", rowCounter);
 
-                        var learner = _dataMapper.MapDataModelFromDbReader<Learner>(reader);
+                        var element = _dataMapper.MapDataModelFromDbReader<TReturnType>(reader);
 
-                        // We also need to map this current row to the learner's parent model
-                        learner.Parent = _dataMapper.MapDataModelFromDbReader<Parent>(reader);
+                        // Learner is the exception to the case here - it has multiple child model properties that are mapped
+                        if (element is Learner)
+                        {
+                            var learner = element as Learner;
 
-                        // We also need to map this current row to the learner's parent's spouse model
-                        learner.Parent.Spouse = _dataMapper.MapDataModelFromDbReader<Spouse>(reader);
+                            // We also need to map this current row to the learner's parent model
+                            learner.Parent = _dataMapper.MapDataModelFromDbReader<Parent>(reader);
+
+                            // We also need to map this current row to the learner's parent's spouse model
+                            learner.Parent.Spouse = _dataMapper.MapDataModelFromDbReader<Spouse>(reader);
+                        }
 
                         // Now we can add it to the collection!
-                        result.Add(learner);
+                        result.Add(element);
                     }
                 }
             }
             return result;
-        }
-
-        public async Task<ICollection<Staff>> ReadStaffDataAsync(AppSettingsDatabase targetDatabase, CancellationToken cancellationToken)
-        {
-            // throw new NotImplementedException();
-            return new List<Staff>();
         }
     }
 }
