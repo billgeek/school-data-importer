@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using SchoolDataImporter.Constants;
+using System.Collections.Generic;
 
 namespace SchoolDataImporter.Models
 {
@@ -23,6 +24,25 @@ namespace SchoolDataImporter.Models
                 { "eHTaal", "HomeLanguage" },
                 { "eGender", "Gender" },
                 { "eStatus", "Status" }
+            };
+        }
+
+        public override string[] GetDataRow()
+        {
+            return new string[]
+            {
+                "Staff",
+                "Educator",
+                FirstName,
+                LastName,
+                $"{MobilePhoneCode}{MobilePhoneNumber}",
+                Gender,
+                string.IsNullOrWhiteSpace(Status) ? "Future" : Formats.LearnerStatuses[Status],
+                string.Empty,
+                string.Empty,
+                string.Empty,
+                string.Empty,
+                $"Staff/Educator/{EducatorCode}"
             };
         }
     }

@@ -1,0 +1,571 @@
+﻿using SchoolDataImporter.Constants;
+using SchoolDataImporter.Forms.Interfaces;
+using SchoolDataImporter.Models;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Windows.Forms;
+
+namespace SchoolDataImporter.Forms
+{
+    public partial class fRenderData : Form, IExportData
+    {
+        // Data elments passed from the main form
+        private ICollection<Learner> _learnerData;
+        private ICollection<OtherStaff> _staffData;
+        private ICollection<GoverningBody> _governingBodyData;
+        private ICollection<Educator> _educatorData;
+
+        private DataSet _dataSet = new DataSet();
+        private bool _formInitialized = false;
+        private int _sourceDataCount = 0;
+
+        
+
+        public fRenderData()
+        {
+            InitializeComponent();
+        }
+
+        public void SetData(ICollection<Learner> learnerDataSet, ICollection<OtherStaff> staffDataSet, ICollection<GoverningBody> governingBodyDataSet, ICollection<Educator> educatorDataSet)
+        {
+            _learnerData = learnerDataSet;
+            _staffData = staffDataSet;
+            _governingBodyData = governingBodyDataSet;
+            _educatorData = educatorDataSet;
+
+            // 8477
+            _sourceDataCount = _learnerData.Count + _staffData.Count + _governingBodyData.Count + _educatorData.Count;
+            _sourceDataCount += _learnerData.Where(l => !string.IsNullOrWhiteSpace(l.Parent?.FirstName) || !string.IsNullOrWhiteSpace(l.Parent?.LastName)).Count();
+            _sourceDataCount += _learnerData.Where(item => !string.IsNullOrWhiteSpace(item.Parent?.Spouse?.FirstName) || !string.IsNullOrWhiteSpace(item.Parent?.Spouse?.LastName)).Count();
+        }
+
+        public void ShowForm()
+        {
+            Show();
+        }
+
+        private void fRenderData_Activated(object sender, System.EventArgs e)
+        {
+            // When activated, we need to load all the relevant information
+            if (!_formInitialized)
+            {
+                _formInitialized = true;
+                LoadAvailableData();
+                LoadFilters();
+                ConfigureDataViews();
+
+                var rowCount = dgAvailableData.Rows.Count;
+                lblRowCount.Text = $"{rowCount} / {_sourceDataCount} rows";
+            }
+        }
+
+        /// <summary>
+        /// Load the values for all applicable filters
+        /// </summary>
+        private void LoadFilters()
+        {
+            cmbLastNameOperator.SelectedIndex = 0;
+            cmbFirstNameOperator.SelectedIndex = 0;
+
+            // Default checks
+            chkTypeLearner.Checked = true;
+            chkTypeParent.Checked = true;
+            chkTypeStaff.Checked = true;
+            chkGenderFemale.Checked = true;
+            chkGenderMale.Checked = true;
+            chkGenderUnassigned.Checked = true;
+            chkStatusArchived.Checked = true;
+            chkStatusCurrent.Checked = true;
+            chkStatusFuture.Checked = true;
+
+            // Grades/Classes
+            var gradesAndClasses = _learnerData.Select(l => $"Gr. {l.Grade} / {l.Class}").Distinct().Where(l => l != "Gr.  / ").OrderBy(l => l).ToList();
+
+            clbGradesClasses.Items.Clear();
+            foreach (var item in gradesAndClasses)
+            {
+                clbGradesClasses.Items.Add(item);
+                clbGradesClasses.SetItemChecked(clbGradesClasses.Items.Count - 1, true);
+            }
+
+            // Houses
+            var houses = _learnerData.Where(l => !string.IsNullOrWhiteSpace(l.House)).Select(l => l.House).Distinct().OrderBy(l => l).ToList();
+
+            clbHouses.Items.Clear();
+            clbHouses.Items.Add("Unassigned");
+            clbHouses.SetItemChecked(clbHouses.Items.Count - 1, true);
+            foreach (var house in houses)
+            {
+                clbHouses.Items.Add(house);
+                clbHouses.SetItemChecked(clbHouses.Items.Count - 1, true);
+            }
+
+            // Hostels
+            var hostels = _learnerData.Where(l => !string.IsNullOrWhiteSpace(l.HostelName)).Select(l => l.HostelName).Distinct().OrderBy(l => l).ToList();
+
+            clbHostels.Items.Clear();
+            clbHostels.Items.Add("Unassigned");
+            clbHostels.SetItemChecked(clbHostels.Items.Count - 1, true);
+            foreach (var hostel in hostels)
+            {
+                clbHostels.Items.Add(hostel);
+                clbHostels.SetItemChecked(clbHostels.Items.Count - 1, true);
+            }
+
+            // Personnel Categories
+            var categories = _staffData.Where(l => !string.IsNullOrWhiteSpace(l.PersonnelCategory)).Select(l => l.PersonnelCategory).Distinct().OrderBy(l => l).ToList();
+
+            clbPersonnelCategory.Items.Clear();
+            clbPersonnelCategory.Items.Add("Unassigned");
+            clbPersonnelCategory.SetItemChecked(clbHostels.Items.Count - 1, true);
+            foreach (var category in categories)
+            {
+                clbPersonnelCategory.Items.Add(category);
+                clbPersonnelCategory.SetItemChecked(clbPersonnelCategory.Items.Count - 1, true);
+            }
+
+            // Governing Body
+            var members = _governingBodyData.Select(l => l.TypeOfMember).Distinct().OrderBy(l => l).ToList();
+
+            clbGoverningBody.Items.Clear();
+            clbGoverningBody.Items.Add("Unassigned");
+            clbGoverningBody.SetItemChecked(clbHostels.Items.Count - 1, true);
+            foreach (var member in members)
+            {
+                clbGoverningBody.Items.Add(member);
+                clbGoverningBody.SetItemChecked(clbGoverningBody.Items.Count - 1, true);
+            }
+
+            cmdApplyFilters_Click(this, new System.EventArgs());
+        }
+
+        private void ConfigureDataViews()
+        {
+            dgAvailableData.ColumnHeadersDefaultCellStyle.BackColor = Color.Navy;
+            dgAvailableData.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
+            dgAvailableData.ColumnHeadersDefaultCellStyle.Font = new Font(dgAvailableData.Font, FontStyle.Bold);
+
+            // dgAvailableData.ColumnCount = _dataViewColumns.Count + 1;
+            foreach(var col in Formats.DataGridColumns)
+            {
+                dgAvailableData.Columns[col.Key].Name = col.Value;
+                dgAvailableData.Columns[col.Key].DataPropertyName = col.Value;
+            }
+            dgAvailableData.Columns[dgAvailableData.ColumnCount - 1].Name = "UniqueIdentifier";
+            dgAvailableData.Columns[dgAvailableData.ColumnCount - 1].Visible = false;
+
+            dgSelected.ColumnHeadersDefaultCellStyle.BackColor = Color.Navy;
+            dgSelected.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
+            dgSelected.ColumnHeadersDefaultCellStyle.Font = new Font(dgAvailableData.Font, FontStyle.Bold);
+
+            dgSelected.ColumnCount = Formats.DataGridColumns.Count + 1;
+            foreach (var col in Formats.DataGridColumns)
+            {
+                dgSelected.Columns[col.Key].Name = col.Value;
+            }
+            dgSelected.Columns[dgSelected.ColumnCount - 1].Name = "UniqueIdentifier";
+            dgSelected.Columns[dgSelected.ColumnCount - 1].Visible = false;
+        }
+
+        private void LoadAvailableData()
+        {
+            var table = new DataTable("Data");
+            foreach(var col in Formats.DataGridColumns)
+            {
+                table.Columns.Add(col.Value);
+            }
+            table.Columns.Add("UniqueIdentifier");
+
+            _dataSet.Tables.Add(table);
+
+            LoadLearnerData();
+            LoadParentData();
+            LoadParentSpouseData();
+            LoadEducatorData();
+            LoadStaffData();
+            LoadGoverningBodyData();
+
+            var view = new DataView(_dataSet.Tables[0]);
+            var src = new BindingSource();
+            src.DataSource = view;
+            dgAvailableData.DataSource = src;
+        }
+
+        private void LoadLearnerData()
+        {
+            foreach (var item in _learnerData)
+            {
+                var rowData = item.GetDataRow();
+                _dataSet.Tables[0].Rows.Add(rowData);
+            }
+        }
+
+        private void LoadParentData()
+        {
+            foreach (var item in _learnerData.Where(l => !string.IsNullOrWhiteSpace(l.Parent?.FirstName) || !string.IsNullOrWhiteSpace(l.Parent?.LastName)))
+            {
+                var parentData = item.Parent.GetDataRow();
+                _dataSet.Tables[0].Rows.Add(parentData);
+            }
+        }
+
+        private void LoadParentSpouseData()
+        {
+            foreach (var item in _learnerData.Where(item => !string.IsNullOrWhiteSpace(item.Parent?.Spouse?.FirstName) || !string.IsNullOrWhiteSpace(item.Parent?.Spouse?.LastName)))
+            {
+                var parentData = item.Parent.Spouse.GetDataRow();
+                _dataSet.Tables[0].Rows.Add(parentData);
+            }
+        }
+
+        private void LoadEducatorData()
+        {
+            foreach (var item in _educatorData)
+            {
+                var rowData = item.GetDataRow();
+                _dataSet.Tables[0].Rows.Add(rowData);
+            }
+        }
+
+        private void LoadStaffData()
+        {
+            foreach (var item in _staffData)
+            {
+                var rowData = item.GetDataRow();
+                _dataSet.Tables[0].Rows.Add(rowData);
+            }
+        }
+
+        private void LoadGoverningBodyData()
+        {
+            foreach (var item in _governingBodyData)
+            {
+                var rowData = item.GetDataRow();
+                _dataSet.Tables[0].Rows.Add(rowData);
+            }
+        }
+
+        private void cmdClearFilters_Click(object sender, System.EventArgs e)
+        {
+            LoadFilters();
+            txtFirstName.Text = string.Empty;
+            txtLastName.Text = string.Empty;
+
+            SetRowHighlighting();
+        }
+
+        private void cmdApplyFilters_Click(object sender, System.EventArgs e)
+        {
+            var dv = new DataView(_dataSet.Tables[0]);
+            var src = new BindingSource();
+            src.DataSource = dv;
+
+            dgAvailableData.DataSource = src;
+
+            var filterString = string.Empty;
+
+            // category
+            var typeValues = new List<string>();
+            if (chkTypeLearner.Checked)
+                typeValues.Add("Learner");
+            if (chkTypeParent.Checked)
+                typeValues.Add("Parent");
+            if (chkTypeStaff.Checked)
+                typeValues.Add("Staff");
+
+            filterString = AppendMultiToFilterString(filterString, "Type", typeValues);
+
+            // Gender
+            var genderValues = new List<string>();
+            if (chkGenderMale.Checked)
+                genderValues.Add("Male");
+            if (chkGenderFemale.Checked)
+                genderValues.Add("Female");
+            if (chkGenderUnassigned.Checked)
+                genderValues.Add(string.Empty);
+
+            filterString = AppendMultiToFilterString(filterString, "Gender", genderValues);
+
+            // Status
+            var statusValues = new List<string>();
+            if (chkStatusCurrent.Checked)
+                statusValues.Add("Current");
+            if (chkStatusArchived.Checked)
+                statusValues.Add("Archived");
+            if (chkStatusFuture.Checked)
+                statusValues.Add("Future");
+
+            filterString = AppendMultiToFilterString(filterString, "Status", statusValues);
+
+            // Grades and classes
+            filterString = GetCheckedValuesForFilter(clbGradesClasses, filterString, "Grade / Class", false);
+
+            // Houses
+            filterString = GetCheckedValuesForFilter(clbHouses, filterString, "House", true);
+
+            // Hostels
+            filterString = GetCheckedValuesForFilter(clbHostels, filterString, "Hostel", true);
+
+            // Personnel Categories
+            filterString = GetCheckedValuesForFilter(clbPersonnelCategory, filterString, "Category / Gov. Body Type", true);
+
+            // Governing Body
+            filterString = GetCheckedValuesForFilter(clbGoverningBody, filterString, "Category / Gov. Body Type", true);
+
+
+            if (!string.IsNullOrWhiteSpace(txtFirstName.Text))
+            {
+                filterString = AppendToFilterString(filterString, "First Name", txtFirstName.Text, cmbFirstNameOperator.SelectedItem.ToString());
+            }
+
+            if (!string.IsNullOrWhiteSpace(txtLastName.Text))
+            {
+                filterString = AppendToFilterString(filterString, "Last Name", txtLastName.Text, cmbLastNameOperator.SelectedItem.ToString());
+            }
+
+            src.Filter = filterString;
+            txtTotalFilter.Text = filterString;
+            var filteredCount = src.Count;
+            lblRowCount.Text = $"{filteredCount} / {_sourceDataCount} rows";
+
+            SetRowHighlighting();
+        }
+
+        private string GetCheckedValuesForFilter(CheckedListBox clb, string filterString, string fieldName, bool firstValueForAll)
+        {
+            // Don't filter if everything is selected
+            if (clb.CheckedItems.Count == clb.Items.Count)
+                return filterString;
+
+            var values = new List<string>();
+            if (firstValueForAll)
+            {
+                if (clb.GetItemChecked(0))
+                {
+                    values.Add(string.Empty);
+                }
+                else
+                {
+                    filterString = AppendToFilterString(filterString, fieldName, "", "Not Equal to");
+                }
+            }
+
+            foreach (var item in clb.CheckedItems)
+            {
+                if (!item.ToString().Equals("Unassigned", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    values.Add(item.ToString());
+                }
+            }
+            filterString = AppendMultiToFilterString(filterString, fieldName, values);
+
+            return filterString;
+        }
+
+        private string AppendToFilterString(string filterString, string fieldName, string fieldValue, string filterOperator = "")
+        {
+            filterString += string.IsNullOrWhiteSpace(filterString) ? "" : " AND ";
+
+            switch (filterOperator)
+            {
+                case "Starts with":
+                    filterString += $"[{fieldName}] LIKE '{fieldValue}*'";
+                    break;
+                case "Ends with":
+                    filterString += $"[{fieldName}] LIKE '*{fieldValue}'";
+                    break;
+                case "Contains":
+                    filterString += $"[{fieldName}] LIKE '*{fieldValue}*'";
+                    break;
+                case "Not Equal to":
+                    filterString += $"[{fieldName}] <> '{fieldValue}'";
+                    break;
+                default:
+                    filterString += $"[{fieldName}] = '{fieldValue}'";
+                    break;
+            }
+
+            return filterString;
+        }
+
+        private string AppendMultiToFilterString(string filterString, string fieldName, List<string> fieldValues)
+        {
+            filterString += string.IsNullOrWhiteSpace(filterString) ? "" : " AND ";
+
+            var combine = string.Join($"' OR [{fieldName}] = '", fieldValues);
+            // ([FieldName] = 'FieldValue' OR [FieldName] = 'FieldValue')
+            filterString += $"([{fieldName}] = '{combine}')";
+
+            return filterString;
+        }
+
+        private void cmdAddSelected_Click(object sender, System.EventArgs e)
+        {
+            foreach(var row in dgAvailableData.SelectedRows)
+            {
+                var item = row as DataGridViewRow;
+                item.DefaultCellStyle.BackColor = SystemColors.Info;
+
+                var uniqueId = item.Cells["UniqueIdentifier"].Value.ToString();
+                var matchingRow = dgSelected.Rows.Cast<DataGridViewRow>().Where(r => r.Cells["UniqueIdentifier"].Value.ToString().Equals(uniqueId)).FirstOrDefault();
+                if (matchingRow == null)
+                {
+                    var rowIdx = dgSelected.Rows.Add();
+                    for (int i = 0; i < item.Cells.Count; i++)
+                    {
+                        dgSelected.Rows[rowIdx].Cells[i].Value = item.Cells[i].Value;
+                    }
+                }
+            }
+            lblExportCount.Text = $"{dgSelected.Rows.Count} Rows selected for Export";
+        }
+
+        private void dgAvailableData_SelectionChanged(object sender, System.EventArgs e)
+        {
+            cmdAddSelected.Enabled = dgAvailableData.SelectedRows.Count > 0;
+        }
+
+        private void dgSelected_SelectionChanged(object sender, System.EventArgs e)
+        {
+            cmdRemoveSelected.Enabled = dgSelected.SelectedRows.Count > 0;
+        }
+
+        private void cmdRemoveAll_Click(object sender, System.EventArgs e)
+        {
+            if (MessageBox.Show($"You have selected to remove all rows from the selected list.{Environment.NewLine}Are you sure that you wish to do this?", "Removing all Rows", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
+            {
+                return;
+            }
+
+            dgSelected.Rows.Clear();
+
+            foreach(var row in dgAvailableData.Rows)
+            {
+                var item = row as DataGridViewRow;
+                item.DefaultCellStyle.BackColor = SystemColors.Window;
+            }
+            lblExportCount.Text = $"{dgSelected.Rows.Count} Rows selected for Export";
+        }
+
+        private void cmdRemoveSelected_Click(object sender, System.EventArgs e)
+        {
+            foreach(var row in dgSelected.SelectedRows)
+            {
+                var item = row as DataGridViewRow;
+
+                // We need to remove the highlighting from the source row
+                var uniqueId = item.Cells["UniqueIdentifier"].Value.ToString();
+                var matchingRow = dgAvailableData.Rows.Cast<DataGridViewRow>().Where(r => r.Cells["UniqueIdentifier"].Value.ToString().Equals(uniqueId)).FirstOrDefault();
+                if (matchingRow != null)
+                {
+                    matchingRow.DefaultCellStyle.BackColor = SystemColors.Window;
+                }
+
+                dgSelected.Rows.Remove(item);
+            }
+            lblExportCount.Text = $"{dgSelected.Rows.Count} Rows selected for Export";
+        }
+
+        private void cmdAddAll_Click(object sender, System.EventArgs e)
+        {
+            if (MessageBox.Show($"You have selected to add all rows to the selected list.{Environment.NewLine}Are you sure that you wish to do this?","Adding all Rows",MessageBoxButtons.YesNo,MessageBoxIcon.Question) == DialogResult.No)
+            {
+                return;
+            }
+
+            foreach (var row in dgAvailableData.Rows)
+            {
+                var item = row as DataGridViewRow;
+                item.DefaultCellStyle.BackColor = SystemColors.Info;
+
+                var rowIdx = dgSelected.Rows.Add();
+                for (int i = 0; i < item.Cells.Count; i++)
+                {
+                    dgSelected.Rows[rowIdx].Cells[i].Value = item.Cells[i].Value;
+                }
+            }
+            lblExportCount.Text = $"{dgSelected.Rows.Count} Rows selected for Export";
+        }
+
+        private void dgSelected_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
+        {
+            cmdExportData.Enabled = dgSelected.Rows.Count > 0;
+        }
+
+        private void dgSelected_RowsRemoved(object sender, DataGridViewRowsRemovedEventArgs e)
+        {
+            cmdExportData.Enabled = dgSelected.Rows.Count > 0;
+        }
+
+        private void cmdExportData_Click(object sender, System.EventArgs e)
+        {
+            var sb = new StringBuilder();
+            sb.Append($"Name\tMobileNumber{Environment.NewLine}");
+
+            foreach(var row in dgSelected.Rows)
+            {
+                var item = row as DataGridViewRow;
+
+                sb.Append($"{item.Cells["First Name"].Value} {item.Cells["Last Name"].Value}\t{item.Cells["Cell. No."].Value}{Environment.NewLine}");
+            }
+
+            var result = sb.ToString();
+            Clipboard.SetText(result);
+
+            MessageBox.Show($"{dgSelected.Rows.Count} records copied to the Clipboard.", "Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+            cmdClearFilters_Click(this, new EventArgs());
+            dgSelected.Rows.Clear();
+        }
+
+        private void cmdGradesSelectAll_Click(object sender, EventArgs e)
+        {
+            for (var i = 0; i < clbGradesClasses.Items.Count;i++)
+            {
+                clbGradesClasses.SetItemChecked(i, true);
+            }
+        }
+
+        private void cmdGradesSelectNone_Click(object sender, EventArgs e)
+        {
+            for (var i = 0; i < clbGradesClasses.Items.Count; i++)
+            {
+                clbGradesClasses.SetItemChecked(i, false);
+            }
+        }
+
+        private void SetRowHighlighting()
+        {
+            foreach(var selRow in dgSelected.Rows)
+            {
+                var selItem = selRow as DataGridViewRow;
+                var uniqueId = selItem.Cells["UniqueIdentifier"].Value.ToString();
+                var matchingRow = dgAvailableData.Rows.Cast<DataGridViewRow>().Where(r => r.Cells["UniqueIdentifier"].Value.ToString().Equals(uniqueId)).FirstOrDefault();
+                if (matchingRow != null)
+                {
+                    matchingRow.DefaultCellStyle.BackColor = SystemColors.Info;
+                }
+            }
+            lblExportCount.Text = $"{dgSelected.Rows.Count} Rows selected for Export";
+        }
+
+        private void dgAvailableData_Sorted(object sender, EventArgs e)
+        {
+            SetRowHighlighting();
+        }
+
+        private void expTextSearch_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void pictureBox1_Click(object sender, EventArgs e)
+        {
+            txtTotalFilter.Visible = !txtTotalFilter.Visible;
+        }
+    }
+}

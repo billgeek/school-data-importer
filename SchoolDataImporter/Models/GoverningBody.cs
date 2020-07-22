@@ -22,5 +22,24 @@ namespace SchoolDataImporter.Models
                 { "eCat", "TypeOfMember" }
             };
         }
+
+        public override string[] GetDataRow()
+        {
+            return new string[]
+            {
+                "Staff",
+                "Governing Body",
+                FirstName,
+                LastName,
+                $"{MobilePhoneCode}{MobilePhoneNumber}",
+                Gender,
+                "Current",
+                string.Empty,
+                string.Empty,
+                string.Empty,
+                TypeOfMember,
+                $"Staff/GoverningBody/{GoverningBodyCode}"
+            };
+        }
     }
 }

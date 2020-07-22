@@ -73,6 +73,7 @@
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Design" />
     <Reference Include="System.Management" />
     <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.4.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.4.5.3\lib\net461\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
@@ -100,20 +101,23 @@
     <Compile Include="Bll\QueryStatementEngine.cs" />
     <Compile Include="Bll\StringEncryption.cs" />
     <Compile Include="Constants\Formats.cs" />
+    <Compile Include="Controls\CheckedComboBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\ExpandingPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\ExpandingPanel.Designer.cs">
+      <DependentUpon>ExpandingPanel.cs</DependentUpon>
+    </Compile>
     <Compile Include="Controls\GroupedRadioButton.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Forms\fExportData.cs">
+    <Compile Include="Forms\fRenderData.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\fExportData.Designer.cs">
-      <DependentUpon>fExportData.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\fTest.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\fTest.Designer.cs">
-      <DependentUpon>fTest.cs</DependentUpon>
+    <Compile Include="Forms\fRenderData.Designer.cs">
+      <DependentUpon>fRenderData.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Interfaces\IExportData.cs" />
     <Compile Include="Forms\Interfaces\IMain.cs" />
@@ -141,14 +145,14 @@
     <Compile Include="Models\OtherStaff.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="Forms\fExportData.resx">
-      <DependentUpon>fExportData.cs</DependentUpon>
+    <EmbeddedResource Include="Controls\ExpandingPanel.resx">
+      <DependentUpon>ExpandingPanel.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\fMain.resx">
       <DependentUpon>fMain.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\fTest.resx">
-      <DependentUpon>fTest.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\fRenderData.resx">
+      <DependentUpon>fRenderData.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -174,6 +178,15 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ExpandRight_16x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ExpandDown_16x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Filter_12x_16x.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -125,9 +125,13 @@ namespace SchoolDataImporter.Bll
 
                             // We also need to map this current row to the learner's parent model
                             learner.Parent = _dataMapper.MapDataModelFromDbReader<Parent>(reader);
+                            learner.Parent.LearnerCode = learner.LearnerCode;
+                            learner.Parent.Status = learner.Status;
 
                             // We also need to map this current row to the learner's parent's spouse model
                             learner.Parent.Spouse = _dataMapper.MapDataModelFromDbReader<Spouse>(reader);
+                            learner.Parent.Spouse.LearnerCode = learner.LearnerCode;
+                            learner.Parent.Spouse.Status = learner.Status;
                         }
 
                         // Now we can add it to the collection!

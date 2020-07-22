@@ -33,7 +33,7 @@ namespace SchoolDataImporter
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-
+            
             // Setup dependency injection
             ConfigureServices();
 
@@ -65,8 +65,8 @@ namespace SchoolDataImporter
             // Setup dependencies: UI
             services.AddTransient<IMain, fMain>();
 
+            services.AddTransient<IExportData, fRenderData>();
             // services.AddTransient<IExportData, fTest>();
-            services.AddTransient<IExportData, fExportData>();
 
             // Setup dependencies: Business Logic Layer (BLL)
             services.AddTransient<IAccessReader, AccessReader>();

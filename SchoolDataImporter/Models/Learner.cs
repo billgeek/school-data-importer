@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.SqlServer.Server;
+using SchoolDataImporter.Constants;
+using System.Collections.Generic;
 
 namespace SchoolDataImporter.Models
 {
@@ -37,6 +39,27 @@ namespace SchoolDataImporter.Models
                 { "Graad", "Grade" },
                 { "Klas", "Class" },
                 { "House", "House" }
+            };
+        }
+
+        public override string[] GetDataRow()
+        {
+            return new string[]
+            {
+                "Learner",
+                string.Empty,
+                FirstName,
+                LastName,
+                $"{MobilePhoneCode}{MobilePhoneNumber}",
+                Gender,
+                string.IsNullOrWhiteSpace(Status) ? "Future" : Formats.LearnerStatuses[Status],
+                string.IsNullOrWhiteSpace(Grade) && string.IsNullOrWhiteSpace(Class) ?
+                    string.Empty :
+                    $"Gr. {Grade} / {Class}",
+                House,
+                HostelName,
+                string.Empty,
+                $"Learner/{LearnerCode}"
             };
         }
     }
