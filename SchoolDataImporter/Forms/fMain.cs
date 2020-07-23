@@ -143,9 +143,11 @@ namespace SchoolDataImporter.Forms
                     }
                 }
 
+                var connectionString = "Provider={dataProvider};Data Source={dbFileName};Jet OLEDB:Database Password={dbPassword}";
+
                 _configManager.Settings.Databases.Add(new AppSettingsDatabase
                 {
-                    ConnectionString = AppConstants.DefaultConnectionString,
+                    ConnectionString = connectionString,
                     FileName = fileName,
                     Password = _stringEncryption.EncryptString(pwd)
                 });
@@ -370,7 +372,7 @@ namespace SchoolDataImporter.Forms
         {
             _logger.Debug("Testing connection to file {fileName}", fileName);
 
-            var connString = AppConstants.DefaultConnectionString.Replace("{dbFileName}", fileName).Replace("{dbPassword}", providedPassword);
+            var connString = $"Provider={_configManager.DataProvider};Data Source={fileName};Jet OLEDB:Database Password={providedPassword}";
             var connectionResult = _dbManager.OpenConnectionAsync(connString, CancellationToken.None).ConfigureAwait(false).GetAwaiter().GetResult();
             if (connectionResult)
             {

@@ -12,14 +12,16 @@ namespace SchoolDataImporter.Bll
 {
     public class AccessReader : IAccessReader
     {
+        private readonly IConfigurationManager _configManager;
         private readonly IQueryStatementEngine _statementEngine;
         private readonly IAdoDbConnectionManager _dbManager;
         private readonly IStringEncryption _stringEncryption;
         private readonly IDataMapper _dataMapper;
         private readonly ILogger _logger;
 
-        public AccessReader(IQueryStatementEngine statementEngine, IAdoDbConnectionManager dbManager, IStringEncryption stringEncryption, IDataMapper dataMapper, ILogger logger)
+        public AccessReader(IConfigurationManager configManager, IQueryStatementEngine statementEngine, IAdoDbConnectionManager dbManager, IStringEncryption stringEncryption, IDataMapper dataMapper, ILogger logger)
         {
+            _configManager = configManager ?? throw new ArgumentNullException(nameof(configManager));
             _statementEngine = statementEngine ?? throw new ArgumentNullException(nameof(statementEngine));
             _dbManager = dbManager ?? throw new ArgumentNullException(nameof(dbManager));
             _stringEncryption = stringEncryption ?? throw new ArgumentNullException(nameof(stringEncryption));
@@ -69,6 +71,7 @@ namespace SchoolDataImporter.Bll
             if (!_dbManager.IsConnectionOpen)
             {
                 var connectionString = targetDatabase.ConnectionString
+                    .Replace("{dataProvider}",_configManager.DataProvider)
                     .Replace("{dbFileName}", targetDatabase.FileName)
                     .Replace("{dbPassword}", _stringEncryption.DecryptString(targetDatabase.Password));
 

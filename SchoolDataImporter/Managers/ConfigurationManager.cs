@@ -14,6 +14,7 @@ namespace SchoolDataImporter.Managers
         public QueryStatements Queries { get; set; }
         public AppSettings Settings { get; set; }
         public string QueryApiUri { get; set; }
+        public string DataProvider { get; set; }
 
         private readonly ILogger _logger;
 
@@ -23,6 +24,7 @@ namespace SchoolDataImporter.Managers
 
             // Retrieve the "default" from the app config
             QueryApiUri = System.Configuration.ConfigurationManager.AppSettings["QueryApiUri"];
+            DataProvider = System.Configuration.ConfigurationManager.AppSettings["DataProvider"];
 
             ReadConfiguration();
         }

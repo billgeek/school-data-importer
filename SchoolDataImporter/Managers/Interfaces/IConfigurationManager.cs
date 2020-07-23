@@ -6,6 +6,7 @@ namespace SchoolDataImporter.Managers.Interfaces
     {
         QueryStatements Queries { get; set; }
         string QueryApiUri { get; set; }
+        string DataProvider { get; set; }
         AppSettings Settings { get; set; }
         void StoreConfiguration();
     }

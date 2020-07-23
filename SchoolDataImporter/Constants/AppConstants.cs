@@ -8,11 +8,6 @@ namespace SchoolDataImporter.Constants
     public static class AppConstants
     {
         /// <summary>
-        /// The default MS-Access DB connection string.
-        /// </summary>
-        public static string DefaultConnectionString = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source={dbFileName};Jet OLEDB:Database Password={dbPassword}";
-
-        /// <summary>
         /// The columns to display on the data grid.
         /// </summary>
         public static Dictionary<int, string> DataGridColumns = new Dictionary<int, string>

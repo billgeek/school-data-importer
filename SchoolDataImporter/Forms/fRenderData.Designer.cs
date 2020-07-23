@@ -37,6 +37,7 @@ namespace SchoolDataImporter.Forms
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(fRenderData));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.pnlFilters = new System.Windows.Forms.Panel();
             this.pnlFilterContent = new System.Windows.Forms.Panel();
@@ -68,6 +69,10 @@ namespace SchoolDataImporter.Forms
             this.cmdGradesSelectNone = new System.Windows.Forms.Button();
             this.cmdGradesSelectAll = new System.Windows.Forms.Button();
             this.expStatus = new SchoolDataImporter.Controls.ExpandingPanel();
+            this.chkStatusFuture = new System.Windows.Forms.CheckBox();
+            this.chkStatusArchived = new System.Windows.Forms.CheckBox();
+            this.chkStatusCurrent = new System.Windows.Forms.CheckBox();
+            this.chkStatusUnassigned = new System.Windows.Forms.CheckBox();
             this.expGender = new SchoolDataImporter.Controls.ExpandingPanel();
             this.chkGenderUnassigned = new System.Windows.Forms.CheckBox();
             this.chkGenderFemale = new System.Windows.Forms.CheckBox();
@@ -95,10 +100,6 @@ namespace SchoolDataImporter.Forms
             this.cmdExportData = new System.Windows.Forms.Button();
             this.dgAvailableData = new System.Windows.Forms.DataGridView();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.chkStatusUnassigned = new System.Windows.Forms.CheckBox();
-            this.chkStatusFuture = new System.Windows.Forms.CheckBox();
-            this.chkStatusArchived = new System.Windows.Forms.CheckBox();
-            this.chkStatusCurrent = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -197,7 +198,7 @@ namespace SchoolDataImporter.Forms
             // txtTotalFilter
             // 
             this.txtTotalFilter.Dock = System.Windows.Forms.DockStyle.Top;
-            this.txtTotalFilter.Location = new System.Drawing.Point(0, 471);
+            this.txtTotalFilter.Location = new System.Drawing.Point(0, 394);
             this.txtTotalFilter.Multiline = true;
             this.txtTotalFilter.Name = "txtTotalFilter";
             this.txtTotalFilter.ReadOnly = true;
@@ -209,7 +210,7 @@ namespace SchoolDataImporter.Forms
             // 
             this.panel10.Controls.Add(this.pictureBox1);
             this.panel10.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel10.Location = new System.Drawing.Point(0, 440);
+            this.panel10.Location = new System.Drawing.Point(0, 363);
             this.panel10.Name = "panel10";
             this.panel10.Size = new System.Drawing.Size(241, 31);
             this.panel10.TabIndex = 129;
@@ -250,7 +251,7 @@ namespace SchoolDataImporter.Forms
             this.expTextSearch.ExpandedHeight = 140;
             this.expTextSearch.Heading = "Search";
             this.expTextSearch.IsExpanded = false;
-            this.expTextSearch.Location = new System.Drawing.Point(0, 403);
+            this.expTextSearch.Location = new System.Drawing.Point(0, 326);
             this.expTextSearch.Name = "expTextSearch";
             this.expTextSearch.Padding = new System.Windows.Forms.Padding(4);
             this.expTextSearch.Size = new System.Drawing.Size(241, 37);
@@ -388,7 +389,7 @@ namespace SchoolDataImporter.Forms
             this.expGoverningBody.ExpandedHeight = 144;
             this.expGoverningBody.Heading = "Governing Body";
             this.expGoverningBody.IsExpanded = false;
-            this.expGoverningBody.Location = new System.Drawing.Point(0, 366);
+            this.expGoverningBody.Location = new System.Drawing.Point(0, 289);
             this.expGoverningBody.Name = "expGoverningBody";
             this.expGoverningBody.Padding = new System.Windows.Forms.Padding(4);
             this.expGoverningBody.Size = new System.Drawing.Size(241, 37);
@@ -423,7 +424,7 @@ namespace SchoolDataImporter.Forms
             this.expPersonnelCategory.ExpandedHeight = 144;
             this.expPersonnelCategory.Heading = "Personnel Category";
             this.expPersonnelCategory.IsExpanded = false;
-            this.expPersonnelCategory.Location = new System.Drawing.Point(0, 329);
+            this.expPersonnelCategory.Location = new System.Drawing.Point(0, 252);
             this.expPersonnelCategory.Name = "expPersonnelCategory";
             this.expPersonnelCategory.Padding = new System.Windows.Forms.Padding(4);
             this.expPersonnelCategory.Size = new System.Drawing.Size(241, 37);
@@ -458,7 +459,7 @@ namespace SchoolDataImporter.Forms
             this.expHostels.ExpandedHeight = 144;
             this.expHostels.Heading = "Hostels";
             this.expHostels.IsExpanded = false;
-            this.expHostels.Location = new System.Drawing.Point(0, 292);
+            this.expHostels.Location = new System.Drawing.Point(0, 215);
             this.expHostels.Name = "expHostels";
             this.expHostels.Padding = new System.Windows.Forms.Padding(4);
             this.expHostels.Size = new System.Drawing.Size(241, 37);
@@ -493,7 +494,7 @@ namespace SchoolDataImporter.Forms
             this.expHouses.ExpandedHeight = 144;
             this.expHouses.Heading = "Houses";
             this.expHouses.IsExpanded = false;
-            this.expHouses.Location = new System.Drawing.Point(0, 255);
+            this.expHouses.Location = new System.Drawing.Point(0, 178);
             this.expHouses.Name = "expHouses";
             this.expHouses.Padding = new System.Windows.Forms.Padding(4);
             this.expHouses.Size = new System.Drawing.Size(241, 37);
@@ -529,7 +530,7 @@ namespace SchoolDataImporter.Forms
             this.expGradesClasses.ExpandedHeight = 204;
             this.expGradesClasses.Heading = "Grades / Classes";
             this.expGradesClasses.IsExpanded = false;
-            this.expGradesClasses.Location = new System.Drawing.Point(0, 218);
+            this.expGradesClasses.Location = new System.Drawing.Point(0, 141);
             this.expGradesClasses.Name = "expGradesClasses";
             this.expGradesClasses.Padding = new System.Windows.Forms.Padding(4);
             this.expGradesClasses.Size = new System.Drawing.Size(241, 37);
@@ -593,16 +594,68 @@ namespace SchoolDataImporter.Forms
             this.expStatus.ContentPanel.Padding = new System.Windows.Forms.Padding(4);
             this.expStatus.ContentPanel.Size = new System.Drawing.Size(233, 75);
             this.expStatus.ContentPanel.TabIndex = 1;
-            this.expStatus.ContentPanel.Visible = true;
+            this.expStatus.ContentPanel.Visible = false;
             this.expStatus.Dock = System.Windows.Forms.DockStyle.Top;
             this.expStatus.ExpandedHeight = 114;
             this.expStatus.Heading = "Status";
-            this.expStatus.IsExpanded = true;
+            this.expStatus.IsExpanded = false;
             this.expStatus.Location = new System.Drawing.Point(0, 104);
             this.expStatus.Name = "expStatus";
             this.expStatus.Padding = new System.Windows.Forms.Padding(4);
-            this.expStatus.Size = new System.Drawing.Size(241, 114);
+            this.expStatus.Size = new System.Drawing.Size(241, 37);
             this.expStatus.TabIndex = 122;
+            // 
+            // chkStatusFuture
+            // 
+            this.chkStatusFuture.AutoSize = true;
+            this.chkStatusFuture.Checked = true;
+            this.chkStatusFuture.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkStatusFuture.Dock = System.Windows.Forms.DockStyle.Top;
+            this.chkStatusFuture.Location = new System.Drawing.Point(4, 55);
+            this.chkStatusFuture.Name = "chkStatusFuture";
+            this.chkStatusFuture.Size = new System.Drawing.Size(223, 17);
+            this.chkStatusFuture.TabIndex = 7;
+            this.chkStatusFuture.Text = "Future";
+            this.chkStatusFuture.UseVisualStyleBackColor = true;
+            // 
+            // chkStatusArchived
+            // 
+            this.chkStatusArchived.AutoSize = true;
+            this.chkStatusArchived.Checked = true;
+            this.chkStatusArchived.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkStatusArchived.Dock = System.Windows.Forms.DockStyle.Top;
+            this.chkStatusArchived.Location = new System.Drawing.Point(4, 38);
+            this.chkStatusArchived.Name = "chkStatusArchived";
+            this.chkStatusArchived.Size = new System.Drawing.Size(223, 17);
+            this.chkStatusArchived.TabIndex = 6;
+            this.chkStatusArchived.Text = "Archived";
+            this.chkStatusArchived.UseVisualStyleBackColor = true;
+            // 
+            // chkStatusCurrent
+            // 
+            this.chkStatusCurrent.AutoSize = true;
+            this.chkStatusCurrent.Checked = true;
+            this.chkStatusCurrent.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkStatusCurrent.Dock = System.Windows.Forms.DockStyle.Top;
+            this.chkStatusCurrent.Location = new System.Drawing.Point(4, 21);
+            this.chkStatusCurrent.Name = "chkStatusCurrent";
+            this.chkStatusCurrent.Size = new System.Drawing.Size(223, 17);
+            this.chkStatusCurrent.TabIndex = 5;
+            this.chkStatusCurrent.Text = "Current";
+            this.chkStatusCurrent.UseVisualStyleBackColor = true;
+            // 
+            // chkStatusUnassigned
+            // 
+            this.chkStatusUnassigned.AutoSize = true;
+            this.chkStatusUnassigned.Checked = true;
+            this.chkStatusUnassigned.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkStatusUnassigned.Dock = System.Windows.Forms.DockStyle.Top;
+            this.chkStatusUnassigned.Location = new System.Drawing.Point(4, 4);
+            this.chkStatusUnassigned.Name = "chkStatusUnassigned";
+            this.chkStatusUnassigned.Size = new System.Drawing.Size(223, 17);
+            this.chkStatusUnassigned.TabIndex = 4;
+            this.chkStatusUnassigned.Text = "Unassigned";
+            this.chkStatusUnassigned.UseVisualStyleBackColor = true;
             // 
             // expGender
             // 
@@ -1011,68 +1064,18 @@ namespace SchoolDataImporter.Forms
             // 
             this.toolTip1.ToolTipTitle = "View Filter";
             // 
-            // chkStatusUnassigned
-            // 
-            this.chkStatusUnassigned.AutoSize = true;
-            this.chkStatusUnassigned.Checked = true;
-            this.chkStatusUnassigned.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkStatusUnassigned.Dock = System.Windows.Forms.DockStyle.Top;
-            this.chkStatusUnassigned.Location = new System.Drawing.Point(4, 4);
-            this.chkStatusUnassigned.Name = "chkStatusUnassigned";
-            this.chkStatusUnassigned.Size = new System.Drawing.Size(223, 17);
-            this.chkStatusUnassigned.TabIndex = 4;
-            this.chkStatusUnassigned.Text = "Unassigned";
-            this.chkStatusUnassigned.UseVisualStyleBackColor = true;
-            // 
-            // chkStatusFuture
-            // 
-            this.chkStatusFuture.AutoSize = true;
-            this.chkStatusFuture.Checked = true;
-            this.chkStatusFuture.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkStatusFuture.Dock = System.Windows.Forms.DockStyle.Top;
-            this.chkStatusFuture.Location = new System.Drawing.Point(4, 55);
-            this.chkStatusFuture.Name = "chkStatusFuture";
-            this.chkStatusFuture.Size = new System.Drawing.Size(223, 17);
-            this.chkStatusFuture.TabIndex = 7;
-            this.chkStatusFuture.Text = "Future";
-            this.chkStatusFuture.UseVisualStyleBackColor = true;
-            // 
-            // chkStatusArchived
-            // 
-            this.chkStatusArchived.AutoSize = true;
-            this.chkStatusArchived.Checked = true;
-            this.chkStatusArchived.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkStatusArchived.Dock = System.Windows.Forms.DockStyle.Top;
-            this.chkStatusArchived.Location = new System.Drawing.Point(4, 38);
-            this.chkStatusArchived.Name = "chkStatusArchived";
-            this.chkStatusArchived.Size = new System.Drawing.Size(223, 17);
-            this.chkStatusArchived.TabIndex = 6;
-            this.chkStatusArchived.Text = "Archived";
-            this.chkStatusArchived.UseVisualStyleBackColor = true;
-            // 
-            // chkStatusCurrent
-            // 
-            this.chkStatusCurrent.AutoSize = true;
-            this.chkStatusCurrent.Checked = true;
-            this.chkStatusCurrent.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkStatusCurrent.Dock = System.Windows.Forms.DockStyle.Top;
-            this.chkStatusCurrent.Location = new System.Drawing.Point(4, 21);
-            this.chkStatusCurrent.Name = "chkStatusCurrent";
-            this.chkStatusCurrent.Size = new System.Drawing.Size(223, 17);
-            this.chkStatusCurrent.TabIndex = 5;
-            this.chkStatusCurrent.Text = "Current";
-            this.chkStatusCurrent.UseVisualStyleBackColor = true;
-            // 
             // fRenderData
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1132, 929);
             this.Controls.Add(this.splitContainer1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "fRenderData";
             this.Padding = new System.Windows.Forms.Padding(10);
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Filter and Export Data";
+            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.Activated += new System.EventHandler(this.fRenderData_Activated);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
