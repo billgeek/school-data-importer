@@ -4,7 +4,9 @@ using SchoolDataImporter.Managers.Interfaces;
 using SchoolDataImporter.Models;
 using Serilog;
 using System;
+using System.IO;
 using System.Net.Http;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -49,9 +51,24 @@ namespace SchoolDataImporter.Bll
             }
             catch (Exception e)
             {
-                _logger.Error(e, "Could not retrieve the queries from the server.");
-                throw;
+                _logger.Error(e, "Could not retrieve the queries from the server; Fallback to local version");
+                return FetchQueryStatementsLocally();
             }
+        }
+
+        private QueryStatements FetchQueryStatementsLocally()
+        {
+            var appPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            var fileName = Path.Combine(appPath, "DefaultQueries.json");
+
+            var fi = new FileInfo(fileName);
+            if (!fi.Exists)
+            {
+                // Throw exception
+            }
+
+            var fileContent = File.ReadAllText(fileName);
+            return JsonConvert.DeserializeObject<QueryStatements>(fileContent);
         }
     }
 }

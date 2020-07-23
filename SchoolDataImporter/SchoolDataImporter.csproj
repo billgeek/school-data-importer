@@ -32,6 +32,8 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+    <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="DeviceId, Version=5.1.1.0, Culture=neutral, PublicKeyToken=f755c371b5c59c52, processorArchitecture=MSIL">
@@ -100,18 +102,12 @@
     <Compile Include="Bll\Interfaces\IStringEncryption.cs" />
     <Compile Include="Bll\QueryStatementEngine.cs" />
     <Compile Include="Bll\StringEncryption.cs" />
-    <Compile Include="Constants\Formats.cs" />
-    <Compile Include="Controls\CheckedComboBox.cs">
-      <SubType>Component</SubType>
-    </Compile>
+    <Compile Include="Constants\AppConstants.cs" />
     <Compile Include="Controls\ExpandingPanel.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Controls\ExpandingPanel.Designer.cs">
       <DependentUpon>ExpandingPanel.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\GroupedRadioButton.cs">
-      <SubType>Component</SubType>
     </Compile>
     <Compile Include="Forms\fRenderData.cs">
       <SubType>Form</SubType>
@@ -164,6 +160,9 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <None Include="DefaultQueries.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

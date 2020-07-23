@@ -1,15 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace SchoolDataImporter.Constants
 {
-    public static class Formats
+    /// <summary>
+    /// Constant values.
+    /// </summary>
+    public static class AppConstants
     {
+        /// <summary>
+        /// The default MS-Access DB connection string.
+        /// </summary>
         public static string DefaultConnectionString = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source={dbFileName};Jet OLEDB:Database Password={dbPassword}";
 
+        /// <summary>
+        /// The columns to display on the data grid.
+        /// </summary>
         public static Dictionary<int, string> DataGridColumns = new Dictionary<int, string>
         {
             { 0, "Type" },
@@ -25,11 +30,14 @@ namespace SchoolDataImporter.Constants
             { 10, "Category / Gov. Body Type" }
         };
 
+        /// <summary>
+        /// The various learner statuses for lookup.
+        /// </summary>
         public static IDictionary<string, string> LearnerStatuses = new Dictionary<string, string>
         {
             { "A", "Archived" },
             { "C", "Current" },
-            { "", "Future" }
+            { "F", "Future" }
         };
     }
 }

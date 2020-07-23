@@ -20,7 +20,8 @@ namespace SchoolDataImporter.Models
                 { "sGender", "Gender" },
                 { "sName", "FirstName" },
                 { "sIDno", "IdNumber" },
-                { "sSell", "MobilePhoneNumber" }
+                { "sSell", "MobilePhoneNumber" },
+                { "pStatus", "Status" }
             };
         }
 
@@ -34,7 +35,7 @@ namespace SchoolDataImporter.Models
                 LastName,
                 $"{MobilePhoneCode}{MobilePhoneNumber}",
                 Gender,
-                string.IsNullOrWhiteSpace(Status) ? "Future" : Formats.LearnerStatuses[Status],
+                string.IsNullOrWhiteSpace(Status) ? "Unassigned" : AppConstants.LearnerStatuses[Status],
                 string.Empty,
                 string.Empty,
                 string.Empty,

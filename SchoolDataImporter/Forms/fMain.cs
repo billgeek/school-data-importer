@@ -48,7 +48,7 @@ namespace SchoolDataImporter.Forms
             InitializeComponent();
         }
 
-        private async void fMain_Load(object sender, EventArgs e)
+        private void fMain_Load(object sender, EventArgs e)
         {
             _logger.Debug("Call to fMain_Load");
             LoadRecentConnections();
@@ -145,7 +145,7 @@ namespace SchoolDataImporter.Forms
 
                 _configManager.Settings.Databases.Add(new AppSettingsDatabase
                 {
-                    ConnectionString = Formats.DefaultConnectionString,
+                    ConnectionString = AppConstants.DefaultConnectionString,
                     FileName = fileName,
                     Password = _stringEncryption.EncryptString(pwd)
                 });
@@ -370,7 +370,7 @@ namespace SchoolDataImporter.Forms
         {
             _logger.Debug("Testing connection to file {fileName}", fileName);
 
-            var connString = Formats.DefaultConnectionString.Replace("{dbFileName}", fileName).Replace("{dbPassword}", providedPassword);
+            var connString = AppConstants.DefaultConnectionString.Replace("{dbFileName}", fileName).Replace("{dbPassword}", providedPassword);
             var connectionResult = _dbManager.OpenConnectionAsync(connString, CancellationToken.None).ConfigureAwait(false).GetAwaiter().GetResult();
             if (connectionResult)
             {

@@ -52,7 +52,7 @@ namespace SchoolDataImporter.Models
                 LastName,
                 $"{MobilePhoneCode}{MobilePhoneNumber}",
                 Gender,
-                string.IsNullOrWhiteSpace(Status) ? "Future" : Formats.LearnerStatuses[Status],
+                string.IsNullOrWhiteSpace(Status) ? "Unassigned" : AppConstants.LearnerStatuses[Status],
                 string.IsNullOrWhiteSpace(Grade) && string.IsNullOrWhiteSpace(Class) ?
                     string.Empty :
                     $"Gr. {Grade} / {Class}",
