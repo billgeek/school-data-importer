@@ -49,10 +49,11 @@ To reduce the number of logs produced by the application, modify the app.config 
 - [X] Connect to a file-based Access database through ADO
 - [X] Execute queries and read the results into memory
 - [X] Map DB entity values to models in the API
-- [ ] Show the rows to the user to visualize data
-- [ ] Allow users to filter the data based on preset filters
-- [ ] Export results to clipboard
+- [X] Show the rows to the user to visualize data
+- [X] Allow users to filter the data based on preset filters
+- [X] Export results to clipboard
 - [ ] Write unit tests 
-- [ ] Create an installer package
-- [ ] Test the installer on various versions of Windows that supports .NET Framework 4.6.1
-- [ ] Test the application on each of the above Windows environments
+- [X] Create an installer package
+- [X] Test the installer on various versions of Windows that supports .NET Framework 4.6.1
+  - Tested this on Windows 7 SP 1 and Windows 10 - all versions inbetween should work as expected, but had to download installer for .NET Framework 4.6.1 as it's not bundled with Windows 7
+- [X] Test the application on each of the above Windows environments
