@@ -13,12 +13,14 @@ namespace SchoolDataImporter.Models
         public string MobilePhoneCode { get; set; }
         public string MobilePhoneNumber { get; set; }
 
+        public abstract string GetItemIdentifier();
+
         /// <summary>
         /// The mapping between the row on the Database and the Object Model.
         /// </summary>
         /// <returns>A dictionary (key value pair) where the key is the DB column name and the value is the property on the model.</returns>
         public abstract IDictionary<string, string> GetDataRowMap();
 
-        public abstract string[] GetDataRow();
+        public abstract IDictionary<string, string> GetModelMap();
     }
 }

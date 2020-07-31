@@ -7,22 +7,43 @@ namespace SchoolDataImporter.Constants
     /// </summary>
     public static class AppConstants
     {
+        public static string UniqueIdentifierFieldName = "UniqueIdentifier";
+        public static string Unassigned = "Unassigned";
+
+        public static string TypeCellName = "Type";
+        public static string StaffTypeCellName = "Staff Type";
+        public static string FirstNameCellName = "First Name";
+        public static string LastNameCellName = "Last Name";
+        public static string MobileNumberCellName = "Cell. No.";
+        public static string GenderCellName = "Gender";
+        public static string StatusCellName = "Status";
+        public static string GradeClassCellName = "Grade / Class";
+        public static string HouseCellName = "House";
+        public static string HostelCellName = "Hostel";
+        public static string GoverningBodyCellName = "Governing Body";
+        public static string OtherStaffTypeCellName = "Other Staff Type";
+        public static string ChildInformationCellName = "Child Information";
+        public static string ParentTypeCellName = "Parent Type";
+
         /// <summary>
         /// The columns to display on the data grid.
         /// </summary>
         public static Dictionary<int, string> DataGridColumns = new Dictionary<int, string>
         {
-            { 0, "Type" },
-            { 1, "Staff Type"},
-            { 2, "First Name"},
-            { 3, "Last Name"},
-            { 4, "Cell. No."},
-            { 5, "Gender"},
-            { 6, "Status"},
-            { 7, "Grade / Class"},
-            { 8, "House"},
-            { 9, "Hostel"},
-            { 10, "Category / Gov. Body Type" }
+            { 0, TypeCellName },
+            { 1, StaffTypeCellName},
+            { 2, FirstNameCellName},
+            { 3, LastNameCellName},
+            { 4, MobileNumberCellName},
+            { 5, GenderCellName},
+            { 6, StatusCellName},
+            { 7, GradeClassCellName},
+            { 8, HouseCellName},
+            { 9, HostelCellName},
+            { 10, GoverningBodyCellName},
+            { 11, OtherStaffTypeCellName },
+            { 12, ChildInformationCellName },
+            { 13, ParentTypeCellName }
         };
 
         /// <summary>

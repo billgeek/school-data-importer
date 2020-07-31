@@ -12,6 +12,8 @@ namespace SchoolDataImporter.Controls
     [Designer(typeof(ExpandingPanelDesigner))]
     public partial class ExpandingPanel : UserControl
     {
+        public EventHandler PanelExpanded;
+
         private Bitmap _expandedImage;
         private Bitmap _collapsedImage;
 
@@ -95,11 +97,23 @@ namespace SchoolDataImporter.Controls
             ToggleExpanded(true);
         }
 
-        private void ToggleExpanded(bool setValue)
+        public void CollapsePanel()
+        {
+            _isExpanded = false;
+            UpdateImage();
+            pnlContent.Visible = false;
+            Height = lblHeading.Height + 16;
+        }
+
+        public void ToggleExpanded(bool setValue)
         {
             if (setValue)
             {
                 _isExpanded = !_isExpanded;
+                if (_isExpanded)
+                {
+                    PanelExpanded?.Invoke(this, new EventArgs());
+                }
             }
             UpdateImage();
 

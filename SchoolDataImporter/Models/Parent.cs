@@ -12,6 +12,10 @@ namespace SchoolDataImporter.Models
         // From the parent model
         public string LearnerCode { get; set; }
         public string Status { get; set; }
+        public string GradeOrClass { get; set; }
+        public string House { get; set; }
+        public string Hostel { get; set; }
+        public string ChildName { get; set; }
 
         public override IDictionary<string, string> GetDataRowMap()
         {
@@ -27,23 +31,27 @@ namespace SchoolDataImporter.Models
             };
         }
 
-        public override string[] GetDataRow()
+        public override string GetItemIdentifier()
         {
-            return new string[]
-                {
-                    "Parent",
-                    string.Empty,
-                    FirstName,
-                    LastName,
-                    $"{MobilePhoneCode}{MobilePhoneNumber}",
-                    Gender,
-                    string.IsNullOrWhiteSpace(Status) ? "Unassigned" : AppConstants.LearnerStatuses[Status],
-                    string.Empty,
-                    string.Empty,
-                    string.Empty,
-                    string.Empty,
-                    $"Parent/{LearnerCode}"
-                };
+            return $"Parent/{LearnerCode}";
+        }
+
+        public override IDictionary<string, string> GetModelMap()
+        {
+            return new Dictionary<string, string>
+            {
+                { AppConstants.TypeCellName, "Parent" },
+                { AppConstants.FirstNameCellName, FirstName },
+                { AppConstants.LastNameCellName, LastName },
+                { AppConstants.MobileNumberCellName, $"{MobilePhoneCode}{MobilePhoneNumber}" },
+                { AppConstants.GenderCellName, Gender },
+                { AppConstants.StatusCellName, string.IsNullOrWhiteSpace(Status) ? "Unassigned" : AppConstants.LearnerStatuses[Status] },
+                { AppConstants.GradeClassCellName, GradeOrClass },
+                { AppConstants.HouseCellName, House },
+                { AppConstants.HostelCellName, Hostel },
+                { AppConstants.ChildInformationCellName, ChildName },
+                { AppConstants.ParentTypeCellName, "Parent" }
+            };
         }
     }
 }

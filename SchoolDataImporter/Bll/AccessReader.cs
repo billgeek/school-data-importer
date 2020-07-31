@@ -1,4 +1,5 @@
 ﻿using SchoolDataImporter.Bll.Interfaces;
+using SchoolDataImporter.Helpers;
 using SchoolDataImporter.Managers.Interfaces;
 using SchoolDataImporter.Models;
 using Serilog;
@@ -129,10 +130,18 @@ namespace SchoolDataImporter.Bll
                             // We also need to map this current row to the learner's parent model
                             learner.Parent = _dataMapper.MapDataModelFromDbReader<Parent>(reader);
                             learner.Parent.LearnerCode = learner.LearnerCode;
+                            learner.Parent.GradeOrClass = MappingHelper.GetGradeClassCombination(learner.Grade, learner.Class);
+                            learner.Parent.House = learner.House;
+                            learner.Parent.Hostel = learner.HostelName;
+                            learner.Parent.ChildName = $"{learner.FirstName} {learner.LastName}";
 
                             // We also need to map this current row to the learner's parent's spouse model
                             learner.Parent.Spouse = _dataMapper.MapDataModelFromDbReader<Spouse>(reader);
                             learner.Parent.Spouse.LearnerCode = learner.LearnerCode;
+                            learner.Parent.Spouse.GradeOrClass = MappingHelper.GetGradeClassCombination(learner.Grade, learner.Class);
+                            learner.Parent.Spouse.House = learner.House;
+                            learner.Parent.Spouse.Hostel = learner.HostelName;
+                            learner.Parent.Spouse.ChildName = $"{learner.FirstName} {learner.LastName}";
                         }
 
                         // Now we can add it to the collection!

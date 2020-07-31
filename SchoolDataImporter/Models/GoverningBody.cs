@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using SchoolDataImporter.Constants;
+using System.Collections.Generic;
 
 namespace SchoolDataImporter.Models
 {
@@ -23,22 +24,23 @@ namespace SchoolDataImporter.Models
             };
         }
 
-        public override string[] GetDataRow()
+        public override string GetItemIdentifier()
         {
-            return new string[]
+            return $"Staff/GoverningBody/{GoverningBodyCode}";
+        }
+
+        public override IDictionary<string, string> GetModelMap()
+        {
+            return new Dictionary<string, string>
             {
-                "Staff",
-                "Governing Body",
-                FirstName,
-                LastName,
-                $"{MobilePhoneCode}{MobilePhoneNumber}",
-                Gender,
-                "Current",
-                string.Empty,
-                string.Empty,
-                string.Empty,
-                TypeOfMember,
-                $"Staff/GoverningBody/{GoverningBodyCode}"
+                { AppConstants.TypeCellName, "Staff" },
+                { AppConstants.StaffTypeCellName, "Governing Body" },
+                { AppConstants.FirstNameCellName, FirstName },
+                { AppConstants.LastNameCellName, LastName },
+                { AppConstants.MobileNumberCellName, $"{MobilePhoneCode}{MobilePhoneNumber}" },
+                { AppConstants.GenderCellName, Gender },
+                { AppConstants.StatusCellName, "Current" },
+                { AppConstants.GoverningBodyCellName, TypeOfMember }
             };
         }
     }

@@ -6,5 +6,7 @@ namespace SchoolDataImporter.Bll.Interfaces
     public interface IDataMapper
     {
         TModelType MapDataModelFromDbReader<TModelType>(DbDataReader dataReader) where TModelType : BaseModel;
+
+        string[] GetModelRowData(BaseModel model);
     }
 }

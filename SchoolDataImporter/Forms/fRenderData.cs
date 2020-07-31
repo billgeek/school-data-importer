@@ -1,5 +1,8 @@
-﻿using SchoolDataImporter.Constants;
+﻿using SchoolDataImporter.Bll.Interfaces;
+using SchoolDataImporter.Constants;
+using SchoolDataImporter.Controls;
 using SchoolDataImporter.Forms.Interfaces;
+using SchoolDataImporter.Helpers;
 using SchoolDataImporter.Models;
 using Serilog;
 using System;
@@ -7,7 +10,6 @@ using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Text;
 using System.Windows.Forms;
 
@@ -16,6 +18,7 @@ namespace SchoolDataImporter.Forms
     public partial class fRenderData : Form, IExportData
     {
         private readonly ILogger _logger;
+        private readonly IDataMapper _mapper;
 
         // Data elements
         private ICollection<Learner> _learnerData;
@@ -28,11 +31,47 @@ namespace SchoolDataImporter.Forms
         private bool _formInitialized = false;
         private int _sourceDataCount = 0;
 
-        public fRenderData(ILogger logger)
+        public fRenderData(IDataMapper mapper, ILogger logger)
         {
+            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
             InitializeComponent();
+
+            // Wire up the PanelExpanded event for all expand panels - this is to collapse others when one is expanded
+            expGender.PanelExpanded += new EventHandler(collapseOtherPanels);
+            expGoverningBody.PanelExpanded += new EventHandler(collapseOtherPanels);
+            expGradesClasses.PanelExpanded += new EventHandler(collapseOtherPanels);
+            expHostels.PanelExpanded += new EventHandler(collapseOtherPanels);
+            expHouses.PanelExpanded += new EventHandler(collapseOtherPanels);
+            expPersonnelCategory.PanelExpanded += new EventHandler(collapseOtherPanels);
+            expStatus.PanelExpanded += new EventHandler(collapseOtherPanels);
+            expTextSearch.PanelExpanded += new EventHandler(collapseOtherPanels);
+            expType.PanelExpanded += new EventHandler(collapseOtherPanels);
+        }
+
+        private void collapseOtherPanels(object sender, EventArgs e)
+        {
+            ExpandingPanel actual = sender as ExpandingPanel;
+
+            if (actual != expGender)
+                expGender.CollapsePanel();
+            if (actual != expGoverningBody)
+                expGoverningBody.CollapsePanel();
+            if (actual != expGradesClasses)
+                expGradesClasses.CollapsePanel();
+            if (actual != expHostels)
+                expHostels.CollapsePanel();
+            if (actual != expHouses)
+                expHouses.CollapsePanel();
+            if (actual != expPersonnelCategory)
+                expPersonnelCategory.CollapsePanel();
+            if (actual != expStatus)
+                expStatus.CollapsePanel();
+            if (actual != expTextSearch)
+                expTextSearch.CollapsePanel();
+            if (actual != expType)
+                expType.CollapsePanel();
         }
 
         /// <inheritdoc />
@@ -86,19 +125,18 @@ namespace SchoolDataImporter.Forms
             cmbLastNameOperator.SelectedIndex = 0;
             cmbFirstNameOperator.SelectedIndex = 0;
 
-            // Default checks
-            chkTypeLearner.Checked = true;
-            chkTypeParent.Checked = true;
-            chkTypeStaff.Checked = true;
+            // Default checks - Gender
             chkGenderFemale.Checked = true;
             chkGenderMale.Checked = true;
             chkGenderUnassigned.Checked = true;
-            chkStatusArchived.Checked = true;
+
+            // Default checks - Status
+            chkStatusArchived.Checked = false;
             chkStatusCurrent.Checked = true;
-            chkStatusFuture.Checked = true;
+            chkStatusFuture.Checked = false;
 
             // Grades/Classes
-            var gradesAndClasses = _learnerData.Select(l => $"Gr. {l.Grade} / {l.Class}").Distinct().Where(l => l != "Gr.  / ").OrderBy(l => l).ToList();
+            var gradesAndClasses = _learnerData.Select(l => MappingHelper.GetGradeClassCombination(l.Grade, l.Class)).Distinct().OrderBy(l => l).ToList();
             
             clbGradesClasses.Items.Clear();
             foreach (var item in gradesAndClasses)
@@ -112,12 +150,12 @@ namespace SchoolDataImporter.Forms
             var houses = _learnerData.Where(l => !string.IsNullOrWhiteSpace(l.House)).Select(l => l.House).Distinct().OrderBy(l => l).ToList();
 
             clbHouses.Items.Clear();
-            clbHouses.Items.Add("Unassigned");
+            clbHouses.Items.Add(AppConstants.Unassigned);
             clbHouses.SetItemChecked(clbHouses.Items.Count - 1, true);
             foreach (var house in houses)
             {
                 clbHouses.Items.Add(house);
-                clbHouses.SetItemChecked(clbHouses.Items.Count - 1, true);
+                clbHouses.SetItemChecked(clbHouses.Items.Count - 1, false);
                 _logger.Verbose("Filter item added: House - {house}", house);
             }
 
@@ -125,12 +163,12 @@ namespace SchoolDataImporter.Forms
             var hostels = _learnerData.Where(l => !string.IsNullOrWhiteSpace(l.HostelName)).Select(l => l.HostelName).Distinct().OrderBy(l => l).ToList();
 
             clbHostels.Items.Clear();
-            clbHostels.Items.Add("Unassigned");
+            clbHostels.Items.Add(AppConstants.Unassigned);
             clbHostels.SetItemChecked(clbHostels.Items.Count - 1, true);
             foreach (var hostel in hostels)
             {
                 clbHostels.Items.Add(hostel);
-                clbHostels.SetItemChecked(clbHostels.Items.Count - 1, true);
+                clbHostels.SetItemChecked(clbHostels.Items.Count - 1, false);
                 _logger.Verbose("Filter item added: Hostel - {hostel}", hostel);
             }
 
@@ -138,12 +176,12 @@ namespace SchoolDataImporter.Forms
             var categories = _staffData.Where(l => !string.IsNullOrWhiteSpace(l.PersonnelCategory)).Select(l => l.PersonnelCategory).Distinct().OrderBy(l => l).ToList();
 
             clbPersonnelCategory.Items.Clear();
-            clbPersonnelCategory.Items.Add("Unassigned");
+            clbPersonnelCategory.Items.Add(AppConstants.Unassigned);
             clbPersonnelCategory.SetItemChecked(clbHostels.Items.Count - 1, true);
             foreach (var category in categories)
             {
                 clbPersonnelCategory.Items.Add(category);
-                clbPersonnelCategory.SetItemChecked(clbPersonnelCategory.Items.Count - 1, true);
+                clbPersonnelCategory.SetItemChecked(clbPersonnelCategory.Items.Count - 1, false);
                 _logger.Verbose("Filter item added: Personnel Category - {personnelCategory}", category);
             }
 
@@ -151,14 +189,19 @@ namespace SchoolDataImporter.Forms
             var members = _governingBodyData.Select(l => l.TypeOfMember).Distinct().OrderBy(l => l).ToList();
 
             clbGoverningBody.Items.Clear();
-            clbGoverningBody.Items.Add("Unassigned");
+            clbGoverningBody.Items.Add(AppConstants.Unassigned);
             clbGoverningBody.SetItemChecked(clbHostels.Items.Count - 1, true);
             foreach (var member in members)
             {
                 clbGoverningBody.Items.Add(member);
-                clbGoverningBody.SetItemChecked(clbGoverningBody.Items.Count - 1, true);
+                clbGoverningBody.SetItemChecked(clbGoverningBody.Items.Count - 1, false);
                 _logger.Verbose("Filter item added: Governing Body Member Type - {memberType}", member);
             }
+
+            // Default checks - Type
+            chkTypeLearner.Checked = true;
+            chkTypeParent.Checked = false;
+            chkTypeStaff.Checked = false;
 
             cmdApplyFilters_Click(this, new System.EventArgs());
         }
@@ -179,7 +222,7 @@ namespace SchoolDataImporter.Forms
                 dgAvailableData.Columns[col.Key].Name = col.Value;
                 dgAvailableData.Columns[col.Key].DataPropertyName = col.Value;
             }
-            dgAvailableData.Columns[dgAvailableData.ColumnCount - 1].Name = "UniqueIdentifier";
+            dgAvailableData.Columns[dgAvailableData.ColumnCount - 1].Name = AppConstants.UniqueIdentifierFieldName;
             dgAvailableData.Columns[dgAvailableData.ColumnCount - 1].Visible = false;
 
             dgSelected.ColumnHeadersDefaultCellStyle.BackColor = Color.Navy;
@@ -192,7 +235,7 @@ namespace SchoolDataImporter.Forms
                 _logger.Verbose("Adding column {columnNumber} with column name {columnName} to Selected DataGrid", col.Key, col.Value);
                 dgSelected.Columns[col.Key].Name = col.Value;
             }
-            dgSelected.Columns[dgSelected.ColumnCount - 1].Name = "UniqueIdentifier";
+            dgSelected.Columns[dgSelected.ColumnCount - 1].Name = AppConstants.UniqueIdentifierFieldName;
             dgSelected.Columns[dgSelected.ColumnCount - 1].Visible = false;
         }
 
@@ -206,7 +249,7 @@ namespace SchoolDataImporter.Forms
                 _logger.Verbose("Adding column with column name {columnName} to data table", col.Value);
                 table.Columns.Add(col.Value);
             }
-            table.Columns.Add("UniqueIdentifier");
+            table.Columns.Add(AppConstants.UniqueIdentifierFieldName);
 
             _dataSet.Tables.Add(table);
 
@@ -230,7 +273,7 @@ namespace SchoolDataImporter.Forms
 
             foreach (var item in _learnerData)
             {
-                var rowData = item.GetDataRow();
+                var rowData = _mapper.GetModelRowData(item);
                 _dataSet.Tables[0].Rows.Add(rowData);
             }
         }
@@ -241,7 +284,7 @@ namespace SchoolDataImporter.Forms
 
             foreach (var item in _learnerData.Where(l => !string.IsNullOrWhiteSpace(l.Parent?.FirstName) || !string.IsNullOrWhiteSpace(l.Parent?.LastName)))
             {
-                var parentData = item.Parent.GetDataRow();
+                var parentData = _mapper.GetModelRowData(item.Parent);
                 _dataSet.Tables[0].Rows.Add(parentData);
             }
         }
@@ -252,7 +295,7 @@ namespace SchoolDataImporter.Forms
 
             foreach (var item in _learnerData.Where(item => !string.IsNullOrWhiteSpace(item.Parent?.Spouse?.FirstName) || !string.IsNullOrWhiteSpace(item.Parent?.Spouse?.LastName)))
             {
-                var parentData = item.Parent.Spouse.GetDataRow();
+                var parentData = _mapper.GetModelRowData(item.Parent.Spouse);
                 _dataSet.Tables[0].Rows.Add(parentData);
             }
         }
@@ -263,7 +306,7 @@ namespace SchoolDataImporter.Forms
 
             foreach (var item in _educatorData)
             {
-                var rowData = item.GetDataRow();
+                var rowData = _mapper.GetModelRowData(item);
                 _dataSet.Tables[0].Rows.Add(rowData);
             }
         }
@@ -274,7 +317,7 @@ namespace SchoolDataImporter.Forms
 
             foreach (var item in _staffData)
             {
-                var rowData = item.GetDataRow();
+                var rowData = _mapper.GetModelRowData(item);
                 _dataSet.Tables[0].Rows.Add(rowData);
             }
         }
@@ -285,7 +328,7 @@ namespace SchoolDataImporter.Forms
 
             foreach (var item in _governingBodyData)
             {
-                var rowData = item.GetDataRow();
+                var rowData = _mapper.GetModelRowData(item);
                 _dataSet.Tables[0].Rows.Add(rowData);
             }
         }
@@ -341,7 +384,7 @@ namespace SchoolDataImporter.Forms
             _logger.Verbose("Checking Status filter");
             var statusValues = new List<string>();
             if (chkStatusUnassigned.Checked)
-                statusValues.Add("Unassigned");
+                statusValues.Add(AppConstants.Unassigned);
             if (chkStatusCurrent.Checked)
                 statusValues.Add("Current");
             if (chkStatusArchived.Checked)
@@ -351,26 +394,30 @@ namespace SchoolDataImporter.Forms
 
             filterString = AppendMultiToFilterString(filterString, "Status", statusValues);
 
-            // Grades and classes
-            _logger.Verbose("Checking Grades and Classes filter");
-            filterString = GetCheckedValuesForFilter(clbGradesClasses, filterString, "Grade / Class", false);
+            // Do not check grades, houses or hostels when staff is selected
+            if (!chkTypeStaff.Checked)
+            {
+                // Grades and classes
+                _logger.Verbose("Checking Grades and Classes filter");
+                filterString = GetCheckedValuesForFilter(clbGradesClasses, filterString, "Grade / Class", false);
 
-            // Houses
-            _logger.Verbose("Checking Houses filter");
-            filterString = GetCheckedValuesForFilter(clbHouses, filterString, "House", true);
+                // Houses
+                _logger.Verbose("Checking Houses filter");
+                filterString = GetCheckedValuesForFilter(clbHouses, filterString, "House", true);
 
-            // Hostels
-            _logger.Verbose("Checking Hostels filter");
-            filterString = GetCheckedValuesForFilter(clbHostels, filterString, "Hostel", true);
+                // Hostels
+                _logger.Verbose("Checking Hostels filter");
+                filterString = GetCheckedValuesForFilter(clbHostels, filterString, "Hostel", true);
+            }
 
+            // TODO: We need to split these...
             // Personnel Categories
             _logger.Verbose("Checking Personnel Category filter");
-            filterString = GetCheckedValuesForFilter(clbPersonnelCategory, filterString, "Category / Gov. Body Type", true);
+            filterString = GetCheckedValuesForFilter(clbPersonnelCategory, filterString, "Other Staff Type", true);
 
             // Governing Body
             _logger.Verbose("Checking Governing Body filter");
-            filterString = GetCheckedValuesForFilter(clbGoverningBody, filterString, "Category / Gov. Body Type", true);
-
+            filterString = GetCheckedValuesForFilter(clbGoverningBody, filterString, "Governing Body", true);
 
             if (!string.IsNullOrWhiteSpace(txtFirstName.Text))
             {
@@ -419,7 +466,7 @@ namespace SchoolDataImporter.Forms
 
             foreach (var item in clb.CheckedItems)
             {
-                if (!item.ToString().Equals("Unassigned", StringComparison.InvariantCultureIgnoreCase))
+                if (!item.ToString().Equals(AppConstants.Unassigned, StringComparison.InvariantCultureIgnoreCase))
                 {
                     values.Add(item.ToString());
                 }
@@ -476,12 +523,19 @@ namespace SchoolDataImporter.Forms
             foreach(var row in dgAvailableData.SelectedRows)
             {
                 var item = row as DataGridViewRow;
+
+                if (chkOnlyValidNumbers.Checked && item.Cells[AppConstants.MobileNumberCellName].Value?.ToString().Length < 10)
+                {
+                    _logger.Verbose("Selected item skipped as the number is less than 10 characters long");
+                    continue;
+                }
+
                 item.DefaultCellStyle.BackColor = SystemColors.Info;
 
-                var uniqueId = item.Cells["UniqueIdentifier"].Value.ToString();
+                var uniqueId = item.Cells[AppConstants.UniqueIdentifierFieldName].Value.ToString();
                 _logger.Verbose("Finding unique row on existing selected rows with identifier {uniqueIdentifier}", uniqueId);
 
-                var matchingRow = dgSelected.Rows.Cast<DataGridViewRow>().Where(r => r.Cells["UniqueIdentifier"].Value.ToString().Equals(uniqueId)).FirstOrDefault();
+                var matchingRow = dgSelected.Rows.Cast<DataGridViewRow>().Where(r => r.Cells[AppConstants.UniqueIdentifierFieldName].Value.ToString().Equals(uniqueId)).FirstOrDefault();
                 if (matchingRow == null)
                 {
                     _logger.Verbose("Matching row not found; Adding to selected list");
@@ -535,9 +589,9 @@ namespace SchoolDataImporter.Forms
                 var item = row as DataGridViewRow;
 
                 // We need to remove the highlighting from the source row
-                var uniqueId = item.Cells["UniqueIdentifier"].Value.ToString();
+                var uniqueId = item.Cells[AppConstants.UniqueIdentifierFieldName].Value.ToString();
                 _logger.Verbose("Attempting to find row in selected list with unique identifier {uniqueIdentifier}", uniqueId);
-                var matchingRow = dgAvailableData.Rows.Cast<DataGridViewRow>().Where(r => r.Cells["UniqueIdentifier"].Value.ToString().Equals(uniqueId)).FirstOrDefault();
+                var matchingRow = dgAvailableData.Rows.Cast<DataGridViewRow>().Where(r => r.Cells[AppConstants.UniqueIdentifierFieldName].Value.ToString().Equals(uniqueId)).FirstOrDefault();
                 if (matchingRow != null)
                 {
                     _logger.Verbose("Found matching row; Removing selection");
@@ -562,6 +616,13 @@ namespace SchoolDataImporter.Forms
             {
                 _logger.Verbose("Setting background for row");
                 var item = row as DataGridViewRow;
+
+                if (chkOnlyValidNumbers.Checked && item.Cells[AppConstants.MobileNumberCellName].Value?.ToString().Length < 10)
+                {
+                    _logger.Verbose("Selected item skipped as the number is less than 10 characters long");
+                    continue;
+                }
+
                 item.DefaultCellStyle.BackColor = SystemColors.Info;
 
                 var rowIdx = dgSelected.Rows.Add();
@@ -588,13 +649,13 @@ namespace SchoolDataImporter.Forms
             _logger.Information("User selected to export data");
 
             var sb = new StringBuilder();
-            sb.Append($"Name\tMobileNumber{Environment.NewLine}");
+            sb.Append($"Name\tMobile{Environment.NewLine}");
 
             foreach(var row in dgSelected.Rows)
             {
                 var item = row as DataGridViewRow;
 
-                sb.Append($"{item.Cells["First Name"].Value} {item.Cells["Last Name"].Value}\t{item.Cells["Cell. No."].Value}{Environment.NewLine}");
+                sb.Append($"{item.Cells[AppConstants.FirstNameCellName].Value} {item.Cells[AppConstants.LastNameCellName].Value}\t{item.Cells[AppConstants.MobileNumberCellName].Value}{Environment.NewLine}");
             }
 
             var result = sb.ToString();
@@ -634,9 +695,9 @@ namespace SchoolDataImporter.Forms
             foreach(var selRow in dgSelected.Rows)
             {
                 var selItem = selRow as DataGridViewRow;
-                var uniqueId = selItem.Cells["UniqueIdentifier"].Value.ToString();
+                var uniqueId = selItem.Cells[AppConstants.UniqueIdentifierFieldName].Value.ToString();
                 _logger.Verbose("Attempting to find row with unique identifier {uniqueIdentifier}", uniqueId);
-                var matchingRow = dgAvailableData.Rows.Cast<DataGridViewRow>().Where(r => r.Cells["UniqueIdentifier"].Value.ToString().Equals(uniqueId)).FirstOrDefault();
+                var matchingRow = dgAvailableData.Rows.Cast<DataGridViewRow>().Where(r => r.Cells[AppConstants.UniqueIdentifierFieldName].Value.ToString().Equals(uniqueId)).FirstOrDefault();
                 if (matchingRow != null)
                 {
                     _logger.Verbose("Found matching row; Setting highlighting");
@@ -655,6 +716,51 @@ namespace SchoolDataImporter.Forms
         private void pictureBox1_Click(object sender, EventArgs e)
         {
             txtTotalFilter.Visible = !txtTotalFilter.Visible;
+        }
+
+        private void TypeCheckChanged(object sender, EventArgs e)
+        {
+            // Wait for the form to be initialized before attempting this
+            // Otherwise there are zero items in the list!
+            if (!_formInitialized)
+                return;
+
+            if (chkTypeParent.Checked || chkTypeLearner.Checked)
+            {
+                SetAllCheckItemsForList(clbPersonnelCategory, true, false, true);
+                SetAllCheckItemsForList(clbGoverningBody, true, false, true);
+            }
+            else
+            {
+                clbPersonnelCategory.Enabled = true;
+                clbGoverningBody.Enabled = true;
+            }
+
+            if (chkTypeStaff.Checked)
+            {
+                SetAllCheckItemsForList(clbGradesClasses, true, true, true);
+                SetAllCheckItemsForList(clbHouses, true, true, true);
+                SetAllCheckItemsForList(clbHostels, true, true, true);
+            }
+            else
+            {
+                clbGradesClasses.Enabled = true;
+                clbHouses.Enabled = true;
+                clbHostels.Enabled = true;
+            }
+        }
+
+        private void SetAllCheckItemsForList(CheckedListBox targetList, bool checkFirstRow, bool valueToSet, bool disableControl)
+        {
+            if (checkFirstRow)
+            {
+                targetList.SetItemChecked(0, true);
+            }
+            for (var i = 1; i < targetList.Items.Count; i++)
+            {
+                targetList.SetItemChecked(i, valueToSet);
+            }
+            targetList.Enabled = !disableControl;
         }
     }
 }

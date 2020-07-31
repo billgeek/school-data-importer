@@ -122,6 +122,7 @@
     <Compile Include="Forms\Interfaces\IMain.cs" />
     <Compile Include="Helpers\ListViewColumnSorter.cs" />
     <Compile Include="Helpers\ListViewExtensions.cs" />
+    <Compile Include="Helpers\MappingHelper.cs" />
     <Compile Include="Managers\ConfigurationManager.cs" />
     <Compile Include="Managers\Interfaces\IConfigurationManager.cs" />
     <Compile Include="Models\AppSettings.cs" />

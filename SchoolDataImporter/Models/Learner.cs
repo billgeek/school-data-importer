@@ -1,5 +1,5 @@
-﻿using Microsoft.SqlServer.Server;
-using SchoolDataImporter.Constants;
+﻿using SchoolDataImporter.Constants;
+using SchoolDataImporter.Helpers;
 using System.Collections.Generic;
 
 namespace SchoolDataImporter.Models
@@ -42,24 +42,24 @@ namespace SchoolDataImporter.Models
             };
         }
 
-        public override string[] GetDataRow()
+        public override string GetItemIdentifier()
         {
-            return new string[]
+            return $"Learner/{LearnerCode}";
+        }
+
+        public override IDictionary<string, string> GetModelMap()
+        {
+            return new Dictionary<string, string>
             {
-                "Learner",
-                string.Empty,
-                FirstName,
-                LastName,
-                $"{MobilePhoneCode}{MobilePhoneNumber}",
-                Gender,
-                string.IsNullOrWhiteSpace(Status) ? "Unassigned" : AppConstants.LearnerStatuses[Status],
-                string.IsNullOrWhiteSpace(Grade) && string.IsNullOrWhiteSpace(Class) ?
-                    string.Empty :
-                    $"Gr. {Grade} / {Class}",
-                House,
-                HostelName,
-                string.Empty,
-                $"Learner/{LearnerCode}"
+                { AppConstants.TypeCellName, "Learner" },
+                { AppConstants.FirstNameCellName, FirstName },
+                { AppConstants.LastNameCellName, LastName },
+                { AppConstants.MobileNumberCellName, $"{MobilePhoneCode}{MobilePhoneNumber}" },
+                { AppConstants.GenderCellName, Gender },
+                { AppConstants.StatusCellName, string.IsNullOrWhiteSpace(Status) ? "Unassigned" : AppConstants.LearnerStatuses[Status] },
+                { AppConstants.GradeClassCellName, MappingHelper.GetGradeClassCombination(Grade,Class) },
+                { AppConstants.HouseCellName, House },
+                { AppConstants.HostelCellName, HostelName }
             };
         }
     }

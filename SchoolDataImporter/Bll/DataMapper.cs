@@ -1,7 +1,9 @@
 ﻿using SchoolDataImporter.Bll.Interfaces;
+using SchoolDataImporter.Constants;
 using SchoolDataImporter.Models;
 using Serilog;
 using System;
+using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
 
@@ -89,6 +91,26 @@ namespace SchoolDataImporter.Bll
             }
 
             return instance;
+        }
+
+        public string[] GetModelRowData(BaseModel model)
+        {
+            var dataRowDictionary = model.GetModelMap();
+            var result = new List<string>();
+
+            foreach (var item in AppConstants.DataGridColumns)
+            {
+                if (dataRowDictionary.ContainsKey(item.Value))
+                {
+                    result.Add(dataRowDictionary[item.Value]);
+                }
+                else
+                {
+                    result.Add(string.Empty);
+                }
+            }
+            result.Add(model.GetItemIdentifier());
+            return result.ToArray();
         }
     }
 }

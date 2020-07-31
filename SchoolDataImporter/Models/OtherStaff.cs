@@ -29,22 +29,23 @@ namespace SchoolDataImporter.Models
             };
         }
 
-        public override string[] GetDataRow()
+        public override string GetItemIdentifier()
         {
-            return new string[]
+            return $"Staff/Other/{StaffCode}";
+        }
+
+        public override IDictionary<string, string> GetModelMap()
+        {
+            return new Dictionary<string, string>
             {
-                "Staff",
-                "Other Staff",
-                FirstName,
-                LastName,
-                $"{MobilePhoneCode}{MobilePhoneNumber}",
-                Gender,
-                string.IsNullOrWhiteSpace(Status) ? "Unassigned" : AppConstants.LearnerStatuses[Status],
-                string.Empty,
-                string.Empty,
-                string.Empty,
-                PersonnelCategory,
-                $"Staff/Other/{StaffCode}"
+                { AppConstants.TypeCellName, "Parent" },
+                { AppConstants.StaffTypeCellName, "Other Staff" },
+                { AppConstants.FirstNameCellName, FirstName },
+                { AppConstants.LastNameCellName, LastName },
+                { AppConstants.MobileNumberCellName, $"{MobilePhoneCode}{MobilePhoneNumber}" },
+                { AppConstants.GenderCellName, Gender },
+                { AppConstants.StatusCellName, string.IsNullOrWhiteSpace(Status) ? "Unassigned" : AppConstants.LearnerStatuses[Status] },
+                { AppConstants.OtherStaffTypeCellName, PersonnelCategory }
             };
         }
     }

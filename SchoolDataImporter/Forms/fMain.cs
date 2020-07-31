@@ -27,6 +27,7 @@ namespace SchoolDataImporter.Forms
         private IExportData _exportForm;
 
         private bool isProcessing = false;
+        private bool _formActivated = false;
         private CancellationTokenSource ctSource = new CancellationTokenSource();
 
         private ICollection<Learner> _learnerData;
@@ -56,14 +57,18 @@ namespace SchoolDataImporter.Forms
 
         private async void fMain_Activated(object sender, EventArgs e)
         {
-            pbProcessing.Visible = true;
-            lblCurrentOperation.Text = "Fetching Configuration from Remote Server...";
+            if (!_formActivated)
+            {
+                _formActivated = true;
+                pbProcessing.Visible = true;
+                lblCurrentOperation.Text = "Fetching Configuration from Remote Server...";
 
-            await Task.Run(() => FetchQueriesAsync());
+                await Task.Run(() => FetchQueriesAsync());
 
-            lblCurrentOperation.Text = "";
-            pbProcessing.Visible = false;
-            cmdStart.Enabled = true;
+                lblCurrentOperation.Text = "";
+                pbProcessing.Visible = false;
+                cmdStart.Enabled = true;
+            }
         }
 
         private async Task FetchQueriesAsync()
