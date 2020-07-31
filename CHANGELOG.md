@@ -11,10 +11,13 @@
 - Filter elements now close automatically when a different filter element is selected. In other words: Only one filter element and/or field is visible at a time.
 - The Category (Other Staff Type) and Governing Body columns are now seperated as there were issues attempting to filter on these fields.
 - When Learner elements only have either a Grade or a Class, displaying this value is now updated. For example: If a Learner only has Class 1A without a Grade, the user will now see `1A` instead of `Gr. / 1A` in the respective column.
+- When the `Parent` or `Learner` items are selected under the `Type` filter object, the `Other Staff` and `Governing Body` filter elements are now disabled and the "Unassigned" option selected.
+- When the `Staff` item is selected under the `Type` filter object, the `Grades / Classes`, `Houses` and `Hostels` filter elements are now disabled and the "Unassigned" option selected where applicable. Note that the Grade / Classes filter is completely ignored in this scenario.
 
 ### Fixed
 - The progress bar on the initial form now no longer disappears after loading the learner data.
 - Renamed the output column from `MobileNumber` to `Mobile`
+
 
 ## Developer Changes
 
