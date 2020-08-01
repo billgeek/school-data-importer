@@ -1,3 +1,27 @@
+# 1.0.0.2 - 2020-08-01
+
+## Useability Changes and Bug Fixes
+
+### Added
+- The exising "Export" button is renamed to "Copy" (Which will result in the existing functionality of copying the result to the clipboard) and a new button was added called `Export` which will create an Excel file with the result.
+
+### Changed
+- Reordered the columns to show the child Gender and Parent Type next to the Child Information for ease of reference.
+
+### Fixed
+- Removed the `MobilePhoneCode` from the Mobile Numbers as this was causing 13 digit numbers.
+
+## Technical Changes
+
+### Added
+- New configuration flag (`FetchRemoteQueries`) that will enable or disable reading queries from a remote server. When set to FALSE, the queries will be read from the application storage.
+- Added a package reference to `EPPlus` in order to create Excel files.
+
+### Changed
+- Changed the `FetchQueryStatmentsLocally` to public in the `QueryStatementEngine`.
+- The toggle to display the filter string used will now only be available on Debug builds.
+
+
 # 1.0.0.1 - 2020-07-31
 
 ## Useability Changes and Bug Fixes
@@ -18,8 +42,7 @@
 1. The progress bar on the initial form now no longer disappears after loading the learner data.
 2. Renamed the output column from `MobileNumber` to `Mobile`
 
-
-## Developer Changes
+## Technical Changes
 
 ### Added
 1. Implemented a Model Mapping method in the `DataMapper` class to simplify mapping from the model to the data row required on the UI.
