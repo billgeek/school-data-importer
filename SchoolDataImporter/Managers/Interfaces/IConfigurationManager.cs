@@ -5,6 +5,7 @@ namespace SchoolDataImporter.Managers.Interfaces
     public interface IConfigurationManager
     {
         QueryStatements Queries { get; set; }
+        bool FetchRemoteQueries { get; set; }
         string QueryApiUri { get; set; }
         string DataProvider { get; set; }
         AppSettings Settings { get; set; }

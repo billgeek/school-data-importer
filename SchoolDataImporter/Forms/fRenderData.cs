@@ -8,7 +8,9 @@ using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
@@ -19,6 +21,7 @@ namespace SchoolDataImporter.Forms
     {
         private readonly ILogger _logger;
         private readonly IDataMapper _mapper;
+        private readonly IExcelEngine _excelEngine;
 
         // Data elements
         private ICollection<Learner> _learnerData;
@@ -31,8 +34,9 @@ namespace SchoolDataImporter.Forms
         private bool _formInitialized = false;
         private int _sourceDataCount = 0;
 
-        public fRenderData(IDataMapper mapper, ILogger logger)
+        public fRenderData(IExcelEngine excelEngine, IDataMapper mapper, ILogger logger)
         {
+            _excelEngine = excelEngine ?? throw new ArgumentNullException(nameof(excelEngine));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
@@ -48,6 +52,10 @@ namespace SchoolDataImporter.Forms
             expStatus.PanelExpanded += new EventHandler(collapseOtherPanels);
             expTextSearch.PanelExpanded += new EventHandler(collapseOtherPanels);
             expType.PanelExpanded += new EventHandler(collapseOtherPanels);
+
+#if DEBUG
+            pictureBox1.Visible = true;
+#endif
         }
 
         private void collapseOtherPanels(object sender, EventArgs e)
@@ -271,7 +279,7 @@ namespace SchoolDataImporter.Forms
         {
             _logger.Information("Call to LoadLearnerData");
 
-            foreach (var item in _learnerData)
+            foreach (var item in _learnerData.Distinct())
             {
                 var rowData = _mapper.GetModelRowData(item);
                 _dataSet.Tables[0].Rows.Add(rowData);
@@ -637,36 +645,41 @@ namespace SchoolDataImporter.Forms
         private void dgSelected_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
         {
             cmdExportData.Enabled = dgSelected.Rows.Count > 0;
+            cmdCopyToClipboard.Enabled = dgSelected.Rows.Count > 0;
         }
 
         private void dgSelected_RowsRemoved(object sender, DataGridViewRowsRemovedEventArgs e)
         {
             cmdExportData.Enabled = dgSelected.Rows.Count > 0;
+            cmdCopyToClipboard.Enabled = dgSelected.Rows.Count > 0;
         }
 
-        private void cmdExportData_Click(object sender, System.EventArgs e)
+        private void cmdExportData_Click(object sender, EventArgs e)
         {
-            _logger.Information("User selected to export data");
+            _logger.Information("User selected to export data to Excel");
 
-            var sb = new StringBuilder();
-            sb.Append($"Name\tMobile{Environment.NewLine}");
+            dlgSave.Filter = "Excel Workbook (*.xlsx)|*.xlsx";
+            var dlgResult = dlgSave.ShowDialog();
 
-            foreach(var row in dgSelected.Rows)
+            if (dlgResult == DialogResult.OK)
             {
-                var item = row as DataGridViewRow;
+                var fileContent = _excelEngine.ExportResultsToExcel(new List<string> { "Name", "Mobile" }, CollectExportData(), "Exported Data");
+                File.WriteAllBytes(dlgSave.FileName, fileContent);
 
-                sb.Append($"{item.Cells[AppConstants.FirstNameCellName].Value} {item.Cells[AppConstants.LastNameCellName].Value}\t{item.Cells[AppConstants.MobileNumberCellName].Value}{Environment.NewLine}");
-            }
+                if (MessageBox.Show($"{dgSelected.Rows.Count} records exported successfully. Do you wish to open the file now?", "Export Success", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                {
+                    var pi = new ProcessStartInfo(dlgSave.FileName);
+                    pi.UseShellExecute = true;
+                    Process.Start(pi);
+                }
 
-            var result = sb.ToString();
-            _logger.Information("Setting clipboard data with {rowCount} rows", dgSelected.Rows.Count);
-            Clipboard.SetText(result);
-
-            if (MessageBox.Show($"{dgSelected.Rows.Count} records copied to the Clipboard.{Environment.NewLine}Do you wish to keep the current list selected?", "Complete", MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.No)
-            {
-                _logger.Verbose("User selected to clear results after export");
-                cmdClearFilters_Click(this, new EventArgs());
-                dgSelected.Rows.Clear();
+                if (MessageBox.Show($"Do you wish to keep the current list selected?", "Export Success", MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.No)
+                {
+                    _logger.Verbose("User selected to clear results after export");
+                    cmdClearFilters_Click(this, new EventArgs());
+                    dgSelected.Rows.Clear();
+                    lblExportCount.Text = "0 Rows for Export";
+                }
             }
         }
 
@@ -761,6 +774,51 @@ namespace SchoolDataImporter.Forms
                 targetList.SetItemChecked(i, valueToSet);
             }
             targetList.Enabled = !disableControl;
+        }
+
+        private void cmdCopyToClipboard_Click(object sender, EventArgs e)
+        {
+            _logger.Information("User selected to copy data to clipboard");
+
+            var sb = new StringBuilder();
+            sb.Append($"Name\tMobile{Environment.NewLine}");
+
+            var data = CollectExportData();
+            foreach(var line in data)
+            {
+                sb.Append(string.Join("\t", line.ToArray()));
+                sb.Append(Environment.NewLine);
+            }
+
+            var result = sb.ToString();
+            _logger.Information("Setting clipboard data with {rowCount} rows", dgSelected.Rows.Count);
+            Clipboard.SetText(result);
+
+            if (MessageBox.Show($"{dgSelected.Rows.Count} records copied to the Clipboard.{Environment.NewLine}Do you wish to keep the current list selected?", "Complete", MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.No)
+            {
+                _logger.Verbose("User selected to clear results after export");
+                cmdClearFilters_Click(this, new EventArgs());
+                dgSelected.Rows.Clear();
+                lblExportCount.Text = "0 Rows for Export";
+            }
+        }
+
+        private List<List<string>> CollectExportData()
+        {
+            var result = new List<List<string>>();
+
+            foreach (var row in dgSelected.Rows)
+            {
+                var item = row as DataGridViewRow;
+
+                result.Add(new List<string>
+                {
+                    $"{item.Cells[AppConstants.FirstNameCellName].Value} {item.Cells[AppConstants.LastNameCellName].Value}",
+                    item.Cells[AppConstants.MobileNumberCellName].Value.ToString()
+                });
+            }
+            
+            return result;
         }
     }
 }

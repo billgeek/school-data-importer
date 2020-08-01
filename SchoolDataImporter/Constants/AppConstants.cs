@@ -35,15 +35,15 @@ namespace SchoolDataImporter.Constants
             { 2, FirstNameCellName},
             { 3, LastNameCellName},
             { 4, MobileNumberCellName},
-            { 5, GenderCellName},
-            { 6, StatusCellName},
-            { 7, GradeClassCellName},
-            { 8, HouseCellName},
-            { 9, HostelCellName},
-            { 10, GoverningBodyCellName},
-            { 11, OtherStaffTypeCellName },
-            { 12, ChildInformationCellName },
-            { 13, ParentTypeCellName }
+            { 5, StatusCellName},
+            { 6, GradeClassCellName},
+            { 7, HouseCellName},
+            { 8, HostelCellName},
+            { 9, GoverningBodyCellName},
+            { 10, OtherStaffTypeCellName },
+            { 11, GenderCellName},
+            { 12, ParentTypeCellName },
+            { 13, ChildInformationCellName },
         };
 
         /// <summary>

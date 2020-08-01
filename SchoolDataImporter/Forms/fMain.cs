@@ -61,10 +61,17 @@ namespace SchoolDataImporter.Forms
             {
                 _formActivated = true;
                 pbProcessing.Visible = true;
-                lblCurrentOperation.Text = "Fetching Configuration from Remote Server...";
 
-                await Task.Run(() => FetchQueriesAsync());
+                if (_configManager.FetchRemoteQueries)
+                {
+                    lblCurrentOperation.Text = "Fetching Configuration from Remote Server...";
 
+                    await Task.Run(() => FetchQueriesAsync());
+                }
+                else
+                {
+                    _configManager.Queries = _queryEngine.FetchQueryStatementsLocally();
+                }
                 lblCurrentOperation.Text = "";
                 pbProcessing.Visible = false;
                 cmdStart.Enabled = true;

@@ -40,7 +40,7 @@ namespace SchoolDataImporter.Models
                 { AppConstants.StaffTypeCellName, "Educator" },
                 { AppConstants.FirstNameCellName, FirstName },
                 { AppConstants.LastNameCellName, LastName },
-                { AppConstants.MobileNumberCellName, $"{MobilePhoneCode}{MobilePhoneNumber}" },
+                { AppConstants.MobileNumberCellName, MobilePhoneNumber },
                 { AppConstants.GenderCellName, Gender },
                 { AppConstants.StatusCellName, string.IsNullOrWhiteSpace(Status) ? "Unassigned" : AppConstants.LearnerStatuses[Status] }
             };

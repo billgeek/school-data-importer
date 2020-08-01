@@ -41,7 +41,7 @@ namespace SchoolDataImporter.Models
                 { AppConstants.TypeCellName, "Parent" },
                 { AppConstants.FirstNameCellName, FirstName },
                 { AppConstants.LastNameCellName, LastName },
-                { AppConstants.MobileNumberCellName, $"{MobilePhoneCode}{MobilePhoneNumber}" },
+                { AppConstants.MobileNumberCellName, MobilePhoneNumber },
                 { AppConstants.GenderCellName, Gender },
                 { AppConstants.StatusCellName, string.IsNullOrWhiteSpace(Status) ? "Unassigned" : AppConstants.LearnerStatuses[Status] },
                 { AppConstants.GradeClassCellName, GradeOrClass },

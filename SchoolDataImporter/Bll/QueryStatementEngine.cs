@@ -29,6 +29,7 @@ namespace SchoolDataImporter.Bll
             cancellationToken.ThrowIfCancellationRequested();
 
             var apiUrl = _configManager.QueryApiUri;
+
             var client = new HttpClient();
             var request = new HttpRequestMessage(HttpMethod.Get, apiUrl);
 
@@ -56,7 +57,7 @@ namespace SchoolDataImporter.Bll
             }
         }
 
-        private QueryStatements FetchQueryStatementsLocally()
+        public QueryStatements FetchQueryStatementsLocally()
         {
             var appPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             var fileName = Path.Combine(appPath, "DefaultQueries.json");

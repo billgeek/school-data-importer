@@ -69,6 +69,7 @@ namespace SchoolDataImporter
             // services.AddTransient<IExportData, fTest>();
 
             // Setup dependencies: Business Logic Layer (BLL)
+            services.AddTransient<IExcelEngine, ExcelEngine>();
             services.AddTransient<IAccessReader, AccessReader>();
             services.AddTransient<IDataMapper, DataMapper>();
             services.AddTransient<IQueryStatementEngine, QueryStatementEngine>();

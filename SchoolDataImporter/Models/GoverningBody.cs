@@ -37,7 +37,7 @@ namespace SchoolDataImporter.Models
                 { AppConstants.StaffTypeCellName, "Governing Body" },
                 { AppConstants.FirstNameCellName, FirstName },
                 { AppConstants.LastNameCellName, LastName },
-                { AppConstants.MobileNumberCellName, $"{MobilePhoneCode}{MobilePhoneNumber}" },
+                { AppConstants.MobileNumberCellName, MobilePhoneNumber },
                 { AppConstants.GenderCellName, Gender },
                 { AppConstants.StatusCellName, "Current" },
                 { AppConstants.GoverningBodyCellName, TypeOfMember }

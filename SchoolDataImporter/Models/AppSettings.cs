@@ -8,6 +8,11 @@ namespace SchoolDataImporter.Models
     public class AppSettings
     {
         /// <summary>
+        /// Flag determining if queries should be fetched from a remote URL.
+        /// </summary>
+        public bool FetchRemoteQueries { get; set; }
+
+        /// <summary>
         /// The API where queries are retrieved from.
         /// </summary>
         public string QueryApiUri { get; set; }

@@ -12,5 +12,11 @@ namespace SchoolDataImporter.Bll.Interfaces
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The populated query statement object.</returns>
         Task<QueryStatements> FetchQueryStatementsAsync(CancellationToken cancellationToken);
+
+        /// <summary>
+        /// Fetches the query statements from a local file.
+        /// </summary>
+        /// <returns>The populated query statement object.</returns>
+        QueryStatements FetchQueryStatementsLocally();
     }
 }

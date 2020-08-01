@@ -14,6 +14,7 @@ namespace SchoolDataImporter.Managers
         public QueryStatements Queries { get; set; }
         public AppSettings Settings { get; set; }
         public string QueryApiUri { get; set; }
+        public bool FetchRemoteQueries { get; set; }
         public string DataProvider { get; set; }
 
         private readonly ILogger _logger;
@@ -24,6 +25,7 @@ namespace SchoolDataImporter.Managers
 
             // Retrieve the "default" from the app config
             QueryApiUri = System.Configuration.ConfigurationManager.AppSettings["QueryApiUri"];
+            FetchRemoteQueries = bool.Parse(System.Configuration.ConfigurationManager.AppSettings["FetchRemoteQueries"]);
             DataProvider = System.Configuration.ConfigurationManager.AppSettings["DataProvider"];
 
             ReadConfiguration();
@@ -41,6 +43,7 @@ namespace SchoolDataImporter.Managers
                 Settings = new AppSettings
                 {
                     QueryApiUri = QueryApiUri,
+                    FetchRemoteQueries = FetchRemoteQueries,
                     Databases = new List<AppSettingsDatabase>()
                 };
                 return;
