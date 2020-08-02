@@ -25,6 +25,8 @@ namespace SchoolDataImporter.Constants
         public static string ChildInformationCellName = "Child Information";
         public static string ParentTypeCellName = "Parent Type";
 
+        public static string[] ExcelExportColumnHeaders = new[] { "Name", "Mobile", "Merge1", "Merge2", "Merge3" };
+
         /// <summary>
         /// The columns to display on the data grid.
         /// </summary>

@@ -98,12 +98,14 @@ namespace SchoolDataImporter.Forms
             this.chkOnlyValidNumbers = new System.Windows.Forms.CheckBox();
             this.splitter1 = new System.Windows.Forms.Splitter();
             this.panel7 = new System.Windows.Forms.Panel();
+            this.cmdCopyToClipboard = new System.Windows.Forms.Button();
             this.lblExportCount = new System.Windows.Forms.Label();
             this.cmdExportData = new System.Windows.Forms.Button();
             this.dgAvailableData = new System.Windows.Forms.DataGridView();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.cmdCopyToClipboard = new System.Windows.Forms.Button();
             this.dlgSave = new System.Windows.Forms.SaveFileDialog();
+            this.ttCopyData = new System.Windows.Forms.ToolTip(this.components);
+            this.ttExportData = new System.Windows.Forms.ToolTip(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -1016,6 +1018,21 @@ namespace SchoolDataImporter.Forms
             this.panel7.Size = new System.Drawing.Size(855, 48);
             this.panel7.TabIndex = 16;
             // 
+            // cmdCopyToClipboard
+            // 
+            this.cmdCopyToClipboard.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.cmdCopyToClipboard.Dock = System.Windows.Forms.DockStyle.Right;
+            this.cmdCopyToClipboard.Enabled = false;
+            this.cmdCopyToClipboard.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cmdCopyToClipboard.Location = new System.Drawing.Point(667, 4);
+            this.cmdCopyToClipboard.Name = "cmdCopyToClipboard";
+            this.cmdCopyToClipboard.Size = new System.Drawing.Size(94, 40);
+            this.cmdCopyToClipboard.TabIndex = 3;
+            this.cmdCopyToClipboard.Text = "Copy";
+            this.ttCopyData.SetToolTip(this.cmdCopyToClipboard, "Copies the rows in the list above to the Clipboard");
+            this.cmdCopyToClipboard.UseVisualStyleBackColor = false;
+            this.cmdCopyToClipboard.Click += new System.EventHandler(this.cmdCopyToClipboard_Click);
+            // 
             // lblExportCount
             // 
             this.lblExportCount.BackColor = System.Drawing.SystemColors.Info;
@@ -1041,6 +1058,7 @@ namespace SchoolDataImporter.Forms
             this.cmdExportData.Size = new System.Drawing.Size(94, 40);
             this.cmdExportData.TabIndex = 1;
             this.cmdExportData.Text = "Export";
+            this.ttExportData.SetToolTip(this.cmdExportData, "Exports the rows in the list above to a new Excel file");
             this.cmdExportData.UseVisualStyleBackColor = false;
             this.cmdExportData.Click += new System.EventHandler(this.cmdExportData_Click);
             // 
@@ -1089,19 +1107,15 @@ namespace SchoolDataImporter.Forms
             // 
             this.toolTip1.ToolTipTitle = "View Filter";
             // 
-            // cmdCopyToClipboard
+            // ttCopyData
             // 
-            this.cmdCopyToClipboard.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
-            this.cmdCopyToClipboard.Dock = System.Windows.Forms.DockStyle.Right;
-            this.cmdCopyToClipboard.Enabled = false;
-            this.cmdCopyToClipboard.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cmdCopyToClipboard.Location = new System.Drawing.Point(667, 4);
-            this.cmdCopyToClipboard.Name = "cmdCopyToClipboard";
-            this.cmdCopyToClipboard.Size = new System.Drawing.Size(94, 40);
-            this.cmdCopyToClipboard.TabIndex = 3;
-            this.cmdCopyToClipboard.Text = "Copy";
-            this.cmdCopyToClipboard.UseVisualStyleBackColor = false;
-            this.cmdCopyToClipboard.Click += new System.EventHandler(this.cmdCopyToClipboard_Click);
+            this.ttCopyData.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
+            this.ttCopyData.ToolTipTitle = "Copy Data";
+            // 
+            // ttExportData
+            // 
+            this.ttExportData.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
+            this.ttExportData.ToolTipTitle = "Export Data";
             // 
             // fRenderData
             // 
@@ -1233,5 +1247,7 @@ namespace SchoolDataImporter.Forms
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Button cmdCopyToClipboard;
         private System.Windows.Forms.SaveFileDialog dlgSave;
+        private System.Windows.Forms.ToolTip ttCopyData;
+        private System.Windows.Forms.ToolTip ttExportData;
     }
 }

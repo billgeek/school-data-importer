@@ -19,6 +19,8 @@ namespace SchoolDataImporter.Forms
 {
     public partial class fRenderData : Form, IExportData
     {
+        private readonly string _rowsForExport = "{0} rows for export";
+
         private readonly ILogger _logger;
         private readonly IDataMapper _mapper;
         private readonly IExcelEngine _excelEngine;
@@ -555,7 +557,7 @@ namespace SchoolDataImporter.Forms
                     }
                 }
             }
-            lblExportCount.Text = $"{dgSelected.Rows.Count} Rows selected for Export";
+            lblExportCount.Text = string.Format(_rowsForExport, dgSelected.Rows.Count);
         }
 
         private void dgAvailableData_SelectionChanged(object sender, System.EventArgs e)
@@ -585,7 +587,7 @@ namespace SchoolDataImporter.Forms
                 var item = row as DataGridViewRow;
                 item.DefaultCellStyle.BackColor = SystemColors.Window;
             }
-            lblExportCount.Text = $"{dgSelected.Rows.Count} Rows selected for Export";
+            lblExportCount.Text = string.Format(_rowsForExport, dgSelected.Rows.Count);
         }
 
         private void cmdRemoveSelected_Click(object sender, System.EventArgs e)
@@ -608,7 +610,7 @@ namespace SchoolDataImporter.Forms
 
                 dgSelected.Rows.Remove(item);
             }
-            lblExportCount.Text = $"{dgSelected.Rows.Count} Rows selected for Export";
+            lblExportCount.Text = string.Format(_rowsForExport, dgSelected.Rows.Count);
         }
 
         private void cmdAddAll_Click(object sender, System.EventArgs e)
@@ -639,7 +641,7 @@ namespace SchoolDataImporter.Forms
                     dgSelected.Rows[rowIdx].Cells[i].Value = item.Cells[i].Value;
                 }
             }
-            lblExportCount.Text = $"{dgSelected.Rows.Count} Rows selected for Export";
+            lblExportCount.Text = string.Format(_rowsForExport, dgSelected.Rows.Count);
         }
 
         private void dgSelected_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
@@ -663,7 +665,7 @@ namespace SchoolDataImporter.Forms
 
             if (dlgResult == DialogResult.OK)
             {
-                var fileContent = _excelEngine.ExportResultsToExcel(new List<string> { "Name", "Mobile" }, CollectExportData(), "Exported Data");
+                var fileContent = _excelEngine.ExportResultsToExcel(AppConstants.ExcelExportColumnHeaders, CollectExportData(), "Exported Data");
                 File.WriteAllBytes(dlgSave.FileName, fileContent);
 
                 if (MessageBox.Show($"{dgSelected.Rows.Count} records exported successfully. Do you wish to open the file now?", "Export Success", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
@@ -678,7 +680,7 @@ namespace SchoolDataImporter.Forms
                     _logger.Verbose("User selected to clear results after export");
                     cmdClearFilters_Click(this, new EventArgs());
                     dgSelected.Rows.Clear();
-                    lblExportCount.Text = "0 Rows for Export";
+                    lblExportCount.Text = string.Format(_rowsForExport, "0");
                 }
             }
         }
@@ -717,7 +719,7 @@ namespace SchoolDataImporter.Forms
                     matchingRow.DefaultCellStyle.BackColor = SystemColors.Info;
                 }
             }
-            lblExportCount.Text = $"{dgSelected.Rows.Count} Rows selected for Export";
+            lblExportCount.Text = string.Format(_rowsForExport, dgSelected.Rows.Count);
         }
 
         private void dgAvailableData_Sorted(object sender, EventArgs e)
@@ -799,7 +801,7 @@ namespace SchoolDataImporter.Forms
                 _logger.Verbose("User selected to clear results after export");
                 cmdClearFilters_Click(this, new EventArgs());
                 dgSelected.Rows.Clear();
-                lblExportCount.Text = "0 Rows for Export";
+                lblExportCount.Text = string.Format(_rowsForExport, "0");
             }
         }
 

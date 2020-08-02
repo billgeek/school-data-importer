@@ -246,7 +246,7 @@ ${Index_RemoveDirBase}-finish:
 !define APP_NAME "School Data Importer"
 !define COMP_NAME "QSoft"
 !define WEB_SITE "http://www.quaintsoft.co.za/"
-!define VERSION "01.00.00.02"
+!define VERSION "01.00.00.03"
 !define COPYRIGHT "Author  © 2020"
 !define DESCRIPTION "Export utility for school databases"
 !define INSTALLER_NAME "D:\Development\git\school-data-importer\SchoolDataImporter.Setup\setup.exe"
