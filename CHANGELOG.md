@@ -6,6 +6,8 @@
 - The exising "Export" button is renamed to "Copy" (Which will result in the existing functionality of copying the result to the clipboard) and a new button was added called `Export` which will create an Excel file with the result.
 
 ### Changed
+- The Checkbox for "Only valid numbers" is now checked by default.
+- The `Apply Filters` and `Reset Filters` buttons are now docked below the filters instead of the bottom of the window.
 - Reordered the columns to show the child Gender and Parent Type next to the Child Information for ease of reference.
 
 ### Fixed
