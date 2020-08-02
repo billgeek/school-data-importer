@@ -1,3 +1,20 @@
+# 1.0.0.3 - 2020-08-02
+
+## Useability Changes and Bug Fixes
+
+### Added
+- Tooltips were added to the Export and Copy buttons to assist the user in understanding the action they are about to perform.
+- Three additional columns were added to the Excel Export functionality to assist with Merge information.
+
+### Changed
+N/A
+
+### Fixed
+- The label text for the selected number of rows will now show information consistently.
+
+## Technical Changes
+No technical changes were made in this release.
+
 # 1.0.0.2 - 2020-08-01
 
 ## Useability Changes and Bug Fixes
