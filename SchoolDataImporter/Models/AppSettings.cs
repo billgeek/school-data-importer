@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace SchoolDataImporter.Models
 {
@@ -21,6 +22,14 @@ namespace SchoolDataImporter.Models
         /// A list of databases that have been used.
         /// </summary>
         public List<AppSettingsDatabase> Databases { get; set; }
+
+        public string[] ColumnNames { get; set; }
+
+        public Dictionary<int, string> GetDataGridColumns()
+        {
+            return ColumnNames.Select((value, index) => new { value, index })
+                .ToDictionary(p => p.index, p => p.value);
+        }
     }
     
     public class AppSettingsDatabase

@@ -1,3 +1,20 @@
 {
-  "databases": []
+  "databases": [],
+  "columnNames": [
+    "Type",
+    "Staff Type",
+    "First Name",
+    "Last Name",
+    "Cell. No.",
+    "Status",
+    "Grade / Class",
+    "Bus Route",
+    "House",
+    "Hostel",
+    "Governing Body",
+    "Other Staff Type",
+    "Gender",
+    "Parent Type",
+    "Child Information"
+  ]
 }

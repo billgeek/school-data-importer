@@ -28,6 +28,9 @@ namespace SchoolDataImporter.Forms
 
         private bool isProcessing = false;
         private bool _formActivated = false;
+        private bool _dbAuthSuccess = false;
+        private string _dbFileName = string.Empty;
+
         private CancellationTokenSource ctSource = new CancellationTokenSource();
 
         private ICollection<Learner> _learnerData;
@@ -113,27 +116,8 @@ namespace SchoolDataImporter.Forms
             if (dlgResult != DialogResult.Cancel)
             {
                 _logger.Debug("User selected file {fileName}", dlgOpenFile.FileName);
-                
-                // If the file the user selected exists in the list of previous connections, select it on the combo box
-                var existingDb = _configManager.Settings.Databases.FirstOrDefault(db => db.FileName.Equals(dlgOpenFile.FileName, StringComparison.InvariantCultureIgnoreCase));
-                if (existingDb != null)
-                {
-                    var idx = cmbPreviousConnections.Items.IndexOf(existingDb.FileName);
-                    if (idx > -1)
-                    {
-                        cmbPreviousConnections.SelectedIndex = idx;
-                        ConnectionSelected();
-                        return;
-                    }
-                }
 
-                var pwd = PromptUserForPassword(dlgOpenFile.FileName);
-                if (string.IsNullOrWhiteSpace(pwd))
-                {
-                    return;
-                }
-
-                TestDbConnection(dlgOpenFile.FileName, pwd);
+                DbFileSelected(dlgOpenFile.FileName);
             }
             else
             {
@@ -141,10 +125,37 @@ namespace SchoolDataImporter.Forms
             }
         }
 
+        private void DbFileSelected(string fileName)
+        {
+            // If the file the user selected exists in the list of previous connections, select it on the combo box
+            var existingDb = _configManager.Settings.Databases.FirstOrDefault(db => db.FileName.Equals(fileName, StringComparison.InvariantCultureIgnoreCase));
+            if (existingDb != null)
+            {
+                var idx = cmbPreviousConnections.Items.IndexOf(existingDb.FileName);
+                if (idx > -1)
+                {
+                    cmbPreviousConnections.SelectedIndex = idx;
+                    ConnectionSelected();
+                    return;
+                }
+            }
+
+            var pwd = PromptUserForPassword(fileName);
+            if (string.IsNullOrWhiteSpace(pwd))
+            {
+                return;
+            }
+
+            TestDbConnection(fileName, pwd);
+        }
+
         private void TestDbConnection(string fileName, string pwd, bool removeOldConnection = false)
         {
             if (TestConnection(fileName, pwd))
             {
+                _dbAuthSuccess = true;
+                _dbFileName = fileName;
+
                 _logger.Debug("Database with file name {fileName} successfully tested with provided credentials. Storing to recently used list.", fileName);
                 if (removeOldConnection)
                 {
@@ -177,6 +188,8 @@ namespace SchoolDataImporter.Forms
             {
                 _logger.Warning("User provided incorrect password for database file {fileName}", dlgOpenFile.FileName);
                 MessageBox.Show("The username and password provided is invalid. Please try again.", "Invalid Credentials", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                _dbAuthSuccess = false;
+                _dbFileName = string.Empty;
             }
         }
 
@@ -187,6 +200,26 @@ namespace SchoolDataImporter.Forms
 
         private async void cmdStart_Click(object sender, EventArgs e)
         {
+            if (_dbFileName == string.Empty)
+            {
+                MessageBox.Show("Please select a database file", "No DB selected", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (!_dbAuthSuccess)
+            {
+                var pwd = PromptUserForPassword(_dbFileName);
+                if (string.IsNullOrEmpty(pwd))
+                {
+                    return;
+                }
+                TestDbConnection(_dbFileName, pwd, true);
+                if (!_dbAuthSuccess)
+                {
+                    return;
+                }
+            }
+
             if (isProcessing)
             {
                 lblCurrentOperation.Text = "Cancelling the operation...";
@@ -336,6 +369,8 @@ namespace SchoolDataImporter.Forms
             var fi = new FileInfo(cmbPreviousConnections.SelectedItem.ToString());
             if (fi.Exists)
             {
+                _dbAuthSuccess = true;
+                _dbFileName = fi.FullName;
                 var db = _configManager.Settings.Databases.FirstOrDefault(f => f.FileName.Equals(fi.FullName, StringComparison.InvariantCultureIgnoreCase));
                 if (db != null)
                 {
@@ -415,6 +450,25 @@ namespace SchoolDataImporter.Forms
             }
 
             return creds.Password;
+        }
+
+        private void txtDbFile_Leave(object sender, EventArgs e)
+        {
+            var value = txtDbFile.Text.Trim();
+            if (value.Length > 0)
+            {
+                // check if this is even a file...
+                var fi = new FileInfo(value);
+                if (!fi.Exists)
+                {
+                    // show error
+                    MessageBox.Show("The provided file name is invalid.", "Invalid File Name", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    txtDbFile.Text = string.Empty;
+                    return;
+                }
+
+                DbFileSelected(value);
+            }
         }
     }
 }

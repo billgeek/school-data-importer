@@ -47,6 +47,8 @@ namespace SchoolDataImporter.Forms
             this.panel3 = new System.Windows.Forms.Panel();
             this.cmdClearFilters = new System.Windows.Forms.Button();
             this.cmdApplyFilters = new System.Windows.Forms.Button();
+            this.panel11 = new System.Windows.Forms.Panel();
+            this.chkOnlyNonBlank = new System.Windows.Forms.CheckBox();
             this.expTextSearch = new SchoolDataImporter.Controls.ExpandingPanel();
             this.panel5 = new System.Windows.Forms.Panel();
             this.panel6 = new System.Windows.Forms.Panel();
@@ -66,6 +68,8 @@ namespace SchoolDataImporter.Forms
             this.clbHostels = new System.Windows.Forms.CheckedListBox();
             this.expHouses = new SchoolDataImporter.Controls.ExpandingPanel();
             this.clbHouses = new System.Windows.Forms.CheckedListBox();
+            this.expBusRoutes = new SchoolDataImporter.Controls.ExpandingPanel();
+            this.clbBusRoutes = new System.Windows.Forms.CheckedListBox();
             this.expGradesClasses = new SchoolDataImporter.Controls.ExpandingPanel();
             this.clbGradesClasses = new System.Windows.Forms.CheckedListBox();
             this.panel8 = new System.Windows.Forms.Panel();
@@ -98,6 +102,7 @@ namespace SchoolDataImporter.Forms
             this.chkOnlyValidNumbers = new System.Windows.Forms.CheckBox();
             this.splitter1 = new System.Windows.Forms.Splitter();
             this.panel7 = new System.Windows.Forms.Panel();
+            this.chkOnlySelected = new System.Windows.Forms.CheckBox();
             this.cmdCopyToClipboard = new System.Windows.Forms.Button();
             this.lblExportCount = new System.Windows.Forms.Label();
             this.cmdExportData = new System.Windows.Forms.Button();
@@ -106,6 +111,7 @@ namespace SchoolDataImporter.Forms
             this.dlgSave = new System.Windows.Forms.SaveFileDialog();
             this.ttCopyData = new System.Windows.Forms.ToolTip(this.components);
             this.ttExportData = new System.Windows.Forms.ToolTip(this.components);
+            this.ContentPanel = new System.Windows.Forms.Panel();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -115,6 +121,7 @@ namespace SchoolDataImporter.Forms
             this.panel10.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.panel3.SuspendLayout();
+            this.panel11.SuspendLayout();
             this.expTextSearch.ContentPanel.SuspendLayout();
             this.expTextSearch.SuspendLayout();
             this.panel5.SuspendLayout();
@@ -129,6 +136,8 @@ namespace SchoolDataImporter.Forms
             this.expHostels.SuspendLayout();
             this.expHouses.ContentPanel.SuspendLayout();
             this.expHouses.SuspendLayout();
+            this.expBusRoutes.ContentPanel.SuspendLayout();
+            this.expBusRoutes.SuspendLayout();
             this.expGradesClasses.ContentPanel.SuspendLayout();
             this.expGradesClasses.SuspendLayout();
             this.panel8.SuspendLayout();
@@ -191,6 +200,7 @@ namespace SchoolDataImporter.Forms
             this.pnlFilterContent.Controls.Add(this.expPersonnelCategory);
             this.pnlFilterContent.Controls.Add(this.expHostels);
             this.pnlFilterContent.Controls.Add(this.expHouses);
+            this.pnlFilterContent.Controls.Add(this.expBusRoutes);
             this.pnlFilterContent.Controls.Add(this.expGradesClasses);
             this.pnlFilterContent.Controls.Add(this.expStatus);
             this.pnlFilterContent.Controls.Add(this.expGender);
@@ -205,7 +215,7 @@ namespace SchoolDataImporter.Forms
             // txtTotalFilter
             // 
             this.txtTotalFilter.Dock = System.Windows.Forms.DockStyle.Top;
-            this.txtTotalFilter.Location = new System.Drawing.Point(0, 434);
+            this.txtTotalFilter.Location = new System.Drawing.Point(0, 711);
             this.txtTotalFilter.Multiline = true;
             this.txtTotalFilter.Name = "txtTotalFilter";
             this.txtTotalFilter.ReadOnly = true;
@@ -217,7 +227,7 @@ namespace SchoolDataImporter.Forms
             // 
             this.panel10.Controls.Add(this.pictureBox1);
             this.panel10.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel10.Location = new System.Drawing.Point(0, 403);
+            this.panel10.Location = new System.Drawing.Point(0, 680);
             this.panel10.Name = "panel10";
             this.panel10.Size = new System.Drawing.Size(241, 31);
             this.panel10.TabIndex = 132;
@@ -241,20 +251,21 @@ namespace SchoolDataImporter.Forms
             // 
             this.panel3.Controls.Add(this.cmdClearFilters);
             this.panel3.Controls.Add(this.cmdApplyFilters);
+            this.panel3.Controls.Add(this.panel11);
             this.panel3.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel3.Location = new System.Drawing.Point(0, 363);
+            this.panel3.Location = new System.Drawing.Point(0, 614);
             this.panel3.Name = "panel3";
             this.panel3.Padding = new System.Windows.Forms.Padding(0, 0, 3, 0);
-            this.panel3.Size = new System.Drawing.Size(241, 40);
+            this.panel3.Size = new System.Drawing.Size(241, 66);
             this.panel3.TabIndex = 131;
             // 
             // cmdClearFilters
             // 
             this.cmdClearFilters.Dock = System.Windows.Forms.DockStyle.Right;
-            this.cmdClearFilters.Location = new System.Drawing.Point(50, 0);
+            this.cmdClearFilters.Location = new System.Drawing.Point(50, 26);
             this.cmdClearFilters.Name = "cmdClearFilters";
             this.cmdClearFilters.Size = new System.Drawing.Size(94, 40);
-            this.cmdClearFilters.TabIndex = 1;
+            this.cmdClearFilters.TabIndex = 4;
             this.cmdClearFilters.Text = "Reset Filters";
             this.cmdClearFilters.UseVisualStyleBackColor = true;
             this.cmdClearFilters.Click += new System.EventHandler(this.cmdClearFilters_Click);
@@ -262,13 +273,34 @@ namespace SchoolDataImporter.Forms
             // cmdApplyFilters
             // 
             this.cmdApplyFilters.Dock = System.Windows.Forms.DockStyle.Right;
-            this.cmdApplyFilters.Location = new System.Drawing.Point(144, 0);
+            this.cmdApplyFilters.Location = new System.Drawing.Point(144, 26);
             this.cmdApplyFilters.Name = "cmdApplyFilters";
             this.cmdApplyFilters.Size = new System.Drawing.Size(94, 40);
-            this.cmdApplyFilters.TabIndex = 0;
+            this.cmdApplyFilters.TabIndex = 3;
             this.cmdApplyFilters.Text = "Apply Filters";
             this.cmdApplyFilters.UseVisualStyleBackColor = true;
             this.cmdApplyFilters.Click += new System.EventHandler(this.cmdApplyFilters_Click);
+            // 
+            // panel11
+            // 
+            this.panel11.Controls.Add(this.chkOnlyNonBlank);
+            this.panel11.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel11.Location = new System.Drawing.Point(0, 0);
+            this.panel11.Name = "panel11";
+            this.panel11.Size = new System.Drawing.Size(238, 26);
+            this.panel11.TabIndex = 2;
+            // 
+            // chkOnlyNonBlank
+            // 
+            this.chkOnlyNonBlank.AutoSize = true;
+            this.chkOnlyNonBlank.Checked = true;
+            this.chkOnlyNonBlank.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkOnlyNonBlank.Location = new System.Drawing.Point(4, 4);
+            this.chkOnlyNonBlank.Name = "chkOnlyNonBlank";
+            this.chkOnlyNonBlank.Size = new System.Drawing.Size(187, 17);
+            this.chkOnlyNonBlank.TabIndex = 0;
+            this.chkOnlyNonBlank.Text = "Show only non-blank cell numbers";
+            this.chkOnlyNonBlank.UseVisualStyleBackColor = true;
             // 
             // expTextSearch
             // 
@@ -292,7 +324,7 @@ namespace SchoolDataImporter.Forms
             this.expTextSearch.ExpandedHeight = 140;
             this.expTextSearch.Heading = "Search";
             this.expTextSearch.IsExpanded = false;
-            this.expTextSearch.Location = new System.Drawing.Point(0, 326);
+            this.expTextSearch.Location = new System.Drawing.Point(0, 577);
             this.expTextSearch.Name = "expTextSearch";
             this.expTextSearch.Padding = new System.Windows.Forms.Padding(4);
             this.expTextSearch.Size = new System.Drawing.Size(241, 37);
@@ -430,7 +462,7 @@ namespace SchoolDataImporter.Forms
             this.expGoverningBody.ExpandedHeight = 144;
             this.expGoverningBody.Heading = "Governing Body";
             this.expGoverningBody.IsExpanded = false;
-            this.expGoverningBody.Location = new System.Drawing.Point(0, 289);
+            this.expGoverningBody.Location = new System.Drawing.Point(0, 540);
             this.expGoverningBody.Name = "expGoverningBody";
             this.expGoverningBody.Padding = new System.Windows.Forms.Padding(4);
             this.expGoverningBody.Size = new System.Drawing.Size(241, 37);
@@ -465,7 +497,7 @@ namespace SchoolDataImporter.Forms
             this.expPersonnelCategory.ExpandedHeight = 144;
             this.expPersonnelCategory.Heading = "Staff";
             this.expPersonnelCategory.IsExpanded = false;
-            this.expPersonnelCategory.Location = new System.Drawing.Point(0, 252);
+            this.expPersonnelCategory.Location = new System.Drawing.Point(0, 503);
             this.expPersonnelCategory.Name = "expPersonnelCategory";
             this.expPersonnelCategory.Padding = new System.Windows.Forms.Padding(4);
             this.expPersonnelCategory.Size = new System.Drawing.Size(241, 37);
@@ -500,7 +532,7 @@ namespace SchoolDataImporter.Forms
             this.expHostels.ExpandedHeight = 144;
             this.expHostels.Heading = "Hostels";
             this.expHostels.IsExpanded = false;
-            this.expHostels.Location = new System.Drawing.Point(0, 215);
+            this.expHostels.Location = new System.Drawing.Point(0, 466);
             this.expHostels.Name = "expHostels";
             this.expHostels.Padding = new System.Windows.Forms.Padding(4);
             this.expHostels.Size = new System.Drawing.Size(241, 37);
@@ -528,17 +560,17 @@ namespace SchoolDataImporter.Forms
             this.expHouses.ContentPanel.Location = new System.Drawing.Point(4, 35);
             this.expHouses.ContentPanel.Name = "ContentPanel";
             this.expHouses.ContentPanel.Padding = new System.Windows.Forms.Padding(4);
-            this.expHouses.ContentPanel.Size = new System.Drawing.Size(399, 105);
+            this.expHouses.ContentPanel.Size = new System.Drawing.Size(233, 105);
             this.expHouses.ContentPanel.TabIndex = 1;
-            this.expHouses.ContentPanel.Visible = false;
+            this.expHouses.ContentPanel.Visible = true;
             this.expHouses.Dock = System.Windows.Forms.DockStyle.Top;
             this.expHouses.ExpandedHeight = 144;
             this.expHouses.Heading = "Houses";
-            this.expHouses.IsExpanded = false;
-            this.expHouses.Location = new System.Drawing.Point(0, 178);
+            this.expHouses.IsExpanded = true;
+            this.expHouses.Location = new System.Drawing.Point(0, 322);
             this.expHouses.Name = "expHouses";
             this.expHouses.Padding = new System.Windows.Forms.Padding(4);
-            this.expHouses.Size = new System.Drawing.Size(241, 37);
+            this.expHouses.Size = new System.Drawing.Size(241, 144);
             this.expHouses.TabIndex = 124;
             // 
             // clbHouses
@@ -548,8 +580,43 @@ namespace SchoolDataImporter.Forms
             this.clbHouses.FormattingEnabled = true;
             this.clbHouses.Location = new System.Drawing.Point(4, 4);
             this.clbHouses.Name = "clbHouses";
-            this.clbHouses.Size = new System.Drawing.Size(389, 95);
+            this.clbHouses.Size = new System.Drawing.Size(223, 95);
             this.clbHouses.TabIndex = 147;
+            // 
+            // expBusRoutes
+            // 
+            // 
+            // expBusRoutes.ContentPanel
+            // 
+            this.expBusRoutes.ContentPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.expBusRoutes.ContentPanel.Controls.Add(this.clbBusRoutes);
+            this.expBusRoutes.ContentPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.expBusRoutes.ContentPanel.Enabled = true;
+            this.expBusRoutes.ContentPanel.Location = new System.Drawing.Point(4, 35);
+            this.expBusRoutes.ContentPanel.Name = "ContentPanel";
+            this.expBusRoutes.ContentPanel.Padding = new System.Windows.Forms.Padding(4);
+            this.expBusRoutes.ContentPanel.Size = new System.Drawing.Size(233, 105);
+            this.expBusRoutes.ContentPanel.TabIndex = 1;
+            this.expBusRoutes.ContentPanel.Visible = true;
+            this.expBusRoutes.Dock = System.Windows.Forms.DockStyle.Top;
+            this.expBusRoutes.ExpandedHeight = 144;
+            this.expBusRoutes.Heading = "Bus Routes";
+            this.expBusRoutes.IsExpanded = true;
+            this.expBusRoutes.Location = new System.Drawing.Point(0, 178);
+            this.expBusRoutes.Name = "expBusRoutes";
+            this.expBusRoutes.Padding = new System.Windows.Forms.Padding(4);
+            this.expBusRoutes.Size = new System.Drawing.Size(241, 144);
+            this.expBusRoutes.TabIndex = 125;
+            // 
+            // clbBusRoutes
+            // 
+            this.clbBusRoutes.CheckOnClick = true;
+            this.clbBusRoutes.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.clbBusRoutes.FormattingEnabled = true;
+            this.clbBusRoutes.Location = new System.Drawing.Point(4, 4);
+            this.clbBusRoutes.Name = "clbBusRoutes";
+            this.clbBusRoutes.Size = new System.Drawing.Size(223, 95);
+            this.clbBusRoutes.TabIndex = 147;
             // 
             // expGradesClasses
             // 
@@ -1008,6 +1075,7 @@ namespace SchoolDataImporter.Forms
             // 
             // panel7
             // 
+            this.panel7.Controls.Add(this.chkOnlySelected);
             this.panel7.Controls.Add(this.cmdCopyToClipboard);
             this.panel7.Controls.Add(this.lblExportCount);
             this.panel7.Controls.Add(this.cmdExportData);
@@ -1017,6 +1085,17 @@ namespace SchoolDataImporter.Forms
             this.panel7.Padding = new System.Windows.Forms.Padding(0, 4, 0, 4);
             this.panel7.Size = new System.Drawing.Size(855, 48);
             this.panel7.TabIndex = 16;
+            // 
+            // chkOnlySelected
+            // 
+            this.chkOnlySelected.AutoSize = true;
+            this.chkOnlySelected.Location = new System.Drawing.Point(332, 17);
+            this.chkOnlySelected.Name = "chkOnlySelected";
+            this.chkOnlySelected.Size = new System.Drawing.Size(158, 17);
+            this.chkOnlySelected.TabIndex = 4;
+            this.chkOnlySelected.Text = "Only export highlighted rows";
+            this.chkOnlySelected.UseVisualStyleBackColor = true;
+            this.chkOnlySelected.CheckedChanged += new System.EventHandler(this.chkOnlySelected_CheckedChanged);
             // 
             // cmdCopyToClipboard
             // 
@@ -1100,6 +1179,7 @@ namespace SchoolDataImporter.Forms
             this.dgAvailableData.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgAvailableData.Size = new System.Drawing.Size(855, 251);
             this.dgAvailableData.TabIndex = 13;
+            this.dgAvailableData.ColumnDisplayIndexChanged += new System.Windows.Forms.DataGridViewColumnEventHandler(this.dgAvailableData_ColumnDisplayIndexChanged);
             this.dgAvailableData.SelectionChanged += new System.EventHandler(this.dgAvailableData_SelectionChanged);
             this.dgAvailableData.Sorted += new System.EventHandler(this.dgAvailableData_Sorted);
             // 
@@ -1117,6 +1197,17 @@ namespace SchoolDataImporter.Forms
             this.ttExportData.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
             this.ttExportData.ToolTipTitle = "Export Data";
             // 
+            // ContentPanel
+            // 
+            this.ContentPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.ContentPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ContentPanel.Location = new System.Drawing.Point(4, 35);
+            this.ContentPanel.Name = "ContentPanel";
+            this.ContentPanel.Padding = new System.Windows.Forms.Padding(4);
+            this.ContentPanel.Size = new System.Drawing.Size(233, 165);
+            this.ContentPanel.TabIndex = 1;
+            this.ContentPanel.Visible = false;
+            // 
             // fRenderData
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1130,6 +1221,7 @@ namespace SchoolDataImporter.Forms
             this.Text = "Filter and Export Data";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.Activated += new System.EventHandler(this.fRenderData_Activated);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.fRenderData_FormClosing);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
@@ -1140,6 +1232,8 @@ namespace SchoolDataImporter.Forms
             this.panel10.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.panel3.ResumeLayout(false);
+            this.panel11.ResumeLayout(false);
+            this.panel11.PerformLayout();
             this.expTextSearch.ContentPanel.ResumeLayout(false);
             this.expTextSearch.ResumeLayout(false);
             this.panel5.ResumeLayout(false);
@@ -1156,6 +1250,8 @@ namespace SchoolDataImporter.Forms
             this.expHostels.ResumeLayout(false);
             this.expHouses.ContentPanel.ResumeLayout(false);
             this.expHouses.ResumeLayout(false);
+            this.expBusRoutes.ContentPanel.ResumeLayout(false);
+            this.expBusRoutes.ResumeLayout(false);
             this.expGradesClasses.ContentPanel.ResumeLayout(false);
             this.expGradesClasses.ResumeLayout(false);
             this.panel8.ResumeLayout(false);
@@ -1174,6 +1270,7 @@ namespace SchoolDataImporter.Forms
             this.pnlOnlyValid.ResumeLayout(false);
             this.pnlOnlyValid.PerformLayout();
             this.panel7.ResumeLayout(false);
+            this.panel7.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgAvailableData)).EndInit();
             this.ResumeLayout(false);
 
@@ -1240,8 +1337,6 @@ namespace SchoolDataImporter.Forms
         private System.Windows.Forms.Panel pnlOnlyValid;
         private System.Windows.Forms.CheckBox chkOnlyValidNumbers;
         private System.Windows.Forms.Panel panel3;
-        private System.Windows.Forms.Button cmdClearFilters;
-        private System.Windows.Forms.Button cmdApplyFilters;
         private System.Windows.Forms.TextBox txtTotalFilter;
         private System.Windows.Forms.Panel panel10;
         private System.Windows.Forms.PictureBox pictureBox1;
@@ -1249,5 +1344,13 @@ namespace SchoolDataImporter.Forms
         private System.Windows.Forms.SaveFileDialog dlgSave;
         private System.Windows.Forms.ToolTip ttCopyData;
         private System.Windows.Forms.ToolTip ttExportData;
+        private System.Windows.Forms.Panel panel11;
+        private System.Windows.Forms.CheckBox chkOnlyNonBlank;
+        private System.Windows.Forms.Button cmdClearFilters;
+        private System.Windows.Forms.Button cmdApplyFilters;
+        private System.Windows.Forms.CheckBox chkOnlySelected;
+        private System.Windows.Forms.Panel ContentPanel;
+        private ExpandingPanel expBusRoutes;
+        private System.Windows.Forms.CheckedListBox clbBusRoutes;
     }
 }

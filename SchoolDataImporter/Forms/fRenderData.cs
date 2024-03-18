@@ -3,16 +3,19 @@ using SchoolDataImporter.Constants;
 using SchoolDataImporter.Controls;
 using SchoolDataImporter.Forms.Interfaces;
 using SchoolDataImporter.Helpers;
+using SchoolDataImporter.Managers.Interfaces;
 using SchoolDataImporter.Models;
 using Serilog;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace SchoolDataImporter.Forms
@@ -23,6 +26,7 @@ namespace SchoolDataImporter.Forms
 
         private readonly ILogger _logger;
         private readonly IDataMapper _mapper;
+        private readonly IConfigurationManager _configManager;
         private readonly IExcelEngine _excelEngine;
 
         // Data elements
@@ -34,12 +38,14 @@ namespace SchoolDataImporter.Forms
         // Internals
         private DataSet _dataSet = new DataSet();
         private bool _formInitialized = false;
+        private bool _gridsInitialized = false;
         private int _sourceDataCount = 0;
 
-        public fRenderData(IExcelEngine excelEngine, IDataMapper mapper, ILogger logger)
+        public fRenderData(IExcelEngine excelEngine, IDataMapper mapper, IConfigurationManager configManager, ILogger logger)
         {
             _excelEngine = excelEngine ?? throw new ArgumentNullException(nameof(excelEngine));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+            _configManager = configManager ?? throw new ArgumentNullException(nameof(configManager));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
             InitializeComponent();
@@ -122,6 +128,12 @@ namespace SchoolDataImporter.Forms
 
                 var rowCount = dgAvailableData.Rows.Count;
                 lblRowCount.Text = $"{rowCount} / {_sourceDataCount} rows";
+
+                // set timeout?
+                Task.Delay(1000).ContinueWith(_ =>
+                {
+                    _gridsInitialized = true;
+                });
             }
         }
 
@@ -169,6 +181,19 @@ namespace SchoolDataImporter.Forms
                 _logger.Verbose("Filter item added: House - {house}", house);
             }
 
+            // Bus Routes
+            var routes = _learnerData.Where(l => !string.IsNullOrWhiteSpace(l.BusRouteName)).Select(l => l.BusRouteName).Distinct().OrderBy(l => l).ToList();
+
+            clbBusRoutes.Items.Clear();
+            clbBusRoutes.Items.Add(AppConstants.Unassigned);
+            clbBusRoutes.SetItemChecked(clbBusRoutes.Items.Count - 1, true);
+            foreach (var route in routes)
+            {
+                clbBusRoutes.Items.Add(route);
+                clbBusRoutes.SetItemChecked(clbBusRoutes.Items.Count - 1, true);
+                _logger.Verbose("Filter item added: Bus Route - {route}", route);
+            }
+
             // Hostels
             var hostels = _learnerData.Where(l => !string.IsNullOrWhiteSpace(l.HostelName)).Select(l => l.HostelName).Distinct().OrderBy(l => l).ToList();
 
@@ -187,7 +212,7 @@ namespace SchoolDataImporter.Forms
 
             clbPersonnelCategory.Items.Clear();
             clbPersonnelCategory.Items.Add(AppConstants.Unassigned);
-            clbPersonnelCategory.SetItemChecked(clbHostels.Items.Count - 1, true);
+            clbPersonnelCategory.SetItemChecked(clbPersonnelCategory.Items.Count - 1, true);
             foreach (var category in categories)
             {
                 clbPersonnelCategory.Items.Add(category);
@@ -200,7 +225,7 @@ namespace SchoolDataImporter.Forms
 
             clbGoverningBody.Items.Clear();
             clbGoverningBody.Items.Add(AppConstants.Unassigned);
-            clbGoverningBody.SetItemChecked(clbHostels.Items.Count - 1, true);
+            clbGoverningBody.SetItemChecked(clbGoverningBody.Items.Count - 1, true);
             foreach (var member in members)
             {
                 clbGoverningBody.Items.Add(member);
@@ -209,8 +234,8 @@ namespace SchoolDataImporter.Forms
             }
 
             // Default checks - Type
-            chkTypeLearner.Checked = true;
-            chkTypeParent.Checked = false;
+            chkTypeLearner.Checked = false;
+            chkTypeParent.Checked = true;
             chkTypeStaff.Checked = false;
 
             cmdApplyFilters_Click(this, new System.EventArgs());
@@ -219,13 +244,14 @@ namespace SchoolDataImporter.Forms
         private void ConfigureDataViews()
         {
             _logger.Information("Call to ConfigureDataViews");
+            var columns = _configManager.Settings.GetDataGridColumns();
 
             dgAvailableData.ColumnHeadersDefaultCellStyle.BackColor = Color.Navy;
             dgAvailableData.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
             dgAvailableData.ColumnHeadersDefaultCellStyle.Font = new Font(dgAvailableData.Font, FontStyle.Bold);
 
             // dgAvailableData.ColumnCount = _dataViewColumns.Count + 1;
-            foreach(var col in AppConstants.DataGridColumns)
+            foreach(var col in columns)
             {
                 _logger.Verbose("Adding column {columnNumber} with column name {columnName} to Available DataGrid", col.Key, col.Value);
 
@@ -239,8 +265,8 @@ namespace SchoolDataImporter.Forms
             dgSelected.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
             dgSelected.ColumnHeadersDefaultCellStyle.Font = new Font(dgAvailableData.Font, FontStyle.Bold);
 
-            dgSelected.ColumnCount = AppConstants.DataGridColumns.Count + 1;
-            foreach (var col in AppConstants.DataGridColumns)
+            dgSelected.ColumnCount = columns.Count + 1;
+            foreach (var col in columns)
             {
                 _logger.Verbose("Adding column {columnNumber} with column name {columnName} to Selected DataGrid", col.Key, col.Value);
                 dgSelected.Columns[col.Key].Name = col.Value;
@@ -254,7 +280,7 @@ namespace SchoolDataImporter.Forms
             _logger.Information("Call to LoadAvailableData");
 
             var table = new DataTable("Data");
-            foreach(var col in AppConstants.DataGridColumns)
+            foreach(var col in _configManager.Settings.GetDataGridColumns())
             {
                 _logger.Verbose("Adding column with column name {columnName} to data table", col.Value);
                 table.Columns.Add(col.Value);
@@ -292,7 +318,7 @@ namespace SchoolDataImporter.Forms
         {
             _logger.Information("Call to LoadParentData");
 
-            foreach (var item in _learnerData.Where(l => !string.IsNullOrWhiteSpace(l.Parent?.FirstName) || !string.IsNullOrWhiteSpace(l.Parent?.LastName)))
+            foreach (var item in _learnerData.Where(l => !string.IsNullOrWhiteSpace(l.Parent?.FirstName) || !string.IsNullOrWhiteSpace(l.Parent?.LastName)).Distinct())
             {
                 var parentData = _mapper.GetModelRowData(item.Parent);
                 _dataSet.Tables[0].Rows.Add(parentData);
@@ -303,7 +329,7 @@ namespace SchoolDataImporter.Forms
         {
             _logger.Information("Call to LoadParentSpouseData");
 
-            foreach (var item in _learnerData.Where(item => !string.IsNullOrWhiteSpace(item.Parent?.Spouse?.FirstName) || !string.IsNullOrWhiteSpace(item.Parent?.Spouse?.LastName)))
+            foreach (var item in _learnerData.Where(item => !string.IsNullOrWhiteSpace(item.Parent?.Spouse?.FirstName) || !string.IsNullOrWhiteSpace(item.Parent?.Spouse?.LastName)).Distinct())
             {
                 var parentData = _mapper.GetModelRowData(item.Parent.Spouse);
                 _dataSet.Tables[0].Rows.Add(parentData);
@@ -314,7 +340,7 @@ namespace SchoolDataImporter.Forms
         {
             _logger.Information("Call to LoadEducatorData");
 
-            foreach (var item in _educatorData)
+            foreach (var item in _educatorData.Distinct())
             {
                 var rowData = _mapper.GetModelRowData(item);
                 _dataSet.Tables[0].Rows.Add(rowData);
@@ -325,7 +351,7 @@ namespace SchoolDataImporter.Forms
         {
             _logger.Information("Call to LoadStaffData");
 
-            foreach (var item in _staffData)
+            foreach (var item in _staffData.Distinct())
             {
                 var rowData = _mapper.GetModelRowData(item);
                 _dataSet.Tables[0].Rows.Add(rowData);
@@ -336,7 +362,7 @@ namespace SchoolDataImporter.Forms
         {
             _logger.Information("Call to LoadGoverningBodyData");
 
-            foreach (var item in _governingBodyData)
+            foreach (var item in _governingBodyData.Distinct())
             {
                 var rowData = _mapper.GetModelRowData(item);
                 _dataSet.Tables[0].Rows.Add(rowData);
@@ -418,6 +444,10 @@ namespace SchoolDataImporter.Forms
                 // Hostels
                 _logger.Verbose("Checking Hostels filter");
                 filterString = GetCheckedValuesForFilter(clbHostels, filterString, "Hostel", true);
+
+                // Bus Routes
+                _logger.Verbose("Checking Bus Routes filter");
+                filterString = GetCheckedValuesForFilter(clbBusRoutes, filterString, "Bus Route", true);
             }
 
             // TODO: We need to split these...
@@ -439,6 +469,11 @@ namespace SchoolDataImporter.Forms
             {
                 _logger.Verbose("Checking Last Name filter");
                 filterString = AppendToFilterString(filterString, "Last Name", txtLastName.Text, cmbLastNameOperator.SelectedItem.ToString());
+            }
+
+            if (chkOnlyNonBlank.Checked)
+            {
+                filterString += $" AND [{AppConstants.MobileNumberCellName}] <> ''";
             }
 
             _logger.Verbose("Applying filter to data grid - filter string: {filterString}", filterString);
@@ -557,7 +592,7 @@ namespace SchoolDataImporter.Forms
                     }
                 }
             }
-            lblExportCount.Text = string.Format(_rowsForExport, dgSelected.Rows.Count);
+            UpdateSelectionCount(dgSelected.Rows.Count);
         }
 
         private void dgAvailableData_SelectionChanged(object sender, System.EventArgs e)
@@ -568,6 +603,18 @@ namespace SchoolDataImporter.Forms
         private void dgSelected_SelectionChanged(object sender, System.EventArgs e)
         {
             cmdRemoveSelected.Enabled = dgSelected.SelectedRows.Count > 0;
+
+            // If we select more than one row, only export the rows in question
+            if (dgSelected.SelectedRows.Count > 1)
+            {
+                chkOnlySelected.Checked = true;
+                UpdateSelectionCount(dgSelected.SelectedRows.Count);
+            }
+            else
+            {
+                chkOnlySelected.Checked = false;
+                UpdateSelectionCount(dgSelected.Rows.Count);
+            }
         }
 
         private void cmdRemoveAll_Click(object sender, System.EventArgs e)
@@ -587,7 +634,7 @@ namespace SchoolDataImporter.Forms
                 var item = row as DataGridViewRow;
                 item.DefaultCellStyle.BackColor = SystemColors.Window;
             }
-            lblExportCount.Text = string.Format(_rowsForExport, dgSelected.Rows.Count);
+            UpdateSelectionCount(dgSelected.Rows.Count);
         }
 
         private void cmdRemoveSelected_Click(object sender, System.EventArgs e)
@@ -610,7 +657,7 @@ namespace SchoolDataImporter.Forms
 
                 dgSelected.Rows.Remove(item);
             }
-            lblExportCount.Text = string.Format(_rowsForExport, dgSelected.Rows.Count);
+            UpdateSelectionCount(dgSelected.Rows.Count);
         }
 
         private void cmdAddAll_Click(object sender, System.EventArgs e)
@@ -641,7 +688,7 @@ namespace SchoolDataImporter.Forms
                     dgSelected.Rows[rowIdx].Cells[i].Value = item.Cells[i].Value;
                 }
             }
-            lblExportCount.Text = string.Format(_rowsForExport, dgSelected.Rows.Count);
+            UpdateSelectionCount(dgSelected.Rows.Count);
         }
 
         private void dgSelected_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
@@ -665,10 +712,11 @@ namespace SchoolDataImporter.Forms
 
             if (dlgResult == DialogResult.OK)
             {
-                var fileContent = _excelEngine.ExportResultsToExcel(AppConstants.ExcelExportColumnHeaders, CollectExportData(), "Exported Data");
+                var (data, count) = CollectExportData();
+                var fileContent = _excelEngine.ExportResultsToExcel(AppConstants.ExcelExportColumnHeaders, data, "Exported Data");
                 File.WriteAllBytes(dlgSave.FileName, fileContent);
 
-                if (MessageBox.Show($"{dgSelected.Rows.Count} records exported successfully. Do you wish to open the file now?", "Export Success", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                if (MessageBox.Show($"{count} records exported successfully. Do you wish to open the file now?", "Export Success", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                 {
                     var pi = new ProcessStartInfo(dlgSave.FileName);
                     pi.UseShellExecute = true;
@@ -680,7 +728,7 @@ namespace SchoolDataImporter.Forms
                     _logger.Verbose("User selected to clear results after export");
                     cmdClearFilters_Click(this, new EventArgs());
                     dgSelected.Rows.Clear();
-                    lblExportCount.Text = string.Format(_rowsForExport, "0");
+                    UpdateSelectionCount(0);
                 }
             }
         }
@@ -719,7 +767,7 @@ namespace SchoolDataImporter.Forms
                     matchingRow.DefaultCellStyle.BackColor = SystemColors.Info;
                 }
             }
-            lblExportCount.Text = string.Format(_rowsForExport, dgSelected.Rows.Count);
+            UpdateSelectionCount(dgSelected.Rows.Count);
         }
 
         private void dgAvailableData_Sorted(object sender, EventArgs e)
@@ -783,9 +831,9 @@ namespace SchoolDataImporter.Forms
             _logger.Information("User selected to copy data to clipboard");
 
             var sb = new StringBuilder();
-            sb.Append($"Name\tMobile{Environment.NewLine}");
+            sb.Append($"Name\tMobile\tmerge1{Environment.NewLine}");
 
-            var data = CollectExportData();
+            var (data, count) = CollectExportData();
             foreach(var line in data)
             {
                 sb.Append(string.Join("\t", line.ToArray()));
@@ -793,34 +841,120 @@ namespace SchoolDataImporter.Forms
             }
 
             var result = sb.ToString();
-            _logger.Information("Setting clipboard data with {rowCount} rows", dgSelected.Rows.Count);
+            _logger.Information("Setting clipboard data with {rowCount} rows", count);
             Clipboard.SetText(result);
 
-            if (MessageBox.Show($"{dgSelected.Rows.Count} records copied to the Clipboard.{Environment.NewLine}Do you wish to keep the current list selected?", "Complete", MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.No)
+            if (MessageBox.Show($"{count} records copied to the Clipboard.{Environment.NewLine}Do you wish to keep the current list selected?", "Complete", MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.No)
             {
                 _logger.Verbose("User selected to clear results after export");
                 cmdClearFilters_Click(this, new EventArgs());
                 dgSelected.Rows.Clear();
-                lblExportCount.Text = string.Format(_rowsForExport, "0");
+                UpdateSelectionCount(0);
             }
         }
 
-        private List<List<string>> CollectExportData()
+        private (List<List<string>>, int) CollectExportData()
         {
             var result = new List<List<string>>();
+            var count = 0;
 
-            foreach (var row in dgSelected.Rows)
+            if (chkOnlySelected.Checked)
             {
-                var item = row as DataGridViewRow;
+                count = dgSelected.SelectedRows.Count;
+                foreach (var row in dgSelected.SelectedRows)
+                {
+                    var item = row as DataGridViewRow;
 
-                result.Add(new List<string>
+                    result.Add(new List<string>
                 {
                     $"{item.Cells[AppConstants.FirstNameCellName].Value} {item.Cells[AppConstants.LastNameCellName].Value}",
-                    item.Cells[AppConstants.MobileNumberCellName].Value.ToString()
+                    item.Cells[AppConstants.MobileNumberCellName].Value.ToString(),
+                    item.Cells[AppConstants.ChildInformationCellName].Value.ToString()
                 });
+                }
+            }
+            else
+            {
+                count = dgSelected.Rows.Count;
+                foreach (var row in dgSelected.Rows)
+                {
+                    var item = row as DataGridViewRow;
+
+                    result.Add(new List<string>
+                {
+                    $"{item.Cells[AppConstants.FirstNameCellName].Value} {item.Cells[AppConstants.LastNameCellName].Value}",
+                    item.Cells[AppConstants.MobileNumberCellName].Value.ToString(),
+                    item.Cells[AppConstants.ChildInformationCellName].Value.ToString()
+                });
+                }
             }
             
-            return result;
+            return (result, count);
+        }
+
+        private void UpdateSelectionCount(int selectionCount)
+        {
+            lblExportCount.Text = string.Format(_rowsForExport, selectionCount);
+        }
+
+        private void chkOnlySelected_CheckedChanged(object sender, EventArgs e)
+        {
+            if (chkOnlySelected.Checked)
+            {
+                UpdateSelectionCount(dgSelected.SelectedRows.Count);
+            }
+            else
+            {
+                UpdateSelectionCount(dgSelected.Rows.Count);
+            }
+        }
+
+        private void fRenderData_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            SaveColumnOrders();
+        }
+
+        private void SaveColumnOrders()
+        {
+
+        }
+
+        private void dgAvailableData_ColumnDisplayIndexChanged(object sender, DataGridViewColumnEventArgs e)
+        {
+            if (!_gridsInitialized)
+            {
+                return;
+            }
+
+            var columnName = e.Column.Name;
+
+            if (columnName == AppConstants.UniqueIdentifierFieldName)
+            {
+                return;
+            }
+
+            var newIndex = e.Column.DisplayIndex;
+            var defaultIdx = Array.IndexOf(_configManager.Settings.ColumnNames, columnName);
+            if (defaultIdx != newIndex)
+            {
+                // Set the flag to prevent further processing on other elements for now...
+                _gridsInitialized = false;
+
+                // Update the "Selected" column...
+                dgSelected.Columns[columnName].DisplayIndex = newIndex;
+
+                // Update the array element order in the configuration
+                var orders = _configManager.Settings.ColumnNames.ToList();
+                orders.RemoveAt(defaultIdx);
+                orders.Insert(newIndex, columnName);
+                _configManager.Settings.ColumnNames = orders.ToArray();
+                
+                // Store the config file
+                _configManager.StoreConfiguration();
+
+                // Reset the flag so we can track these things
+                _gridsInitialized = true;
+            }
         }
     }
 }

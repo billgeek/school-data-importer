@@ -111,9 +111,9 @@
             this.txtDbFile.Dock = System.Windows.Forms.DockStyle.Fill;
             this.txtDbFile.Location = new System.Drawing.Point(0, 0);
             this.txtDbFile.Name = "txtDbFile";
-            this.txtDbFile.ReadOnly = true;
             this.txtDbFile.Size = new System.Drawing.Size(733, 20);
             this.txtDbFile.TabIndex = 3;
+            this.txtDbFile.Leave += new System.EventHandler(this.txtDbFile_Leave);
             // 
             // cmdBrowseFile
             // 
