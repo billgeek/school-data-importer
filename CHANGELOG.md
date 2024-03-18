@@ -1,3 +1,25 @@
+# 1.0.0.4 - 2024-03-18
+
+## Useability Changes and Bug Fixes
+
+### Added
+- A Bus Route column was added, along with the appropriate filter option
+- A new filter option was introduced to "Show only non-blank cell numbers"
+
+### Changed
+- Users are now able to copy and paste a DB file name into the start form instead of being forced to browse for a file. After pasting a value, pressing TAB will trigger the authentication process.
+- Users are now able to reorder columns on the data grids. Note that the reordering will only be affected when the "source" list is changed and the same column order will be used for the "selected" grid.
+- On the Selected grid, users can now select rows using SHIFT or CTRL and export/copy only the selected rows vs. all rows in the grid.
+- Exporting the data now results in the "Child Information" column to be copied into the "merge1" column.
+- The "Type" filter now has "Parents" selected as default.
+
+### Fixed
+- An "index out of range" exception was thrown when importing certain DB's. This was caused by an incorrect reference to a Combo List control due to a copy and paste error.
+- Rows in the grids are now unique - A "Distinct" call was missing on the majority of data elements.
+
+## Technical Changes
+No technical changes were made in this release.
+
 # 1.0.0.3 - 2020-08-02
 
 ## Useability Changes and Bug Fixes
