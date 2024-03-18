@@ -27,27 +27,7 @@ namespace SchoolDataImporter.Constants
 
         public static string[] ExcelExportColumnHeaders = new[] { "Name", "Mobile", "Merge1", "Merge2", "Merge3" };
 
-        /// <summary>
-        /// The columns to display on the data grid.
-        /// </summary>
-        public static Dictionary<int, string> DataGridColumns = new Dictionary<int, string>
-        {
-            { 0, TypeCellName },
-            { 1, StaffTypeCellName},
-            { 2, FirstNameCellName},
-            { 3, LastNameCellName},
-            { 4, MobileNumberCellName},
-            { 5, StatusCellName},
-            { 6, GradeClassCellName},
-            { 7, HouseCellName},
-            { 8, HostelCellName},
-            { 9, GoverningBodyCellName},
-            { 10, OtherStaffTypeCellName },
-            { 11, GenderCellName},
-            { 12, ParentTypeCellName },
-            { 13, ChildInformationCellName },
-        };
-
+        public static string[] ColumnNames = new[] { TypeCellName, StaffTypeCellName, FirstNameCellName, LastNameCellName, MobileNumberCellName, StatusCellName, GradeClassCellName, HouseCellName, HostelCellName, GoverningBodyCellName, OtherStaffTypeCellName, GenderCellName, ParentTypeCellName, ChildInformationCellName };
         /// <summary>
         /// The various learner statuses for lookup.
         /// </summary>

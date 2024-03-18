@@ -3,16 +3,19 @@ using SchoolDataImporter.Constants;
 using SchoolDataImporter.Controls;
 using SchoolDataImporter.Forms.Interfaces;
 using SchoolDataImporter.Helpers;
+using SchoolDataImporter.Managers.Interfaces;
 using SchoolDataImporter.Models;
 using Serilog;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace SchoolDataImporter.Forms
@@ -23,6 +26,7 @@ namespace SchoolDataImporter.Forms
 
         private readonly ILogger _logger;
         private readonly IDataMapper _mapper;
+        private readonly IConfigurationManager _configManager;
         private readonly IExcelEngine _excelEngine;
 
         // Data elements
@@ -34,12 +38,14 @@ namespace SchoolDataImporter.Forms
         // Internals
         private DataSet _dataSet = new DataSet();
         private bool _formInitialized = false;
+        private bool _gridsInitialized = false;
         private int _sourceDataCount = 0;
 
-        public fRenderData(IExcelEngine excelEngine, IDataMapper mapper, ILogger logger)
+        public fRenderData(IExcelEngine excelEngine, IDataMapper mapper, IConfigurationManager configManager, ILogger logger)
         {
             _excelEngine = excelEngine ?? throw new ArgumentNullException(nameof(excelEngine));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+            _configManager = configManager ?? throw new ArgumentNullException(nameof(configManager));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
             InitializeComponent();
@@ -122,6 +128,12 @@ namespace SchoolDataImporter.Forms
 
                 var rowCount = dgAvailableData.Rows.Count;
                 lblRowCount.Text = $"{rowCount} / {_sourceDataCount} rows";
+
+                // set timeout?
+                Task.Delay(1000).ContinueWith(_ =>
+                {
+                    _gridsInitialized = true;
+                });
             }
         }
 
@@ -219,14 +231,14 @@ namespace SchoolDataImporter.Forms
         private void ConfigureDataViews()
         {
             _logger.Information("Call to ConfigureDataViews");
-            var columns = AppConstants.DataGridColumns;
+            var columns = _configManager.Settings.GetDataGridColumns();
 
             dgAvailableData.ColumnHeadersDefaultCellStyle.BackColor = Color.Navy;
             dgAvailableData.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
             dgAvailableData.ColumnHeadersDefaultCellStyle.Font = new Font(dgAvailableData.Font, FontStyle.Bold);
 
             // dgAvailableData.ColumnCount = _dataViewColumns.Count + 1;
-            foreach(var col in AppConstants.DataGridColumns)
+            foreach(var col in columns)
             {
                 _logger.Verbose("Adding column {columnNumber} with column name {columnName} to Available DataGrid", col.Key, col.Value);
 
@@ -240,8 +252,8 @@ namespace SchoolDataImporter.Forms
             dgSelected.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
             dgSelected.ColumnHeadersDefaultCellStyle.Font = new Font(dgAvailableData.Font, FontStyle.Bold);
 
-            dgSelected.ColumnCount = AppConstants.DataGridColumns.Count + 1;
-            foreach (var col in AppConstants.DataGridColumns)
+            dgSelected.ColumnCount = columns.Count + 1;
+            foreach (var col in columns)
             {
                 _logger.Verbose("Adding column {columnNumber} with column name {columnName} to Selected DataGrid", col.Key, col.Value);
                 dgSelected.Columns[col.Key].Name = col.Value;
@@ -255,7 +267,7 @@ namespace SchoolDataImporter.Forms
             _logger.Information("Call to LoadAvailableData");
 
             var table = new DataTable("Data");
-            foreach(var col in AppConstants.DataGridColumns)
+            foreach(var col in _configManager.Settings.GetDataGridColumns())
             {
                 _logger.Verbose("Adding column with column name {columnName} to data table", col.Value);
                 table.Columns.Add(col.Value);
@@ -293,7 +305,7 @@ namespace SchoolDataImporter.Forms
         {
             _logger.Information("Call to LoadParentData");
 
-            foreach (var item in _learnerData.Where(l => !string.IsNullOrWhiteSpace(l.Parent?.FirstName) || !string.IsNullOrWhiteSpace(l.Parent?.LastName)))
+            foreach (var item in _learnerData.Where(l => !string.IsNullOrWhiteSpace(l.Parent?.FirstName) || !string.IsNullOrWhiteSpace(l.Parent?.LastName)).Distinct())
             {
                 var parentData = _mapper.GetModelRowData(item.Parent);
                 _dataSet.Tables[0].Rows.Add(parentData);
@@ -304,7 +316,7 @@ namespace SchoolDataImporter.Forms
         {
             _logger.Information("Call to LoadParentSpouseData");
 
-            foreach (var item in _learnerData.Where(item => !string.IsNullOrWhiteSpace(item.Parent?.Spouse?.FirstName) || !string.IsNullOrWhiteSpace(item.Parent?.Spouse?.LastName)))
+            foreach (var item in _learnerData.Where(item => !string.IsNullOrWhiteSpace(item.Parent?.Spouse?.FirstName) || !string.IsNullOrWhiteSpace(item.Parent?.Spouse?.LastName)).Distinct())
             {
                 var parentData = _mapper.GetModelRowData(item.Parent.Spouse);
                 _dataSet.Tables[0].Rows.Add(parentData);
@@ -315,7 +327,7 @@ namespace SchoolDataImporter.Forms
         {
             _logger.Information("Call to LoadEducatorData");
 
-            foreach (var item in _educatorData)
+            foreach (var item in _educatorData.Distinct())
             {
                 var rowData = _mapper.GetModelRowData(item);
                 _dataSet.Tables[0].Rows.Add(rowData);
@@ -326,7 +338,7 @@ namespace SchoolDataImporter.Forms
         {
             _logger.Information("Call to LoadStaffData");
 
-            foreach (var item in _staffData)
+            foreach (var item in _staffData.Distinct())
             {
                 var rowData = _mapper.GetModelRowData(item);
                 _dataSet.Tables[0].Rows.Add(rowData);
@@ -337,7 +349,7 @@ namespace SchoolDataImporter.Forms
         {
             _logger.Information("Call to LoadGoverningBodyData");
 
-            foreach (var item in _governingBodyData)
+            foreach (var item in _governingBodyData.Distinct())
             {
                 var rowData = _mapper.GetModelRowData(item);
                 _dataSet.Tables[0].Rows.Add(rowData);
@@ -888,6 +900,38 @@ namespace SchoolDataImporter.Forms
         private void SaveColumnOrders()
         {
 
+        }
+
+        private void dgAvailableData_ColumnDisplayIndexChanged(object sender, DataGridViewColumnEventArgs e)
+        {
+            if (!_gridsInitialized)
+            {
+                return;
+            }
+
+            var columnName = e.Column.Name;
+            var newIndex = e.Column.DisplayIndex;
+            var defaultIdx = Array.IndexOf(_configManager.Settings.ColumnNames, columnName);
+            if (defaultIdx != newIndex)
+            {
+                // Set the flag to prevent further processing on other elements for now...
+                _gridsInitialized = false;
+
+                // Update the "Selected" column...
+                dgSelected.Columns[columnName].DisplayIndex = newIndex;
+
+                // Update the array element order in the configuration
+                var orders = _configManager.Settings.ColumnNames.ToList();
+                orders.RemoveAt(defaultIdx);
+                orders.Insert(newIndex, columnName);
+                _configManager.Settings.ColumnNames = orders.ToArray();
+                
+                // Store the config file
+                _configManager.StoreConfiguration();
+
+                // Reset the flag so we can track these things
+                _gridsInitialized = true;
+            }
         }
     }
 }

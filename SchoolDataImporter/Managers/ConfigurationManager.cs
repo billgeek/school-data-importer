@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using SchoolDataImporter.Constants;
 using SchoolDataImporter.Managers.Interfaces;
 using SchoolDataImporter.Models;
 using Serilog;
@@ -44,7 +45,8 @@ namespace SchoolDataImporter.Managers
                 {
                     QueryApiUri = QueryApiUri,
                     FetchRemoteQueries = FetchRemoteQueries,
-                    Databases = new List<AppSettingsDatabase>()
+                    Databases = new List<AppSettingsDatabase>(),
+                    ColumnNames = AppConstants.ColumnNames
                 };
                 return;
             }
@@ -58,16 +60,6 @@ namespace SchoolDataImporter.Managers
 
             var settingsFile = GetConfigFileName();
             File.WriteAllText(settingsFile, JsonConvert.SerializeObject(Settings));
-        }
-
-        private string DecryptDbPassword(string storedPassword)
-        {
-            return storedPassword;
-        }
-
-        private string EncryptDbPassword(string toEncrypt)
-        {
-            return toEncrypt;
         }
 
         private string GetConfigFileName()

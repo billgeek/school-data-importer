@@ -140,13 +140,13 @@ namespace SchoolDataImporter.Forms
                 }
             }
 
-            var pwd = PromptUserForPassword(dlgOpenFile.FileName);
+            var pwd = PromptUserForPassword(fileName);
             if (string.IsNullOrWhiteSpace(pwd))
             {
                 return;
             }
 
-            TestDbConnection(dlgOpenFile.FileName, pwd);
+            TestDbConnection(fileName, pwd);
         }
 
         private void TestDbConnection(string fileName, string pwd, bool removeOldConnection = false)
@@ -155,6 +155,7 @@ namespace SchoolDataImporter.Forms
             {
                 _dbAuthSuccess = true;
                 _dbFileName = fileName;
+
                 _logger.Debug("Database with file name {fileName} successfully tested with provided credentials. Storing to recently used list.", fileName);
                 if (removeOldConnection)
                 {
@@ -368,6 +369,7 @@ namespace SchoolDataImporter.Forms
             var fi = new FileInfo(cmbPreviousConnections.SelectedItem.ToString());
             if (fi.Exists)
             {
+                _dbAuthSuccess = true;
                 _dbFileName = fi.FullName;
                 var db = _configManager.Settings.Databases.FirstOrDefault(f => f.FileName.Equals(fi.FullName, StringComparison.InvariantCultureIgnoreCase));
                 if (db != null)

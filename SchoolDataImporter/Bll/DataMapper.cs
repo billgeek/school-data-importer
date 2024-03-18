@@ -1,5 +1,6 @@
 ﻿using SchoolDataImporter.Bll.Interfaces;
 using SchoolDataImporter.Constants;
+using SchoolDataImporter.Managers.Interfaces;
 using SchoolDataImporter.Models;
 using Serilog;
 using System;
@@ -11,10 +12,12 @@ namespace SchoolDataImporter.Bll
 {
     public class DataMapper : IDataMapper
     {
+        private readonly IConfigurationManager _configManager;
         private readonly ILogger _logger;
-
-        public DataMapper(ILogger logger)
+        
+        public DataMapper(IConfigurationManager configManager, ILogger logger)
         {
+            _configManager = configManager ?? throw new ArgumentNullException(nameof(configManager));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
@@ -98,7 +101,7 @@ namespace SchoolDataImporter.Bll
             var dataRowDictionary = model.GetModelMap();
             var result = new List<string>();
 
-            foreach (var item in AppConstants.DataGridColumns)
+            foreach (var item in _configManager.Settings.GetDataGridColumns())
             {
                 if (dataRowDictionary.ContainsKey(item.Value))
                 {
