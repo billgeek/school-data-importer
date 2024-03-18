@@ -181,6 +181,19 @@ namespace SchoolDataImporter.Forms
                 _logger.Verbose("Filter item added: House - {house}", house);
             }
 
+            // Bus Routes
+            var routes = _learnerData.Where(l => !string.IsNullOrWhiteSpace(l.BusRouteName)).Select(l => l.BusRouteName).Distinct().OrderBy(l => l).ToList();
+
+            clbBusRoutes.Items.Clear();
+            clbBusRoutes.Items.Add(AppConstants.Unassigned);
+            clbBusRoutes.SetItemChecked(clbBusRoutes.Items.Count - 1, true);
+            foreach (var route in routes)
+            {
+                clbBusRoutes.Items.Add(route);
+                clbBusRoutes.SetItemChecked(clbBusRoutes.Items.Count - 1, true);
+                _logger.Verbose("Filter item added: Bus Route - {route}", route);
+            }
+
             // Hostels
             var hostels = _learnerData.Where(l => !string.IsNullOrWhiteSpace(l.HostelName)).Select(l => l.HostelName).Distinct().OrderBy(l => l).ToList();
 
@@ -431,6 +444,10 @@ namespace SchoolDataImporter.Forms
                 // Hostels
                 _logger.Verbose("Checking Hostels filter");
                 filterString = GetCheckedValuesForFilter(clbHostels, filterString, "Hostel", true);
+
+                // Bus Routes
+                _logger.Verbose("Checking Bus Routes filter");
+                filterString = GetCheckedValuesForFilter(clbBusRoutes, filterString, "Bus Route", true);
             }
 
             // TODO: We need to split these...
@@ -910,6 +927,12 @@ namespace SchoolDataImporter.Forms
             }
 
             var columnName = e.Column.Name;
+
+            if (columnName == AppConstants.UniqueIdentifierFieldName)
+            {
+                return;
+            }
+
             var newIndex = e.Column.DisplayIndex;
             var defaultIdx = Array.IndexOf(_configManager.Settings.ColumnNames, columnName);
             if (defaultIdx != newIndex)

@@ -18,6 +18,7 @@ namespace SchoolDataImporter.Constants
         public static string GenderCellName = "Gender";
         public static string StatusCellName = "Status";
         public static string GradeClassCellName = "Grade / Class";
+        public static string BusRouteCellName = "Bus Route";
         public static string HouseCellName = "House";
         public static string HostelCellName = "Hostel";
         public static string GoverningBodyCellName = "Governing Body";

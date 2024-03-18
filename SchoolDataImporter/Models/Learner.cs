@@ -1,6 +1,7 @@
 ﻿using SchoolDataImporter.Constants;
 using SchoolDataImporter.Helpers;
 using System.Collections.Generic;
+using System.Text;
 
 namespace SchoolDataImporter.Models
 {
@@ -18,6 +19,7 @@ namespace SchoolDataImporter.Models
         public string Grade { get; set; }
         public string Class { get; set; }
         public string House { get; set; }
+        public string BusRouteName { get; set; }
         public Parent Parent { get; set; }
 
         public override IDictionary<string, string> GetDataRowMap()
@@ -38,7 +40,8 @@ namespace SchoolDataImporter.Models
                 { "lStatus", "Status" },
                 { "Graad", "Grade" },
                 { "Klas", "Class" },
-                { "House", "House" }
+                { "House", "House" },
+                { "BusRouteName", "BusRouteName" }
             };
         }
 
@@ -58,6 +61,7 @@ namespace SchoolDataImporter.Models
                 { AppConstants.GenderCellName, Gender },
                 { AppConstants.StatusCellName, string.IsNullOrWhiteSpace(Status) ? "Unassigned" : AppConstants.LearnerStatuses[Status] },
                 { AppConstants.GradeClassCellName, MappingHelper.GetGradeClassCombination(Grade,Class) },
+                { AppConstants.BusRouteCellName, BusRouteName },
                 { AppConstants.HouseCellName, House },
                 { AppConstants.HostelCellName, HostelName }
             };
