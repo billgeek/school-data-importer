@@ -187,7 +187,7 @@ namespace SchoolDataImporter.Forms
 
             clbPersonnelCategory.Items.Clear();
             clbPersonnelCategory.Items.Add(AppConstants.Unassigned);
-            clbPersonnelCategory.SetItemChecked(clbHostels.Items.Count - 1, true);
+            clbPersonnelCategory.SetItemChecked(clbPersonnelCategory.Items.Count - 1, true);
             foreach (var category in categories)
             {
                 clbPersonnelCategory.Items.Add(category);
@@ -200,7 +200,7 @@ namespace SchoolDataImporter.Forms
 
             clbGoverningBody.Items.Clear();
             clbGoverningBody.Items.Add(AppConstants.Unassigned);
-            clbGoverningBody.SetItemChecked(clbHostels.Items.Count - 1, true);
+            clbGoverningBody.SetItemChecked(clbGoverningBody.Items.Count - 1, true);
             foreach (var member in members)
             {
                 clbGoverningBody.Items.Add(member);
@@ -209,8 +209,8 @@ namespace SchoolDataImporter.Forms
             }
 
             // Default checks - Type
-            chkTypeLearner.Checked = true;
-            chkTypeParent.Checked = false;
+            chkTypeLearner.Checked = false;
+            chkTypeParent.Checked = true;
             chkTypeStaff.Checked = false;
 
             cmdApplyFilters_Click(this, new System.EventArgs());
@@ -219,6 +219,7 @@ namespace SchoolDataImporter.Forms
         private void ConfigureDataViews()
         {
             _logger.Information("Call to ConfigureDataViews");
+            var columns = AppConstants.DataGridColumns;
 
             dgAvailableData.ColumnHeadersDefaultCellStyle.BackColor = Color.Navy;
             dgAvailableData.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
@@ -441,6 +442,11 @@ namespace SchoolDataImporter.Forms
                 filterString = AppendToFilterString(filterString, "Last Name", txtLastName.Text, cmbLastNameOperator.SelectedItem.ToString());
             }
 
+            if (chkOnlyNonBlank.Checked)
+            {
+                filterString += $" AND [{AppConstants.MobileNumberCellName}] <> ''";
+            }
+
             _logger.Verbose("Applying filter to data grid - filter string: {filterString}", filterString);
             src.Filter = filterString;
             txtTotalFilter.Text = filterString;
@@ -557,7 +563,7 @@ namespace SchoolDataImporter.Forms
                     }
                 }
             }
-            lblExportCount.Text = string.Format(_rowsForExport, dgSelected.Rows.Count);
+            UpdateSelectionCount(dgSelected.Rows.Count);
         }
 
         private void dgAvailableData_SelectionChanged(object sender, System.EventArgs e)
@@ -568,6 +574,18 @@ namespace SchoolDataImporter.Forms
         private void dgSelected_SelectionChanged(object sender, System.EventArgs e)
         {
             cmdRemoveSelected.Enabled = dgSelected.SelectedRows.Count > 0;
+
+            // If we select more than one row, only export the rows in question
+            if (dgSelected.SelectedRows.Count > 1)
+            {
+                chkOnlySelected.Checked = true;
+                UpdateSelectionCount(dgSelected.SelectedRows.Count);
+            }
+            else
+            {
+                chkOnlySelected.Checked = false;
+                UpdateSelectionCount(dgSelected.Rows.Count);
+            }
         }
 
         private void cmdRemoveAll_Click(object sender, System.EventArgs e)
@@ -587,7 +605,7 @@ namespace SchoolDataImporter.Forms
                 var item = row as DataGridViewRow;
                 item.DefaultCellStyle.BackColor = SystemColors.Window;
             }
-            lblExportCount.Text = string.Format(_rowsForExport, dgSelected.Rows.Count);
+            UpdateSelectionCount(dgSelected.Rows.Count);
         }
 
         private void cmdRemoveSelected_Click(object sender, System.EventArgs e)
@@ -610,7 +628,7 @@ namespace SchoolDataImporter.Forms
 
                 dgSelected.Rows.Remove(item);
             }
-            lblExportCount.Text = string.Format(_rowsForExport, dgSelected.Rows.Count);
+            UpdateSelectionCount(dgSelected.Rows.Count);
         }
 
         private void cmdAddAll_Click(object sender, System.EventArgs e)
@@ -641,7 +659,7 @@ namespace SchoolDataImporter.Forms
                     dgSelected.Rows[rowIdx].Cells[i].Value = item.Cells[i].Value;
                 }
             }
-            lblExportCount.Text = string.Format(_rowsForExport, dgSelected.Rows.Count);
+            UpdateSelectionCount(dgSelected.Rows.Count);
         }
 
         private void dgSelected_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
@@ -665,10 +683,11 @@ namespace SchoolDataImporter.Forms
 
             if (dlgResult == DialogResult.OK)
             {
-                var fileContent = _excelEngine.ExportResultsToExcel(AppConstants.ExcelExportColumnHeaders, CollectExportData(), "Exported Data");
+                var (data, count) = CollectExportData();
+                var fileContent = _excelEngine.ExportResultsToExcel(AppConstants.ExcelExportColumnHeaders, data, "Exported Data");
                 File.WriteAllBytes(dlgSave.FileName, fileContent);
 
-                if (MessageBox.Show($"{dgSelected.Rows.Count} records exported successfully. Do you wish to open the file now?", "Export Success", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                if (MessageBox.Show($"{count} records exported successfully. Do you wish to open the file now?", "Export Success", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                 {
                     var pi = new ProcessStartInfo(dlgSave.FileName);
                     pi.UseShellExecute = true;
@@ -680,7 +699,7 @@ namespace SchoolDataImporter.Forms
                     _logger.Verbose("User selected to clear results after export");
                     cmdClearFilters_Click(this, new EventArgs());
                     dgSelected.Rows.Clear();
-                    lblExportCount.Text = string.Format(_rowsForExport, "0");
+                    UpdateSelectionCount(0);
                 }
             }
         }
@@ -719,7 +738,7 @@ namespace SchoolDataImporter.Forms
                     matchingRow.DefaultCellStyle.BackColor = SystemColors.Info;
                 }
             }
-            lblExportCount.Text = string.Format(_rowsForExport, dgSelected.Rows.Count);
+            UpdateSelectionCount(dgSelected.Rows.Count);
         }
 
         private void dgAvailableData_Sorted(object sender, EventArgs e)
@@ -783,9 +802,9 @@ namespace SchoolDataImporter.Forms
             _logger.Information("User selected to copy data to clipboard");
 
             var sb = new StringBuilder();
-            sb.Append($"Name\tMobile{Environment.NewLine}");
+            sb.Append($"Name\tMobile\tmerge1{Environment.NewLine}");
 
-            var data = CollectExportData();
+            var (data, count) = CollectExportData();
             foreach(var line in data)
             {
                 sb.Append(string.Join("\t", line.ToArray()));
@@ -793,34 +812,82 @@ namespace SchoolDataImporter.Forms
             }
 
             var result = sb.ToString();
-            _logger.Information("Setting clipboard data with {rowCount} rows", dgSelected.Rows.Count);
+            _logger.Information("Setting clipboard data with {rowCount} rows", count);
             Clipboard.SetText(result);
 
-            if (MessageBox.Show($"{dgSelected.Rows.Count} records copied to the Clipboard.{Environment.NewLine}Do you wish to keep the current list selected?", "Complete", MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.No)
+            if (MessageBox.Show($"{count} records copied to the Clipboard.{Environment.NewLine}Do you wish to keep the current list selected?", "Complete", MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.No)
             {
                 _logger.Verbose("User selected to clear results after export");
                 cmdClearFilters_Click(this, new EventArgs());
                 dgSelected.Rows.Clear();
-                lblExportCount.Text = string.Format(_rowsForExport, "0");
+                UpdateSelectionCount(0);
             }
         }
 
-        private List<List<string>> CollectExportData()
+        private (List<List<string>>, int) CollectExportData()
         {
             var result = new List<List<string>>();
+            var count = 0;
 
-            foreach (var row in dgSelected.Rows)
+            if (chkOnlySelected.Checked)
             {
-                var item = row as DataGridViewRow;
+                count = dgSelected.SelectedRows.Count;
+                foreach (var row in dgSelected.SelectedRows)
+                {
+                    var item = row as DataGridViewRow;
 
-                result.Add(new List<string>
+                    result.Add(new List<string>
                 {
                     $"{item.Cells[AppConstants.FirstNameCellName].Value} {item.Cells[AppConstants.LastNameCellName].Value}",
-                    item.Cells[AppConstants.MobileNumberCellName].Value.ToString()
+                    item.Cells[AppConstants.MobileNumberCellName].Value.ToString(),
+                    item.Cells[AppConstants.ChildInformationCellName].Value.ToString()
                 });
+                }
+            }
+            else
+            {
+                count = dgSelected.Rows.Count;
+                foreach (var row in dgSelected.Rows)
+                {
+                    var item = row as DataGridViewRow;
+
+                    result.Add(new List<string>
+                {
+                    $"{item.Cells[AppConstants.FirstNameCellName].Value} {item.Cells[AppConstants.LastNameCellName].Value}",
+                    item.Cells[AppConstants.MobileNumberCellName].Value.ToString(),
+                    item.Cells[AppConstants.ChildInformationCellName].Value.ToString()
+                });
+                }
             }
             
-            return result;
+            return (result, count);
+        }
+
+        private void UpdateSelectionCount(int selectionCount)
+        {
+            lblExportCount.Text = string.Format(_rowsForExport, selectionCount);
+        }
+
+        private void chkOnlySelected_CheckedChanged(object sender, EventArgs e)
+        {
+            if (chkOnlySelected.Checked)
+            {
+                UpdateSelectionCount(dgSelected.SelectedRows.Count);
+            }
+            else
+            {
+                UpdateSelectionCount(dgSelected.Rows.Count);
+            }
+        }
+
+        private void fRenderData_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            SaveColumnOrders();
+        }
+
+        private void SaveColumnOrders()
+        {
+
         }
     }
 }
