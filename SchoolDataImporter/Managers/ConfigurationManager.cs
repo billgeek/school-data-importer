@@ -52,6 +52,10 @@ namespace SchoolDataImporter.Managers
             }
 
             Settings = JsonConvert.DeserializeObject<AppSettings>(File.ReadAllText(settingsFile));
+            if (Settings.ColumnNames == null || Settings.ColumnNames.Length == 0)
+            {
+                Settings.ColumnNames = AppConstants.ColumnNames;
+            }
         }
 
         public void StoreConfiguration()

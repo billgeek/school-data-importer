@@ -934,6 +934,11 @@ namespace SchoolDataImporter.Forms
             }
 
             var newIndex = e.Column.DisplayIndex;
+            if (newIndex == -1)
+            {
+                return;
+            }
+
             var defaultIdx = Array.IndexOf(_configManager.Settings.ColumnNames, columnName);
             if (defaultIdx != newIndex)
             {
