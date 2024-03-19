@@ -45,7 +45,8 @@ namespace SchoolDataImporter.Models
                 { AppConstants.MobileNumberCellName, MobilePhoneNumber },
                 { AppConstants.GenderCellName, Gender },
                 { AppConstants.StatusCellName, string.IsNullOrWhiteSpace(Status) ? "Unassigned" : AppConstants.LearnerStatuses[Status] },
-                { AppConstants.OtherStaffTypeCellName, PersonnelCategory }
+                { AppConstants.OtherStaffTypeCellName, PersonnelCategory },
+                { AppConstants.BusRouteCellName, string.Empty },
             };
         }
     }

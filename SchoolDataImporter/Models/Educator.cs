@@ -42,7 +42,8 @@ namespace SchoolDataImporter.Models
                 { AppConstants.LastNameCellName, LastName },
                 { AppConstants.MobileNumberCellName, MobilePhoneNumber },
                 { AppConstants.GenderCellName, Gender },
-                { AppConstants.StatusCellName, string.IsNullOrWhiteSpace(Status) ? "Unassigned" : AppConstants.LearnerStatuses[Status] }
+                { AppConstants.StatusCellName, string.IsNullOrWhiteSpace(Status) ? "Unassigned" : AppConstants.LearnerStatuses[Status] },
+                { AppConstants.BusRouteCellName, string.Empty },
             };
         }
     }
