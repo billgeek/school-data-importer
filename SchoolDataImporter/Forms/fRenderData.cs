@@ -768,6 +768,7 @@ namespace SchoolDataImporter.Forms
                 }
             }
             UpdateSelectionCount(dgSelected.Rows.Count);
+            SetColumnOrder();
         }
 
         private void dgAvailableData_Sorted(object sender, EventArgs e)
@@ -914,51 +915,70 @@ namespace SchoolDataImporter.Forms
             SaveColumnOrders();
         }
 
+        private struct GridColumn
+        {
+            public int Index { get; set; }
+            public string Name { get; set; }
+        }
         private void SaveColumnOrders()
         {
+            var colDic = new List<GridColumn>();
 
+            foreach (DataGridViewColumn col in dgAvailableData.Columns)
+            {
+                if (AppConstants.ColumnNames.Contains(col.Name))
+                {
+                    colDic.Add(new GridColumn { Name = col.Name, Index = col.DisplayIndex });
+                }
+            }
+
+            _configManager.Settings.ColumnNames = colDic.OrderBy(s => s.Index).Select(s => s.Name).ToArray();
+
+            // Store the config file
+            _configManager.StoreConfiguration();
+        }
+
+        private void cmdRoutesSelNone_Click(object sender, EventArgs e)
+        {
+            _logger.Verbose("User selected to clear all bus routes");
+            for (var i = 0; i < clbBusRoutes.Items.Count; i++)
+            {
+                clbBusRoutes.SetItemChecked(i, false);
+            }
+        }
+
+        private void cmdRoutesSelAll_Click(object sender, EventArgs e)
+        {
+            _logger.Verbose("User selected to check all bus routes");
+            for (var i = 0; i < clbBusRoutes.Items.Count; i++)
+            {
+                clbBusRoutes.SetItemChecked(i, true);
+            }
         }
 
         private void dgAvailableData_ColumnDisplayIndexChanged(object sender, DataGridViewColumnEventArgs e)
         {
-            if (!_gridsInitialized)
+            SetColumnOrder();
+        }
+
+        private void SetColumnOrder()
+        {
+            if (_gridsInitialized)
             {
-                return;
-            }
+                var colDic = new List<GridColumn>();
 
-            var columnName = e.Column.Name;
+                foreach (DataGridViewColumn col in dgAvailableData.Columns)
+                {
+                    if (AppConstants.ColumnNames.Contains(col.Name))
+                    {
+                        colDic.Add(new GridColumn { Name = col.Name, Index = col.DisplayIndex });
+                    }
+                }
 
-            if (columnName == AppConstants.UniqueIdentifierFieldName)
-            {
-                return;
-            }
-
-            var newIndex = e.Column.DisplayIndex;
-            if (newIndex == -1)
-            {
-                return;
-            }
-
-            var defaultIdx = Array.IndexOf(_configManager.Settings.ColumnNames, columnName);
-            if (defaultIdx != newIndex)
-            {
-                // Set the flag to prevent further processing on other elements for now...
-                _gridsInitialized = false;
-
-                // Update the "Selected" column...
-                dgSelected.Columns[columnName].DisplayIndex = newIndex;
-
-                // Update the array element order in the configuration
-                var orders = _configManager.Settings.ColumnNames.ToList();
-                orders.RemoveAt(defaultIdx);
-                orders.Insert(newIndex, columnName);
-                _configManager.Settings.ColumnNames = orders.ToArray();
-                
-                // Store the config file
-                _configManager.StoreConfiguration();
-
-                // Reset the flag so we can track these things
-                _gridsInitialized = true;
+                foreach (var col in colDic.OrderByDescending(s => s.Index))
+                {
+                    dgSelected.Columns[col.Name].DisplayIndex = col.Index;
+                }
             }
         }
     }

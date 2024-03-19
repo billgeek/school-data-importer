@@ -40,7 +40,8 @@ namespace SchoolDataImporter.Models
                 { AppConstants.MobileNumberCellName, MobilePhoneNumber },
                 { AppConstants.GenderCellName, Gender },
                 { AppConstants.StatusCellName, "Current" },
-                { AppConstants.GoverningBodyCellName, TypeOfMember }
+                { AppConstants.GoverningBodyCellName, TypeOfMember },
+                { AppConstants.BusRouteCellName, string.Empty },
             };
         }
     }

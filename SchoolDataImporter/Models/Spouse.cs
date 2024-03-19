@@ -15,6 +15,7 @@ namespace SchoolDataImporter.Models
         public string House { get; set; }
         public string Hostel { get; set; }
         public string ChildName { get; set; }
+        public string BusRouteName { get; set; }
 
         public override IDictionary<string, string> GetDataRowMap()
         {
@@ -25,7 +26,8 @@ namespace SchoolDataImporter.Models
                 { "sName", "FirstName" },
                 { "sIDno", "IdNumber" },
                 { "sSell", "MobilePhoneNumber" },
-                { "pStatus", "Status" }
+                { "pStatus", "Status" },
+                { "BusRouteName", "BusRouteName" }
             };
         }
 
@@ -48,6 +50,7 @@ namespace SchoolDataImporter.Models
                 { AppConstants.HouseCellName, House },
                 { AppConstants.HostelCellName, Hostel },
                 { AppConstants.ChildInformationCellName, ChildName },
+                { AppConstants.BusRouteCellName, BusRouteName },
                 { AppConstants.ParentTypeCellName, "Spouse" }
             };
         }

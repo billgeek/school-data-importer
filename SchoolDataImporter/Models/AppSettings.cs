@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using SchoolDataImporter.Constants;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace SchoolDataImporter.Models
@@ -27,6 +28,9 @@ namespace SchoolDataImporter.Models
 
         public Dictionary<int, string> GetDataGridColumns()
         {
+            //return AppConstants.ColumnNames.Select((value, index) => new { value, index })
+            //    .ToDictionary(p => p.index, p => p.value);
+
             return ColumnNames.Select((value, index) => new { value, index })
                 .ToDictionary(p => p.index, p => p.value);
         }

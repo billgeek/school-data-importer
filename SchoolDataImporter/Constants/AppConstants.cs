@@ -28,7 +28,7 @@ namespace SchoolDataImporter.Constants
 
         public static string[] ExcelExportColumnHeaders = new[] { "Name", "Mobile", "Merge1", "Merge2", "Merge3" };
 
-        public static string[] ColumnNames = new[] { TypeCellName, StaffTypeCellName, FirstNameCellName, LastNameCellName, MobileNumberCellName, StatusCellName, GradeClassCellName, HouseCellName, HostelCellName, GoverningBodyCellName, OtherStaffTypeCellName, GenderCellName, ParentTypeCellName, ChildInformationCellName };
+        public static string[] ColumnNames = new[] { TypeCellName, StaffTypeCellName, FirstNameCellName, LastNameCellName, MobileNumberCellName, StatusCellName, GradeClassCellName, BusRouteCellName, HouseCellName, HostelCellName, GoverningBodyCellName, OtherStaffTypeCellName, GenderCellName, ParentTypeCellName, ChildInformationCellName };
         /// <summary>
         /// The various learner statuses for lookup.
         /// </summary>
