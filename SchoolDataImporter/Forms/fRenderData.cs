@@ -112,6 +112,8 @@ namespace SchoolDataImporter.Forms
         {
             _logger.Information("Call to fRenderData ShowForm");
             Show();
+
+            Text = $"Filter and Export Data (v.{Application.ProductVersion})";
         }
 
         private void fRenderData_Activated(object sender, System.EventArgs e)

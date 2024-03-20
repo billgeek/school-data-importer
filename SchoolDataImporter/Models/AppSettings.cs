@@ -28,8 +28,15 @@ namespace SchoolDataImporter.Models
 
         public Dictionary<int, string> GetDataGridColumns()
         {
-            //return AppConstants.ColumnNames.Select((value, index) => new { value, index })
-            //    .ToDictionary(p => p.index, p => p.value);
+            var defaultCols = AppConstants.ColumnNames;
+            var missingCols = defaultCols.Except(ColumnNames);
+
+            if (missingCols.Any())
+            {
+                var newCols = ColumnNames.ToList();
+                newCols.AddRange(missingCols);
+                ColumnNames = newCols.ToArray();
+            }
 
             return ColumnNames.Select((value, index) => new { value, index })
                 .ToDictionary(p => p.index, p => p.value);
