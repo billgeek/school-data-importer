@@ -14,9 +14,13 @@
 - The checkbox "Only copy highlighted rows" has been changed to "Only copy / export highlighted rows" for clarity
 - The total number of rows has been removed from the row indicator (IE: Instead of seeing "10 / 2100 rows" the user will now see "10 rows")
 - Filter visibility is now dependent on the type of Category selected. Please refer to the table below for details on which filters apply to which categories.
+- The "Staff" filter has now been renamed "Staff Type"
+- The "Other Staff Type" column has been removed and the data merged with the "Staff Type" column
+- Due to the change in filters hiding based on the selected Category, all Staff Types and Governing Body values are selected by default
 
 ### Fixed
 - The "Bus Routes" filter now collapses automatically when another filter has been opened
+- Other Staff entities (non-educators) were incorrectly marked under the "Parents" category. This has been fixed and now allows other staff members to be included in the "Staff" category.
 
 ## Technical Changes
 No technical changes were made in this release.
