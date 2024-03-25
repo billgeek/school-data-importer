@@ -1,6 +1,7 @@
 ﻿using SchoolDataImporter.Bll.Interfaces;
 using SchoolDataImporter.Constants;
 using SchoolDataImporter.Controls;
+using SchoolDataImporter.Enums;
 using SchoolDataImporter.Forms.Interfaces;
 using SchoolDataImporter.Helpers;
 using SchoolDataImporter.Managers.Interfaces;
@@ -8,7 +9,6 @@ using SchoolDataImporter.Models;
 using Serilog;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Data;
 using System.Diagnostics;
 using System.Drawing;
@@ -40,6 +40,7 @@ namespace SchoolDataImporter.Forms
         private bool _formInitialized = false;
         private bool _gridsInitialized = false;
         private int _sourceDataCount = 0;
+        private FilterCategory _currentFilterCategory = FilterCategory.Default;
 
         public fRenderData(IExcelEngine excelEngine, IDataMapper mapper, IConfigurationManager configManager, ILogger logger)
         {
@@ -60,6 +61,7 @@ namespace SchoolDataImporter.Forms
             expStatus.PanelExpanded += new EventHandler(collapseOtherPanels);
             expTextSearch.PanelExpanded += new EventHandler(collapseOtherPanels);
             expType.PanelExpanded += new EventHandler(collapseOtherPanels);
+            expBusRoutes.PanelExpanded += new EventHandler(collapseOtherPanels);
 
 #if DEBUG
             pictureBox1.Visible = true;
@@ -88,6 +90,8 @@ namespace SchoolDataImporter.Forms
                 expTextSearch.CollapsePanel();
             if (actual != expType)
                 expType.CollapsePanel();
+            if (actual != expBusRoutes)
+                expBusRoutes.CollapsePanel();
         }
 
         /// <inheritdoc />
@@ -127,9 +131,10 @@ namespace SchoolDataImporter.Forms
                 LoadAvailableData();
                 LoadFilters();
                 ConfigureDataViews();
+                UpdateFilters(FilterCategory.Default);
 
                 var rowCount = dgAvailableData.Rows.Count;
-                lblRowCount.Text = $"{rowCount} / {_sourceDataCount} rows";
+                lblRowCount.Text = $"{rowCount} rows"; // $"{rowCount} / {_sourceDataCount} rows";
 
                 // set timeout?
                 Task.Delay(1000).ContinueWith(_ =>
@@ -192,7 +197,7 @@ namespace SchoolDataImporter.Forms
             foreach (var route in routes)
             {
                 clbBusRoutes.Items.Add(route);
-                clbBusRoutes.SetItemChecked(clbBusRoutes.Items.Count - 1, true);
+                clbBusRoutes.SetItemChecked(clbBusRoutes.Items.Count - 1, false);
                 _logger.Verbose("Filter item added: Bus Route - {route}", route);
             }
 
@@ -213,12 +218,12 @@ namespace SchoolDataImporter.Forms
             var categories = _staffData.Where(l => !string.IsNullOrWhiteSpace(l.PersonnelCategory)).Select(l => l.PersonnelCategory).Distinct().OrderBy(l => l).ToList();
 
             clbPersonnelCategory.Items.Clear();
-            clbPersonnelCategory.Items.Add(AppConstants.Unassigned);
+            clbPersonnelCategory.Items.Add("Educator");
             clbPersonnelCategory.SetItemChecked(clbPersonnelCategory.Items.Count - 1, true);
             foreach (var category in categories)
             {
                 clbPersonnelCategory.Items.Add(category);
-                clbPersonnelCategory.SetItemChecked(clbPersonnelCategory.Items.Count - 1, false);
+                clbPersonnelCategory.SetItemChecked(clbPersonnelCategory.Items.Count - 1, true);
                 _logger.Verbose("Filter item added: Personnel Category - {personnelCategory}", category);
             }
 
@@ -231,7 +236,7 @@ namespace SchoolDataImporter.Forms
             foreach (var member in members)
             {
                 clbGoverningBody.Items.Add(member);
-                clbGoverningBody.SetItemChecked(clbGoverningBody.Items.Count - 1, false);
+                clbGoverningBody.SetItemChecked(clbGoverningBody.Items.Count - 1, true);
                 _logger.Verbose("Filter item added: Governing Body Member Type - {memberType}", member);
             }
 
@@ -403,8 +408,10 @@ namespace SchoolDataImporter.Forms
                 typeValues.Add("Parent");
             if (chkTypeStaff.Checked)
                 typeValues.Add("Staff");
+            if (chkTypeGoverningBody.Checked)
+                typeValues.Add("Governing Body");
 
-            filterString = AppendMultiToFilterString(filterString, "Type", typeValues);
+            filterString = AppendMultiToFilterString(filterString, "Category", typeValues);
 
             // Gender
             _logger.Verbose("Checking Gender filter");
@@ -436,30 +443,72 @@ namespace SchoolDataImporter.Forms
             if (!chkTypeStaff.Checked)
             {
                 // Grades and classes
-                _logger.Verbose("Checking Grades and Classes filter");
-                filterString = GetCheckedValuesForFilter(clbGradesClasses, filterString, "Grade / Class", false);
+                if (FilterApplies(FilterType.Grades))
+                {
+                    _logger.Verbose("Checking Grades and Classes filter");
+                    filterString = GetCheckedValuesForFilter(clbGradesClasses, filterString, "Grade / Class", false);
+                }
+                else
+                {
+                    _logger.Verbose("Grades filter not applied; Current category is {category}", _currentFilterCategory);
+                }
 
                 // Houses
-                _logger.Verbose("Checking Houses filter");
-                filterString = GetCheckedValuesForFilter(clbHouses, filterString, "House", true);
+                if (FilterApplies(FilterType.Houses))
+                {
+                    _logger.Verbose("Checking Houses filter");
+                    filterString = GetCheckedValuesForFilter(clbHouses, filterString, "House", true);
+                }
+                else
+                {
+                    _logger.Verbose("Houses filter not applied; Current category is {category}", _currentFilterCategory);
+                }
 
                 // Hostels
-                _logger.Verbose("Checking Hostels filter");
-                filterString = GetCheckedValuesForFilter(clbHostels, filterString, "Hostel", true);
+                if (FilterApplies(FilterType.Hostels))
+                {
+                    _logger.Verbose("Checking Hostels filter");
+                    filterString = GetCheckedValuesForFilter(clbHostels, filterString, "Hostel", true);
+                }
+                else
+                {
+                    _logger.Verbose("Hostels filter not applied; Current category is {category}", _currentFilterCategory);
+                }
 
                 // Bus Routes
-                _logger.Verbose("Checking Bus Routes filter");
-                filterString = GetCheckedValuesForFilter(clbBusRoutes, filterString, "Bus Route", true);
+                if (FilterApplies(FilterType.BusRoutes))
+                {
+                    _logger.Verbose("Checking Bus Routes filter");
+                    filterString = GetCheckedValuesForFilter(clbBusRoutes, filterString, "Bus Route", true);
+                }
+                else
+                {
+                    _logger.Verbose("Bus Routes filter not applied; Current category is {category}", _currentFilterCategory);
+                }
             }
 
             // TODO: We need to split these...
             // Personnel Categories
-            _logger.Verbose("Checking Personnel Category filter");
-            filterString = GetCheckedValuesForFilter(clbPersonnelCategory, filterString, "Other Staff Type", true);
+            if (FilterApplies(FilterType.Staff))
+            {
+                _logger.Verbose("Checking Personnel Category filter");
+                filterString = GetCheckedValuesForFilter(clbPersonnelCategory, filterString, "Staff Type", true);
+            }
+            else
+            {
+                _logger.Verbose("Personnel Category filter not applied; Current category is {category}", _currentFilterCategory);
+            }
 
             // Governing Body
-            _logger.Verbose("Checking Governing Body filter");
-            filterString = GetCheckedValuesForFilter(clbGoverningBody, filterString, "Governing Body", true);
+            if (FilterApplies(FilterType.GoverningBody))
+            {
+                _logger.Verbose("Checking Governing Body filter");
+                filterString = GetCheckedValuesForFilter(clbGoverningBody, filterString, "Governing Body", true);
+            }
+            else
+            {
+                _logger.Verbose("Governing Body filter not applied; Current category is {category}", _currentFilterCategory);
+            }
 
             if (!string.IsNullOrWhiteSpace(txtFirstName.Text))
             {
@@ -482,7 +531,7 @@ namespace SchoolDataImporter.Forms
             src.Filter = filterString;
             txtTotalFilter.Text = filterString;
             var filteredCount = src.Count;
-            lblRowCount.Text = $"{filteredCount} / {_sourceDataCount} rows";
+            lblRowCount.Text = $"{filteredCount} rows"; // $"{filteredCount} / {_sourceDataCount} rows";
 
             SetRowHighlighting();
         }
@@ -982,6 +1031,115 @@ namespace SchoolDataImporter.Forms
                     dgSelected.Columns[col.Name].DisplayIndex = col.Index;
                 }
             }
+        }
+
+        private void cmdHousesSelNone_Click(object sender, EventArgs e)
+        {
+            _logger.Verbose("User selected to clear all houses");
+            for (var i = 0; i < clbHouses.Items.Count; i++)
+            {
+                clbHouses.SetItemChecked(i, false);
+            }
+        }
+
+        private void cmdHousesSelAll_Click(object sender, EventArgs e)
+        {
+            _logger.Verbose("User selected to check all houses");
+            for (var i = 0; i < clbHouses.Items.Count; i++)
+            {
+                clbHouses.SetItemChecked(i, true);
+            }
+        }
+
+        private void cmdGovBodySelNone_Click(object sender, EventArgs e)
+        {
+            _logger.Verbose("User selected to clear all governing body");
+            for (var i = 0; i < clbGoverningBody.Items.Count; i++)
+            {
+                clbGoverningBody.SetItemChecked(i, false);
+            }
+        }
+
+        private void cmdGovBodySelAll_Click(object sender, EventArgs e)
+        {
+            _logger.Verbose("User selected to check all governing body");
+            for (var i = 0; i < clbGoverningBody.Items.Count; i++)
+            {
+                clbGoverningBody.SetItemChecked(i, true);
+            }
+        }
+
+        private void cmdStaffSelAll_Click(object sender, EventArgs e)
+        {
+            _logger.Verbose("User selected to clear all staff type");
+            for (var i = 0; i < clbPersonnelCategory.Items.Count; i++)
+            {
+                clbPersonnelCategory.SetItemChecked(i, false);
+            }
+        }
+
+        private void cmdStaffSelNone_Click(object sender, EventArgs e)
+        {
+            _logger.Verbose("User selected to check all staff type");
+            for (var i = 0; i < clbPersonnelCategory.Items.Count; i++)
+            {
+                clbPersonnelCategory.SetItemChecked(i, true);
+            }
+        }
+
+        private void cmdHostelsSelNone_Click(object sender, EventArgs e)
+        {
+            _logger.Verbose("User selected to clear all hostels");
+            for (var i = 0; i < clbHostels.Items.Count; i++)
+            {
+                clbHostels.SetItemChecked(i, false);
+            }
+        }
+
+        private void cmdHostelsSelAll_Click(object sender, EventArgs e)
+        {
+            _logger.Verbose("User selected to check all hostels");
+            for (var i = 0; i < clbHostels.Items.Count; i++)
+            {
+                clbHostels.SetItemChecked(i, true);
+            }
+        }
+
+        private void chkTypeParent_CheckedChanged(object sender, EventArgs e)
+        {
+            UpdateFilters(FilterCategory.Default);
+        }
+
+        private void chkTypeStaff_CheckedChanged(object sender, EventArgs e)
+        {
+            UpdateFilters(FilterCategory.Staff);
+        }
+
+        private void chkTypeLearner_CheckedChanged(object sender, EventArgs e)
+        {
+            UpdateFilters(FilterCategory.Default);
+        }
+
+        private void chkTypeGoverningBody_CheckedChanged(object sender, EventArgs e)
+        {
+            UpdateFilters(FilterCategory.GoverningBody);
+        }
+
+        private void UpdateFilters(FilterCategory category)
+        {
+            _currentFilterCategory = category;
+
+            expGradesClasses.Visible = FilterApplies(FilterType.Grades);
+            expBusRoutes.Visible = FilterApplies(FilterType.BusRoutes);
+            expHouses.Visible = FilterApplies(FilterType.Houses);
+            expHostels.Visible = FilterApplies(FilterType.Hostels);
+            expPersonnelCategory.Visible = FilterApplies(FilterType.Staff);
+            expGoverningBody.Visible = FilterApplies(FilterType.GoverningBody);
+        }
+
+        private bool FilterApplies(FilterType filter)
+        {
+            return AppConstants.FilterTypesPerCategory[_currentFilterCategory].Contains(filter);
         }
     }
 }

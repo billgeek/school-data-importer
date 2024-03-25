@@ -33,7 +33,7 @@ namespace SchoolDataImporter.Models
         {
             return new Dictionary<string, string>
             {
-                { AppConstants.TypeCellName, "Staff" },
+                { AppConstants.TypeCellName, "Governing Body" },
                 { AppConstants.StaffTypeCellName, "Governing Body" },
                 { AppConstants.FirstNameCellName, FirstName },
                 { AppConstants.LastNameCellName, LastName },

@@ -30,11 +30,17 @@ namespace SchoolDataImporter.Bll
 
             var apiUrl = _configManager.QueryApiUri;
 
-            var client = new HttpClient();
-            var request = new HttpRequestMessage(HttpMethod.Get, apiUrl);
-
             try
             {
+                if (!_configManager.FetchRemoteQueries)
+                {
+                    _logger.Information("Configuratino set to NOT fetch remote queries. Using local queries instead.");
+                    return FetchQueryStatementsLocally();
+                }
+
+                var client = new HttpClient();
+                var request = new HttpRequestMessage(HttpMethod.Get, apiUrl);
+
                 HttpResponseMessage response;
                 using (_logger.BeginTimedOperation("Call Remote API to fetch queries"))
                 {
