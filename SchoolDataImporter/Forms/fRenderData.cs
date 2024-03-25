@@ -218,12 +218,12 @@ namespace SchoolDataImporter.Forms
             var categories = _staffData.Where(l => !string.IsNullOrWhiteSpace(l.PersonnelCategory)).Select(l => l.PersonnelCategory).Distinct().OrderBy(l => l).ToList();
 
             clbPersonnelCategory.Items.Clear();
-            clbPersonnelCategory.Items.Add(AppConstants.Unassigned);
+            clbPersonnelCategory.Items.Add("Educator");
             clbPersonnelCategory.SetItemChecked(clbPersonnelCategory.Items.Count - 1, true);
             foreach (var category in categories)
             {
                 clbPersonnelCategory.Items.Add(category);
-                clbPersonnelCategory.SetItemChecked(clbPersonnelCategory.Items.Count - 1, false);
+                clbPersonnelCategory.SetItemChecked(clbPersonnelCategory.Items.Count - 1, true);
                 _logger.Verbose("Filter item added: Personnel Category - {personnelCategory}", category);
             }
 
@@ -236,7 +236,7 @@ namespace SchoolDataImporter.Forms
             foreach (var member in members)
             {
                 clbGoverningBody.Items.Add(member);
-                clbGoverningBody.SetItemChecked(clbGoverningBody.Items.Count - 1, false);
+                clbGoverningBody.SetItemChecked(clbGoverningBody.Items.Count - 1, true);
                 _logger.Verbose("Filter item added: Governing Body Member Type - {memberType}", member);
             }
 
@@ -492,7 +492,7 @@ namespace SchoolDataImporter.Forms
             if (FilterApplies(FilterType.Staff))
             {
                 _logger.Verbose("Checking Personnel Category filter");
-                filterString = GetCheckedValuesForFilter(clbPersonnelCategory, filterString, "Other Staff Type", true);
+                filterString = GetCheckedValuesForFilter(clbPersonnelCategory, filterString, "Staff Type", true);
             }
             else
             {

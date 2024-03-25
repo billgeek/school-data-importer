@@ -23,13 +23,12 @@ namespace SchoolDataImporter.Constants
         public static string HouseCellName = "House";
         public static string HostelCellName = "Hostel";
         public static string GoverningBodyCellName = "Governing Body";
-        public static string OtherStaffTypeCellName = "Other Staff Type";
         public static string ChildInformationCellName = "Child Information";
         public static string ParentTypeCellName = "Parent Type";
 
         public static string[] ExcelExportColumnHeaders = new[] { "Name", "Mobile", "Merge1", "Merge2", "Merge3" };
 
-        public static string[] ColumnNames = new[] { TypeCellName, StaffTypeCellName, FirstNameCellName, LastNameCellName, MobileNumberCellName, StatusCellName, GradeClassCellName, BusRouteCellName, HouseCellName, HostelCellName, GoverningBodyCellName, OtherStaffTypeCellName, GenderCellName, ParentTypeCellName, ChildInformationCellName };
+        public static string[] ColumnNames = new[] { TypeCellName, StaffTypeCellName, FirstNameCellName, LastNameCellName, MobileNumberCellName, StatusCellName, GradeClassCellName, BusRouteCellName, HouseCellName, HostelCellName, GoverningBodyCellName, GenderCellName, ParentTypeCellName, ChildInformationCellName };
         /// <summary>
         /// The various learner statuses for lookup.
         /// </summary>

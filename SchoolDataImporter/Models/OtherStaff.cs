@@ -38,14 +38,13 @@ namespace SchoolDataImporter.Models
         {
             return new Dictionary<string, string>
             {
-                { AppConstants.TypeCellName, "Parent" },
-                { AppConstants.StaffTypeCellName, "Other Staff" },
+                { AppConstants.TypeCellName, "Staff" },
+                { AppConstants.StaffTypeCellName, PersonnelCategory },
                 { AppConstants.FirstNameCellName, FirstName },
                 { AppConstants.LastNameCellName, LastName },
                 { AppConstants.MobileNumberCellName, MobilePhoneNumber },
                 { AppConstants.GenderCellName, Gender },
                 { AppConstants.StatusCellName, string.IsNullOrWhiteSpace(Status) ? "Unassigned" : AppConstants.LearnerStatuses[Status] },
-                { AppConstants.OtherStaffTypeCellName, PersonnelCategory },
                 { AppConstants.BusRouteCellName, string.Empty },
             };
         }

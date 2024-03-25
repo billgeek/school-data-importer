@@ -85,9 +85,25 @@ namespace SchoolDataImporter.Forms
             this.cmbFirstNameOperator = new System.Windows.Forms.ComboBox();
             this.label10 = new System.Windows.Forms.Label();
             this.expGoverningBody = new SchoolDataImporter.Controls.ExpandingPanel();
+            this.clbGoverningBody = new System.Windows.Forms.CheckedListBox();
+            this.panel14 = new System.Windows.Forms.Panel();
+            this.cmdGovBodySelNone = new System.Windows.Forms.Button();
+            this.cmdGovBodySelAll = new System.Windows.Forms.Button();
             this.expPersonnelCategory = new SchoolDataImporter.Controls.ExpandingPanel();
+            this.clbPersonnelCategory = new System.Windows.Forms.CheckedListBox();
+            this.panel15 = new System.Windows.Forms.Panel();
+            this.cmdStaffSelAll = new System.Windows.Forms.Button();
+            this.cmdStaffSelNone = new System.Windows.Forms.Button();
             this.expHostels = new SchoolDataImporter.Controls.ExpandingPanel();
+            this.clbHostels = new System.Windows.Forms.CheckedListBox();
+            this.panel16 = new System.Windows.Forms.Panel();
+            this.cmdHostelsSelNone = new System.Windows.Forms.Button();
+            this.cmdHostelsSelAll = new System.Windows.Forms.Button();
             this.expHouses = new SchoolDataImporter.Controls.ExpandingPanel();
+            this.clbHouses = new System.Windows.Forms.CheckedListBox();
+            this.panel13 = new System.Windows.Forms.Panel();
+            this.cmdHousesSelNone = new System.Windows.Forms.Button();
+            this.cmdHousesSelAll = new System.Windows.Forms.Button();
             this.expBusRoutes = new SchoolDataImporter.Controls.ExpandingPanel();
             this.clbBusRoutes = new System.Windows.Forms.CheckedListBox();
             this.panel12 = new System.Windows.Forms.Panel();
@@ -112,22 +128,6 @@ namespace SchoolDataImporter.Forms
             this.chkTypeLearner = new System.Windows.Forms.RadioButton();
             this.chkTypeStaff = new System.Windows.Forms.RadioButton();
             this.chkTypeParent = new System.Windows.Forms.RadioButton();
-            this.panel13 = new System.Windows.Forms.Panel();
-            this.cmdHousesSelNone = new System.Windows.Forms.Button();
-            this.cmdHousesSelAll = new System.Windows.Forms.Button();
-            this.clbHouses = new System.Windows.Forms.CheckedListBox();
-            this.panel14 = new System.Windows.Forms.Panel();
-            this.cmdGovBodySelNone = new System.Windows.Forms.Button();
-            this.cmdGovBodySelAll = new System.Windows.Forms.Button();
-            this.clbGoverningBody = new System.Windows.Forms.CheckedListBox();
-            this.panel15 = new System.Windows.Forms.Panel();
-            this.cmdStaffSelAll = new System.Windows.Forms.Button();
-            this.cmdStaffSelNone = new System.Windows.Forms.Button();
-            this.clbPersonnelCategory = new System.Windows.Forms.CheckedListBox();
-            this.panel16 = new System.Windows.Forms.Panel();
-            this.cmdHostelsSelNone = new System.Windows.Forms.Button();
-            this.cmdHostelsSelAll = new System.Windows.Forms.Button();
-            this.clbHostels = new System.Windows.Forms.CheckedListBox();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -152,12 +152,16 @@ namespace SchoolDataImporter.Forms
             this.panel4.SuspendLayout();
             this.expGoverningBody.ContentPanel.SuspendLayout();
             this.expGoverningBody.SuspendLayout();
+            this.panel14.SuspendLayout();
             this.expPersonnelCategory.ContentPanel.SuspendLayout();
             this.expPersonnelCategory.SuspendLayout();
+            this.panel15.SuspendLayout();
             this.expHostels.ContentPanel.SuspendLayout();
             this.expHostels.SuspendLayout();
+            this.panel16.SuspendLayout();
             this.expHouses.ContentPanel.SuspendLayout();
             this.expHouses.SuspendLayout();
+            this.panel13.SuspendLayout();
             this.expBusRoutes.ContentPanel.SuspendLayout();
             this.expBusRoutes.SuspendLayout();
             this.panel12.SuspendLayout();
@@ -170,10 +174,6 @@ namespace SchoolDataImporter.Forms
             this.expGender.SuspendLayout();
             this.expType.ContentPanel.SuspendLayout();
             this.expType.SuspendLayout();
-            this.panel13.SuspendLayout();
-            this.panel14.SuspendLayout();
-            this.panel15.SuspendLayout();
-            this.panel16.SuspendLayout();
             this.SuspendLayout();
             // 
             // splitContainer1
@@ -236,7 +236,7 @@ namespace SchoolDataImporter.Forms
             // txtTotalFilter
             // 
             this.txtTotalFilter.Dock = System.Windows.Forms.DockStyle.Top;
-            this.txtTotalFilter.Location = new System.Drawing.Point(0, 578);
+            this.txtTotalFilter.Location = new System.Drawing.Point(0, 497);
             this.txtTotalFilter.Multiline = true;
             this.txtTotalFilter.Name = "txtTotalFilter";
             this.txtTotalFilter.ReadOnly = true;
@@ -248,7 +248,7 @@ namespace SchoolDataImporter.Forms
             // 
             this.panel10.Controls.Add(this.pictureBox1);
             this.panel10.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel10.Location = new System.Drawing.Point(0, 547);
+            this.panel10.Location = new System.Drawing.Point(0, 466);
             this.panel10.Name = "panel10";
             this.panel10.Size = new System.Drawing.Size(241, 31);
             this.panel10.TabIndex = 132;
@@ -274,7 +274,7 @@ namespace SchoolDataImporter.Forms
             this.panel3.Controls.Add(this.cmdApplyFilters);
             this.panel3.Controls.Add(this.panel11);
             this.panel3.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel3.Location = new System.Drawing.Point(0, 481);
+            this.panel3.Location = new System.Drawing.Point(0, 400);
             this.panel3.Name = "panel3";
             this.panel3.Padding = new System.Windows.Forms.Padding(0, 0, 3, 0);
             this.panel3.Size = new System.Drawing.Size(241, 66);
@@ -663,7 +663,7 @@ namespace SchoolDataImporter.Forms
             this.expTextSearch.ExpandedHeight = 140;
             this.expTextSearch.Heading = "Search";
             this.expTextSearch.IsExpanded = false;
-            this.expTextSearch.Location = new System.Drawing.Point(0, 444);
+            this.expTextSearch.Location = new System.Drawing.Point(0, 363);
             this.expTextSearch.Name = "expTextSearch";
             this.expTextSearch.Padding = new System.Windows.Forms.Padding(4);
             this.expTextSearch.Size = new System.Drawing.Size(241, 37);
@@ -802,11 +802,54 @@ namespace SchoolDataImporter.Forms
             this.expGoverningBody.ExpandedHeight = 204;
             this.expGoverningBody.Heading = "Governing Body";
             this.expGoverningBody.IsExpanded = false;
-            this.expGoverningBody.Location = new System.Drawing.Point(0, 407);
+            this.expGoverningBody.Location = new System.Drawing.Point(0, 326);
             this.expGoverningBody.Name = "expGoverningBody";
             this.expGoverningBody.Padding = new System.Windows.Forms.Padding(4);
             this.expGoverningBody.Size = new System.Drawing.Size(241, 37);
             this.expGoverningBody.TabIndex = 127;
+            // 
+            // clbGoverningBody
+            // 
+            this.clbGoverningBody.CheckOnClick = true;
+            this.clbGoverningBody.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.clbGoverningBody.FormattingEnabled = true;
+            this.clbGoverningBody.Location = new System.Drawing.Point(4, 4);
+            this.clbGoverningBody.Name = "clbGoverningBody";
+            this.clbGoverningBody.Size = new System.Drawing.Size(223, 125);
+            this.clbGoverningBody.TabIndex = 155;
+            // 
+            // panel14
+            // 
+            this.panel14.Controls.Add(this.cmdGovBodySelNone);
+            this.panel14.Controls.Add(this.cmdGovBodySelAll);
+            this.panel14.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.panel14.Location = new System.Drawing.Point(4, 129);
+            this.panel14.Name = "panel14";
+            this.panel14.Padding = new System.Windows.Forms.Padding(0, 4, 0, 0);
+            this.panel14.Size = new System.Drawing.Size(223, 30);
+            this.panel14.TabIndex = 154;
+            // 
+            // cmdGovBodySelNone
+            // 
+            this.cmdGovBodySelNone.Dock = System.Windows.Forms.DockStyle.Right;
+            this.cmdGovBodySelNone.Location = new System.Drawing.Point(73, 4);
+            this.cmdGovBodySelNone.Name = "cmdGovBodySelNone";
+            this.cmdGovBodySelNone.Size = new System.Drawing.Size(75, 26);
+            this.cmdGovBodySelNone.TabIndex = 1;
+            this.cmdGovBodySelNone.Text = "None";
+            this.cmdGovBodySelNone.UseVisualStyleBackColor = true;
+            this.cmdGovBodySelNone.Click += new System.EventHandler(this.cmdGovBodySelNone_Click);
+            // 
+            // cmdGovBodySelAll
+            // 
+            this.cmdGovBodySelAll.Dock = System.Windows.Forms.DockStyle.Right;
+            this.cmdGovBodySelAll.Location = new System.Drawing.Point(148, 4);
+            this.cmdGovBodySelAll.Name = "cmdGovBodySelAll";
+            this.cmdGovBodySelAll.Size = new System.Drawing.Size(75, 26);
+            this.cmdGovBodySelAll.TabIndex = 0;
+            this.cmdGovBodySelAll.Text = "All";
+            this.cmdGovBodySelAll.UseVisualStyleBackColor = true;
+            this.cmdGovBodySelAll.Click += new System.EventHandler(this.cmdGovBodySelAll_Click);
             // 
             // expPersonnelCategory
             // 
@@ -826,13 +869,56 @@ namespace SchoolDataImporter.Forms
             this.expPersonnelCategory.ContentPanel.Visible = false;
             this.expPersonnelCategory.Dock = System.Windows.Forms.DockStyle.Top;
             this.expPersonnelCategory.ExpandedHeight = 204;
-            this.expPersonnelCategory.Heading = "Staff";
+            this.expPersonnelCategory.Heading = "Staff Type";
             this.expPersonnelCategory.IsExpanded = false;
-            this.expPersonnelCategory.Location = new System.Drawing.Point(0, 370);
+            this.expPersonnelCategory.Location = new System.Drawing.Point(0, 289);
             this.expPersonnelCategory.Name = "expPersonnelCategory";
             this.expPersonnelCategory.Padding = new System.Windows.Forms.Padding(4);
             this.expPersonnelCategory.Size = new System.Drawing.Size(241, 37);
             this.expPersonnelCategory.TabIndex = 126;
+            // 
+            // clbPersonnelCategory
+            // 
+            this.clbPersonnelCategory.CheckOnClick = true;
+            this.clbPersonnelCategory.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.clbPersonnelCategory.FormattingEnabled = true;
+            this.clbPersonnelCategory.Location = new System.Drawing.Point(4, 4);
+            this.clbPersonnelCategory.Name = "clbPersonnelCategory";
+            this.clbPersonnelCategory.Size = new System.Drawing.Size(223, 125);
+            this.clbPersonnelCategory.TabIndex = 156;
+            // 
+            // panel15
+            // 
+            this.panel15.Controls.Add(this.cmdStaffSelAll);
+            this.panel15.Controls.Add(this.cmdStaffSelNone);
+            this.panel15.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.panel15.Location = new System.Drawing.Point(4, 129);
+            this.panel15.Name = "panel15";
+            this.panel15.Padding = new System.Windows.Forms.Padding(0, 4, 0, 0);
+            this.panel15.Size = new System.Drawing.Size(223, 30);
+            this.panel15.TabIndex = 155;
+            // 
+            // cmdStaffSelAll
+            // 
+            this.cmdStaffSelAll.Dock = System.Windows.Forms.DockStyle.Right;
+            this.cmdStaffSelAll.Location = new System.Drawing.Point(73, 4);
+            this.cmdStaffSelAll.Name = "cmdStaffSelAll";
+            this.cmdStaffSelAll.Size = new System.Drawing.Size(75, 26);
+            this.cmdStaffSelAll.TabIndex = 1;
+            this.cmdStaffSelAll.Text = "None";
+            this.cmdStaffSelAll.UseVisualStyleBackColor = true;
+            this.cmdStaffSelAll.Click += new System.EventHandler(this.cmdStaffSelAll_Click);
+            // 
+            // cmdStaffSelNone
+            // 
+            this.cmdStaffSelNone.Dock = System.Windows.Forms.DockStyle.Right;
+            this.cmdStaffSelNone.Location = new System.Drawing.Point(148, 4);
+            this.cmdStaffSelNone.Name = "cmdStaffSelNone";
+            this.cmdStaffSelNone.Size = new System.Drawing.Size(75, 26);
+            this.cmdStaffSelNone.TabIndex = 0;
+            this.cmdStaffSelNone.Text = "All";
+            this.cmdStaffSelNone.UseVisualStyleBackColor = true;
+            this.cmdStaffSelNone.Click += new System.EventHandler(this.cmdStaffSelNone_Click);
             // 
             // expHostels
             // 
@@ -854,11 +940,54 @@ namespace SchoolDataImporter.Forms
             this.expHostels.ExpandedHeight = 204;
             this.expHostels.Heading = "Hostels";
             this.expHostels.IsExpanded = false;
-            this.expHostels.Location = new System.Drawing.Point(0, 333);
+            this.expHostels.Location = new System.Drawing.Point(0, 252);
             this.expHostels.Name = "expHostels";
             this.expHostels.Padding = new System.Windows.Forms.Padding(4);
             this.expHostels.Size = new System.Drawing.Size(241, 37);
             this.expHostels.TabIndex = 125;
+            // 
+            // clbHostels
+            // 
+            this.clbHostels.CheckOnClick = true;
+            this.clbHostels.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.clbHostels.FormattingEnabled = true;
+            this.clbHostels.Location = new System.Drawing.Point(4, 4);
+            this.clbHostels.Name = "clbHostels";
+            this.clbHostels.Size = new System.Drawing.Size(223, 125);
+            this.clbHostels.TabIndex = 151;
+            // 
+            // panel16
+            // 
+            this.panel16.Controls.Add(this.cmdHostelsSelNone);
+            this.panel16.Controls.Add(this.cmdHostelsSelAll);
+            this.panel16.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.panel16.Location = new System.Drawing.Point(4, 129);
+            this.panel16.Name = "panel16";
+            this.panel16.Padding = new System.Windows.Forms.Padding(0, 4, 0, 0);
+            this.panel16.Size = new System.Drawing.Size(223, 30);
+            this.panel16.TabIndex = 150;
+            // 
+            // cmdHostelsSelNone
+            // 
+            this.cmdHostelsSelNone.Dock = System.Windows.Forms.DockStyle.Right;
+            this.cmdHostelsSelNone.Location = new System.Drawing.Point(73, 4);
+            this.cmdHostelsSelNone.Name = "cmdHostelsSelNone";
+            this.cmdHostelsSelNone.Size = new System.Drawing.Size(75, 26);
+            this.cmdHostelsSelNone.TabIndex = 1;
+            this.cmdHostelsSelNone.Text = "None";
+            this.cmdHostelsSelNone.UseVisualStyleBackColor = true;
+            this.cmdHostelsSelNone.Click += new System.EventHandler(this.cmdHostelsSelNone_Click);
+            // 
+            // cmdHostelsSelAll
+            // 
+            this.cmdHostelsSelAll.Dock = System.Windows.Forms.DockStyle.Right;
+            this.cmdHostelsSelAll.Location = new System.Drawing.Point(148, 4);
+            this.cmdHostelsSelAll.Name = "cmdHostelsSelAll";
+            this.cmdHostelsSelAll.Size = new System.Drawing.Size(75, 26);
+            this.cmdHostelsSelAll.TabIndex = 0;
+            this.cmdHostelsSelAll.Text = "All";
+            this.cmdHostelsSelAll.UseVisualStyleBackColor = true;
+            this.cmdHostelsSelAll.Click += new System.EventHandler(this.cmdHostelsSelAll_Click);
             // 
             // expHouses
             // 
@@ -880,11 +1009,54 @@ namespace SchoolDataImporter.Forms
             this.expHouses.ExpandedHeight = 204;
             this.expHouses.Heading = "Houses";
             this.expHouses.IsExpanded = false;
-            this.expHouses.Location = new System.Drawing.Point(0, 296);
+            this.expHouses.Location = new System.Drawing.Point(0, 215);
             this.expHouses.Name = "expHouses";
             this.expHouses.Padding = new System.Windows.Forms.Padding(4);
             this.expHouses.Size = new System.Drawing.Size(241, 37);
             this.expHouses.TabIndex = 124;
+            // 
+            // clbHouses
+            // 
+            this.clbHouses.CheckOnClick = true;
+            this.clbHouses.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.clbHouses.FormattingEnabled = true;
+            this.clbHouses.Location = new System.Drawing.Point(4, 4);
+            this.clbHouses.Name = "clbHouses";
+            this.clbHouses.Size = new System.Drawing.Size(223, 125);
+            this.clbHouses.TabIndex = 150;
+            // 
+            // panel13
+            // 
+            this.panel13.Controls.Add(this.cmdHousesSelNone);
+            this.panel13.Controls.Add(this.cmdHousesSelAll);
+            this.panel13.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.panel13.Location = new System.Drawing.Point(4, 129);
+            this.panel13.Name = "panel13";
+            this.panel13.Padding = new System.Windows.Forms.Padding(0, 4, 0, 0);
+            this.panel13.Size = new System.Drawing.Size(223, 30);
+            this.panel13.TabIndex = 149;
+            // 
+            // cmdHousesSelNone
+            // 
+            this.cmdHousesSelNone.Dock = System.Windows.Forms.DockStyle.Right;
+            this.cmdHousesSelNone.Location = new System.Drawing.Point(73, 4);
+            this.cmdHousesSelNone.Name = "cmdHousesSelNone";
+            this.cmdHousesSelNone.Size = new System.Drawing.Size(75, 26);
+            this.cmdHousesSelNone.TabIndex = 1;
+            this.cmdHousesSelNone.Text = "None";
+            this.cmdHousesSelNone.UseVisualStyleBackColor = true;
+            this.cmdHousesSelNone.Click += new System.EventHandler(this.cmdHousesSelNone_Click);
+            // 
+            // cmdHousesSelAll
+            // 
+            this.cmdHousesSelAll.Dock = System.Windows.Forms.DockStyle.Right;
+            this.cmdHousesSelAll.Location = new System.Drawing.Point(148, 4);
+            this.cmdHousesSelAll.Name = "cmdHousesSelAll";
+            this.cmdHousesSelAll.Size = new System.Drawing.Size(75, 26);
+            this.cmdHousesSelAll.TabIndex = 0;
+            this.cmdHousesSelAll.Text = "All";
+            this.cmdHousesSelAll.UseVisualStyleBackColor = true;
+            this.cmdHousesSelAll.Click += new System.EventHandler(this.cmdHousesSelAll_Click);
             // 
             // expBusRoutes
             // 
@@ -906,7 +1078,7 @@ namespace SchoolDataImporter.Forms
             this.expBusRoutes.ExpandedHeight = 204;
             this.expBusRoutes.Heading = "Bus Routes";
             this.expBusRoutes.IsExpanded = false;
-            this.expBusRoutes.Location = new System.Drawing.Point(0, 259);
+            this.expBusRoutes.Location = new System.Drawing.Point(0, 178);
             this.expBusRoutes.Name = "expBusRoutes";
             this.expBusRoutes.Padding = new System.Windows.Forms.Padding(4);
             this.expBusRoutes.Size = new System.Drawing.Size(241, 37);
@@ -975,7 +1147,7 @@ namespace SchoolDataImporter.Forms
             this.expGradesClasses.ExpandedHeight = 204;
             this.expGradesClasses.Heading = "Grades / Classes";
             this.expGradesClasses.IsExpanded = false;
-            this.expGradesClasses.Location = new System.Drawing.Point(0, 222);
+            this.expGradesClasses.Location = new System.Drawing.Point(0, 141);
             this.expGradesClasses.Name = "expGradesClasses";
             this.expGradesClasses.Padding = new System.Windows.Forms.Padding(4);
             this.expGradesClasses.Size = new System.Drawing.Size(241, 37);
@@ -1046,7 +1218,7 @@ namespace SchoolDataImporter.Forms
             this.expStatus.ExpandedHeight = 114;
             this.expStatus.Heading = "Status";
             this.expStatus.IsExpanded = false;
-            this.expStatus.Location = new System.Drawing.Point(0, 185);
+            this.expStatus.Location = new System.Drawing.Point(0, 104);
             this.expStatus.Name = "expStatus";
             this.expStatus.Padding = new System.Windows.Forms.Padding(4);
             this.expStatus.Size = new System.Drawing.Size(241, 37);
@@ -1119,7 +1291,7 @@ namespace SchoolDataImporter.Forms
             this.expGender.ExpandedHeight = 96;
             this.expGender.Heading = "Gender";
             this.expGender.IsExpanded = false;
-            this.expGender.Location = new System.Drawing.Point(0, 148);
+            this.expGender.Location = new System.Drawing.Point(0, 67);
             this.expGender.Name = "expGender";
             this.expGender.Padding = new System.Windows.Forms.Padding(4);
             this.expGender.Size = new System.Drawing.Size(241, 37);
@@ -1181,15 +1353,15 @@ namespace SchoolDataImporter.Forms
             this.expType.ContentPanel.Padding = new System.Windows.Forms.Padding(4);
             this.expType.ContentPanel.Size = new System.Drawing.Size(233, 79);
             this.expType.ContentPanel.TabIndex = 1;
-            this.expType.ContentPanel.Visible = true;
+            this.expType.ContentPanel.Visible = false;
             this.expType.Dock = System.Windows.Forms.DockStyle.Top;
             this.expType.ExpandedHeight = 118;
             this.expType.Heading = "Category";
-            this.expType.IsExpanded = true;
+            this.expType.IsExpanded = false;
             this.expType.Location = new System.Drawing.Point(0, 30);
             this.expType.Name = "expType";
             this.expType.Padding = new System.Windows.Forms.Padding(4);
-            this.expType.Size = new System.Drawing.Size(241, 118);
+            this.expType.Size = new System.Drawing.Size(241, 37);
             this.expType.TabIndex = 120;
             // 
             // chkTypeGoverningBody
@@ -1242,178 +1414,6 @@ namespace SchoolDataImporter.Forms
             this.chkTypeParent.UseVisualStyleBackColor = true;
             this.chkTypeParent.CheckedChanged += new System.EventHandler(this.chkTypeParent_CheckedChanged);
             // 
-            // panel13
-            // 
-            this.panel13.Controls.Add(this.cmdHousesSelNone);
-            this.panel13.Controls.Add(this.cmdHousesSelAll);
-            this.panel13.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel13.Location = new System.Drawing.Point(4, 129);
-            this.panel13.Name = "panel13";
-            this.panel13.Padding = new System.Windows.Forms.Padding(0, 4, 0, 0);
-            this.panel13.Size = new System.Drawing.Size(223, 30);
-            this.panel13.TabIndex = 149;
-            // 
-            // cmdHousesSelNone
-            // 
-            this.cmdHousesSelNone.Dock = System.Windows.Forms.DockStyle.Right;
-            this.cmdHousesSelNone.Location = new System.Drawing.Point(73, 4);
-            this.cmdHousesSelNone.Name = "cmdHousesSelNone";
-            this.cmdHousesSelNone.Size = new System.Drawing.Size(75, 26);
-            this.cmdHousesSelNone.TabIndex = 1;
-            this.cmdHousesSelNone.Text = "None";
-            this.cmdHousesSelNone.UseVisualStyleBackColor = true;
-            this.cmdHousesSelNone.Click += new System.EventHandler(this.cmdHousesSelNone_Click);
-            // 
-            // cmdHousesSelAll
-            // 
-            this.cmdHousesSelAll.Dock = System.Windows.Forms.DockStyle.Right;
-            this.cmdHousesSelAll.Location = new System.Drawing.Point(148, 4);
-            this.cmdHousesSelAll.Name = "cmdHousesSelAll";
-            this.cmdHousesSelAll.Size = new System.Drawing.Size(75, 26);
-            this.cmdHousesSelAll.TabIndex = 0;
-            this.cmdHousesSelAll.Text = "All";
-            this.cmdHousesSelAll.UseVisualStyleBackColor = true;
-            this.cmdHousesSelAll.Click += new System.EventHandler(this.cmdHousesSelAll_Click);
-            // 
-            // clbHouses
-            // 
-            this.clbHouses.CheckOnClick = true;
-            this.clbHouses.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.clbHouses.FormattingEnabled = true;
-            this.clbHouses.Location = new System.Drawing.Point(4, 4);
-            this.clbHouses.Name = "clbHouses";
-            this.clbHouses.Size = new System.Drawing.Size(223, 125);
-            this.clbHouses.TabIndex = 150;
-            // 
-            // panel14
-            // 
-            this.panel14.Controls.Add(this.cmdGovBodySelNone);
-            this.panel14.Controls.Add(this.cmdGovBodySelAll);
-            this.panel14.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel14.Location = new System.Drawing.Point(4, 129);
-            this.panel14.Name = "panel14";
-            this.panel14.Padding = new System.Windows.Forms.Padding(0, 4, 0, 0);
-            this.panel14.Size = new System.Drawing.Size(223, 30);
-            this.panel14.TabIndex = 154;
-            // 
-            // cmdGovBodySelNone
-            // 
-            this.cmdGovBodySelNone.Dock = System.Windows.Forms.DockStyle.Right;
-            this.cmdGovBodySelNone.Location = new System.Drawing.Point(73, 4);
-            this.cmdGovBodySelNone.Name = "cmdGovBodySelNone";
-            this.cmdGovBodySelNone.Size = new System.Drawing.Size(75, 26);
-            this.cmdGovBodySelNone.TabIndex = 1;
-            this.cmdGovBodySelNone.Text = "None";
-            this.cmdGovBodySelNone.UseVisualStyleBackColor = true;
-            this.cmdGovBodySelNone.Click += new System.EventHandler(this.cmdGovBodySelNone_Click);
-            // 
-            // cmdGovBodySelAll
-            // 
-            this.cmdGovBodySelAll.Dock = System.Windows.Forms.DockStyle.Right;
-            this.cmdGovBodySelAll.Location = new System.Drawing.Point(148, 4);
-            this.cmdGovBodySelAll.Name = "cmdGovBodySelAll";
-            this.cmdGovBodySelAll.Size = new System.Drawing.Size(75, 26);
-            this.cmdGovBodySelAll.TabIndex = 0;
-            this.cmdGovBodySelAll.Text = "All";
-            this.cmdGovBodySelAll.UseVisualStyleBackColor = true;
-            this.cmdGovBodySelAll.Click += new System.EventHandler(this.cmdGovBodySelAll_Click);
-            // 
-            // clbGoverningBody
-            // 
-            this.clbGoverningBody.CheckOnClick = true;
-            this.clbGoverningBody.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.clbGoverningBody.FormattingEnabled = true;
-            this.clbGoverningBody.Location = new System.Drawing.Point(4, 4);
-            this.clbGoverningBody.Name = "clbGoverningBody";
-            this.clbGoverningBody.Size = new System.Drawing.Size(223, 125);
-            this.clbGoverningBody.TabIndex = 155;
-            // 
-            // panel15
-            // 
-            this.panel15.Controls.Add(this.cmdStaffSelAll);
-            this.panel15.Controls.Add(this.cmdStaffSelNone);
-            this.panel15.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel15.Location = new System.Drawing.Point(4, 129);
-            this.panel15.Name = "panel15";
-            this.panel15.Padding = new System.Windows.Forms.Padding(0, 4, 0, 0);
-            this.panel15.Size = new System.Drawing.Size(223, 30);
-            this.panel15.TabIndex = 155;
-            // 
-            // cmdStaffSelAll
-            // 
-            this.cmdStaffSelAll.Dock = System.Windows.Forms.DockStyle.Right;
-            this.cmdStaffSelAll.Location = new System.Drawing.Point(73, 4);
-            this.cmdStaffSelAll.Name = "cmdStaffSelAll";
-            this.cmdStaffSelAll.Size = new System.Drawing.Size(75, 26);
-            this.cmdStaffSelAll.TabIndex = 1;
-            this.cmdStaffSelAll.Text = "None";
-            this.cmdStaffSelAll.UseVisualStyleBackColor = true;
-            this.cmdStaffSelAll.Click += new System.EventHandler(this.cmdStaffSelAll_Click);
-            // 
-            // cmdStaffSelNone
-            // 
-            this.cmdStaffSelNone.Dock = System.Windows.Forms.DockStyle.Right;
-            this.cmdStaffSelNone.Location = new System.Drawing.Point(148, 4);
-            this.cmdStaffSelNone.Name = "cmdStaffSelNone";
-            this.cmdStaffSelNone.Size = new System.Drawing.Size(75, 26);
-            this.cmdStaffSelNone.TabIndex = 0;
-            this.cmdStaffSelNone.Text = "All";
-            this.cmdStaffSelNone.UseVisualStyleBackColor = true;
-            this.cmdStaffSelNone.Click += new System.EventHandler(this.cmdStaffSelNone_Click);
-            // 
-            // clbPersonnelCategory
-            // 
-            this.clbPersonnelCategory.CheckOnClick = true;
-            this.clbPersonnelCategory.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.clbPersonnelCategory.FormattingEnabled = true;
-            this.clbPersonnelCategory.Location = new System.Drawing.Point(4, 4);
-            this.clbPersonnelCategory.Name = "clbPersonnelCategory";
-            this.clbPersonnelCategory.Size = new System.Drawing.Size(223, 125);
-            this.clbPersonnelCategory.TabIndex = 156;
-            // 
-            // panel16
-            // 
-            this.panel16.Controls.Add(this.cmdHostelsSelNone);
-            this.panel16.Controls.Add(this.cmdHostelsSelAll);
-            this.panel16.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel16.Location = new System.Drawing.Point(4, 129);
-            this.panel16.Name = "panel16";
-            this.panel16.Padding = new System.Windows.Forms.Padding(0, 4, 0, 0);
-            this.panel16.Size = new System.Drawing.Size(223, 30);
-            this.panel16.TabIndex = 150;
-            // 
-            // cmdHostelsSelNone
-            // 
-            this.cmdHostelsSelNone.Dock = System.Windows.Forms.DockStyle.Right;
-            this.cmdHostelsSelNone.Location = new System.Drawing.Point(73, 4);
-            this.cmdHostelsSelNone.Name = "cmdHostelsSelNone";
-            this.cmdHostelsSelNone.Size = new System.Drawing.Size(75, 26);
-            this.cmdHostelsSelNone.TabIndex = 1;
-            this.cmdHostelsSelNone.Text = "None";
-            this.cmdHostelsSelNone.UseVisualStyleBackColor = true;
-            this.cmdHostelsSelNone.Click += new System.EventHandler(this.cmdHostelsSelNone_Click);
-            // 
-            // cmdHostelsSelAll
-            // 
-            this.cmdHostelsSelAll.Dock = System.Windows.Forms.DockStyle.Right;
-            this.cmdHostelsSelAll.Location = new System.Drawing.Point(148, 4);
-            this.cmdHostelsSelAll.Name = "cmdHostelsSelAll";
-            this.cmdHostelsSelAll.Size = new System.Drawing.Size(75, 26);
-            this.cmdHostelsSelAll.TabIndex = 0;
-            this.cmdHostelsSelAll.Text = "All";
-            this.cmdHostelsSelAll.UseVisualStyleBackColor = true;
-            this.cmdHostelsSelAll.Click += new System.EventHandler(this.cmdHostelsSelAll_Click);
-            // 
-            // clbHostels
-            // 
-            this.clbHostels.CheckOnClick = true;
-            this.clbHostels.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.clbHostels.FormattingEnabled = true;
-            this.clbHostels.Location = new System.Drawing.Point(4, 4);
-            this.clbHostels.Name = "clbHostels";
-            this.clbHostels.Size = new System.Drawing.Size(223, 125);
-            this.clbHostels.TabIndex = 151;
-            // 
             // fRenderData
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1458,12 +1458,16 @@ namespace SchoolDataImporter.Forms
             this.panel4.PerformLayout();
             this.expGoverningBody.ContentPanel.ResumeLayout(false);
             this.expGoverningBody.ResumeLayout(false);
+            this.panel14.ResumeLayout(false);
             this.expPersonnelCategory.ContentPanel.ResumeLayout(false);
             this.expPersonnelCategory.ResumeLayout(false);
+            this.panel15.ResumeLayout(false);
             this.expHostels.ContentPanel.ResumeLayout(false);
             this.expHostels.ResumeLayout(false);
+            this.panel16.ResumeLayout(false);
             this.expHouses.ContentPanel.ResumeLayout(false);
             this.expHouses.ResumeLayout(false);
+            this.panel13.ResumeLayout(false);
             this.expBusRoutes.ContentPanel.ResumeLayout(false);
             this.expBusRoutes.ResumeLayout(false);
             this.panel12.ResumeLayout(false);
@@ -1479,10 +1483,6 @@ namespace SchoolDataImporter.Forms
             this.expType.ContentPanel.ResumeLayout(false);
             this.expType.ContentPanel.PerformLayout();
             this.expType.ResumeLayout(false);
-            this.panel13.ResumeLayout(false);
-            this.panel14.ResumeLayout(false);
-            this.panel15.ResumeLayout(false);
-            this.panel16.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
