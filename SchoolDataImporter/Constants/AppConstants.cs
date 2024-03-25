@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using SchoolDataImporter.Enums;
+using System.Collections.Generic;
 
 namespace SchoolDataImporter.Constants
 {
@@ -8,9 +9,9 @@ namespace SchoolDataImporter.Constants
     public static class AppConstants
     {
         public static string UniqueIdentifierFieldName = "UniqueIdentifier";
-        public static string Unassigned = "Unassigned";
+        public static string Unassigned = "Not Applicable / Blank";
 
-        public static string TypeCellName = "Type";
+        public static string TypeCellName = "Category";
         public static string StaffTypeCellName = "Staff Type";
         public static string FirstNameCellName = "First Name";
         public static string LastNameCellName = "Last Name";
@@ -37,6 +38,38 @@ namespace SchoolDataImporter.Constants
             { "A", "Archived" },
             { "C", "Current" },
             { "F", "Future" }
+        };
+
+        public static Dictionary<FilterCategory, FilterType[]> FilterTypesPerCategory = new Dictionary<FilterCategory, FilterType[]>
+        {
+            {
+                FilterCategory.Default, new []
+                {
+                    FilterType.Gender,
+                    FilterType.Status,
+                    FilterType.Grades,
+                    FilterType.BusRoutes,
+                    FilterType.Houses,
+                    FilterType.Hostels
+                }
+            },
+            {
+                FilterCategory.Staff, new []
+                {
+                    FilterType.Gender,
+                    FilterType.Status,
+                    FilterType.Grades,
+                    FilterType.Staff
+                }
+            },
+            {
+                FilterCategory.GoverningBody, new []
+                {
+                    FilterType.Gender,
+                    FilterType.Status,
+                    FilterType.GoverningBody
+                }
+            }
         };
     }
 }

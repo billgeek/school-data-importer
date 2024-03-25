@@ -120,6 +120,8 @@
     <Compile Include="Controls\ExpandingPanel.Designer.cs">
       <DependentUpon>ExpandingPanel.cs</DependentUpon>
     </Compile>
+    <Compile Include="Enums\FilterType.cs" />
+    <Compile Include="Enums\FilterCategory.cs" />
     <Compile Include="Forms\fRenderData.cs">
       <SubType>Form</SubType>
     </Compile>

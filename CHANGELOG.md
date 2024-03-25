@@ -1,3 +1,41 @@
+# 1.0.1.4 - 2024-03-25
+
+## Useability Changes and Bug Fixes
+
+### Added
+- All filters except Category, Gender and Status now have "All" and "None" buttons
+- A new Category (previously "Type") has been added for Governing Body to allow filtering only for governing body members
+
+### Changed
+- The "Type" column was changed to "Category" to match the filter name
+- The "Add Only Valid Numbers" checkbox is no longer visible and the rule is applied by default
+- The "Category" filter (previously "Type") now only allows a single selection and has changed from check boxes to radio buttons
+- The Bus Routes filter now selected "Not Applicable / Blank" by default and will not select ALL options
+- The checkbox "Only copy highlighted rows" has been changed to "Only copy / export highlighted rows" for clarity
+- The total number of rows has been removed from the row indicator (IE: Instead of seeing "10 / 2100 rows" the user will now see "10 rows")
+- Filter visibility is now dependent on the type of Category selected. Please refer to the table below for details on which filters apply to which categories.
+
+### Fixed
+- The "Bus Routes" filter now collapses automatically when another filter has been opened
+
+## Technical Changes
+No technical changes were made in this release.
+
+## Filter and Category reference table
+The table below indicates which Filters (rows) are applied and are visible to which Categories. (columns)
+
+| Filter | Parent / Learner | Staff | Governing Body |
+| --- | :---: | :---: | :---: | 
+| Gender | &#10003; | &#10003; |  &#10003; |
+| Status | &#10003; | &#10003; |  &#10003; |
+| Grades / Classes | &#10003; | &#10003; |  &#x274C; |
+| Bus Routes | &#10003; | &#x274C; |  &#x274C; |
+| Houses | &#10003; | &#x274C; |  &#x274C; |
+| Hostels | &#10003; | &#x274C; | &#x274C; |
+| Staff | &#x274C; | &#10003; | &#x274C; |
+| Governing Body | &#x274C; | &#x274C; | &#10003; |
+
+
 # 1.0.1.1 - 2024-03-18
 
 ## Useability Changes and Bug Fixes
