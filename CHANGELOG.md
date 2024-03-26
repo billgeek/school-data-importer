@@ -1,3 +1,19 @@
+# 1.0.1.5 - 2024-03-26
+
+## Useability Changes and Bug Fixes
+
+### Added
+- A new column has been introduced for the Learner Nick Name
+
+### Changed
+
+### Fixed
+- When resetting filters, the Status for Unassigned is now also unchecked
+- The Parent entity was using the incorrect Status column and has now been rectified
+
+## Technical Changes
+No technical changes were made in this release.
+
 # 1.0.1.4 - 2024-03-25
 
 ## Useability Changes and Bug Fixes
