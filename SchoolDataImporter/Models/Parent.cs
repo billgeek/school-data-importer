@@ -29,7 +29,7 @@ namespace SchoolDataImporter.Models
                 { "pGender", "Gender" },
                 { "pSellK", "MobilePhoneCode" },
                 { "pSell", "MobilePhoneNumber" },
-                { "pStatus", "Status" },
+                { "lStatus", "Status" },
                 { "BusRouteName", "BusRouteName" }
             };
         }

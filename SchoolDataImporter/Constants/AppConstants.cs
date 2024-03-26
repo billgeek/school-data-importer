@@ -15,6 +15,7 @@ namespace SchoolDataImporter.Constants
         public static string StaffTypeCellName = "Staff Type";
         public static string FirstNameCellName = "First Name";
         public static string LastNameCellName = "Last Name";
+        public static string NickNameCellName = "Learner Nick Name";
         public static string MobileNumberCellName = "Cell. No.";
         public static string GenderCellName = "Gender";
         public static string StatusCellName = "Status";
@@ -28,7 +29,7 @@ namespace SchoolDataImporter.Constants
 
         public static string[] ExcelExportColumnHeaders = new[] { "Name", "Mobile", "Merge1", "Merge2", "Merge3" };
 
-        public static string[] ColumnNames = new[] { TypeCellName, StaffTypeCellName, FirstNameCellName, LastNameCellName, MobileNumberCellName, StatusCellName, GradeClassCellName, BusRouteCellName, HouseCellName, HostelCellName, GoverningBodyCellName, GenderCellName, ParentTypeCellName, ChildInformationCellName };
+        public static string[] ColumnNames = new[] { TypeCellName, StaffTypeCellName, FirstNameCellName, LastNameCellName, NickNameCellName, MobileNumberCellName, StatusCellName, GradeClassCellName, BusRouteCellName, HouseCellName, HostelCellName, GoverningBodyCellName, GenderCellName, ParentTypeCellName, ChildInformationCellName };
         /// <summary>
         /// The various learner statuses for lookup.
         /// </summary>

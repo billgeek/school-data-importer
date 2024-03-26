@@ -160,6 +160,7 @@ namespace SchoolDataImporter.Forms
             chkGenderUnassigned.Checked = true;
 
             // Default checks - Status
+            chkStatusUnassigned.Checked = false;
             chkStatusArchived.Checked = false;
             chkStatusCurrent.Checked = true;
             chkStatusFuture.Checked = false;

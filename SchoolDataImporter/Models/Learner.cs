@@ -29,6 +29,7 @@ namespace SchoolDataImporter.Models
                 { "lKode", "LearnerCode" },
                 { "lVan", "LastName" },
                 { "lName" ,"FirstName" },
+                { "lNName", "NickName" },
                 { "lGDatum", "DateOfBirth" },
                 { "lIDno", "IdNumber" },
                 { "lGender", "Gender" },
@@ -63,7 +64,8 @@ namespace SchoolDataImporter.Models
                 { AppConstants.GradeClassCellName, MappingHelper.GetGradeClassCombination(Grade,Class) },
                 { AppConstants.BusRouteCellName, BusRouteName },
                 { AppConstants.HouseCellName, House },
-                { AppConstants.HostelCellName, HostelName }
+                { AppConstants.HostelCellName, HostelName },
+                { AppConstants.NickNameCellName, NickName }
             };
         }
     }
