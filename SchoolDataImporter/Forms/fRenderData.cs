@@ -179,9 +179,13 @@ namespace SchoolDataImporter.Forms
             // Houses
             var houses = _learnerData.Where(l => !string.IsNullOrWhiteSpace(l.House)).Select(l => l.House).Distinct().OrderBy(l => l).ToList();
 
+            var houseAllValue = AppConstants.FilterEmptyValues.ContainsKey(FilterType.Houses) ? AppConstants.FilterEmptyValues[FilterType.Houses] : string.Empty;
             clbHouses.Items.Clear();
-            clbHouses.Items.Add(AppConstants.Unassigned);
-            clbHouses.SetItemChecked(clbHouses.Items.Count - 1, true);
+            if (houseAllValue != string.Empty)
+            {
+                clbHouses.Items.Add(houseAllValue);
+                clbHouses.SetItemChecked(clbHouses.Items.Count - 1, true);
+            }
             foreach (var house in houses)
             {
                 clbHouses.Items.Add(house);
@@ -192,9 +196,13 @@ namespace SchoolDataImporter.Forms
             // Bus Routes
             var routes = _learnerData.Where(l => !string.IsNullOrWhiteSpace(l.BusRouteName)).Select(l => l.BusRouteName).Distinct().OrderBy(l => l).ToList();
 
+            var busRoutesAllValue = AppConstants.FilterEmptyValues.ContainsKey(FilterType.BusRoutes) ? AppConstants.FilterEmptyValues[FilterType.BusRoutes] : string.Empty;
             clbBusRoutes.Items.Clear();
-            clbBusRoutes.Items.Add(AppConstants.Unassigned);
-            clbBusRoutes.SetItemChecked(clbBusRoutes.Items.Count - 1, true);
+            if (busRoutesAllValue != string.Empty)
+            {
+                clbBusRoutes.Items.Add(busRoutesAllValue);
+                clbBusRoutes.SetItemChecked(clbBusRoutes.Items.Count - 1, true);
+            }
             foreach (var route in routes)
             {
                 clbBusRoutes.Items.Add(route);
@@ -206,8 +214,12 @@ namespace SchoolDataImporter.Forms
             var hostels = _learnerData.Where(l => !string.IsNullOrWhiteSpace(l.HostelName)).Select(l => l.HostelName).Distinct().OrderBy(l => l).ToList();
 
             clbHostels.Items.Clear();
-            clbHostels.Items.Add(AppConstants.Unassigned);
-            clbHostels.SetItemChecked(clbHostels.Items.Count - 1, true);
+            var hostelsAllValue = AppConstants.FilterEmptyValues.ContainsKey(FilterType.Hostels) ? AppConstants.FilterEmptyValues[FilterType.Hostels] : string.Empty;
+            if (hostelsAllValue != string.Empty)
+            {
+                clbHostels.Items.Add(hostelsAllValue);
+                clbHostels.SetItemChecked(clbHostels.Items.Count - 1, true);
+            }
             foreach (var hostel in hostels)
             {
                 clbHostels.Items.Add(hostel);
@@ -232,8 +244,12 @@ namespace SchoolDataImporter.Forms
             var members = _governingBodyData.Select(l => l.TypeOfMember).Distinct().OrderBy(l => l).ToList();
 
             clbGoverningBody.Items.Clear();
-            clbGoverningBody.Items.Add(AppConstants.Unassigned);
-            clbGoverningBody.SetItemChecked(clbGoverningBody.Items.Count - 1, true);
+            var govBodyAllValue = AppConstants.FilterEmptyValues.ContainsKey(FilterType.GoverningBody) ? AppConstants.FilterEmptyValues[FilterType.GoverningBody] : string.Empty;
+            if (govBodyAllValue != string.Empty)
+            {
+                clbGoverningBody.Items.Add(govBodyAllValue);
+                clbGoverningBody.SetItemChecked(clbGoverningBody.Items.Count - 1, true);
+            }
             foreach (var member in members)
             {
                 clbGoverningBody.Items.Add(member);
@@ -458,7 +474,7 @@ namespace SchoolDataImporter.Forms
                 if (FilterApplies(FilterType.Houses))
                 {
                     _logger.Verbose("Checking Houses filter");
-                    filterString = GetCheckedValuesForFilter(clbHouses, filterString, "House", true);
+                    filterString = GetCheckedValuesForFilter(clbHouses, filterString, "House", true, FilterType.Houses);
                 }
                 else
                 {
@@ -469,7 +485,7 @@ namespace SchoolDataImporter.Forms
                 if (FilterApplies(FilterType.Hostels))
                 {
                     _logger.Verbose("Checking Hostels filter");
-                    filterString = GetCheckedValuesForFilter(clbHostels, filterString, "Hostel", true);
+                    filterString = GetCheckedValuesForFilter(clbHostels, filterString, "Hostel", true, FilterType.Hostels);
                 }
                 else
                 {
@@ -480,7 +496,7 @@ namespace SchoolDataImporter.Forms
                 if (FilterApplies(FilterType.BusRoutes))
                 {
                     _logger.Verbose("Checking Bus Routes filter");
-                    filterString = GetCheckedValuesForFilter(clbBusRoutes, filterString, "Bus Route", true);
+                    filterString = GetCheckedValuesForFilter(clbBusRoutes, filterString, "Bus Route", true, FilterType.BusRoutes);
                 }
                 else
                 {
@@ -504,7 +520,7 @@ namespace SchoolDataImporter.Forms
             if (FilterApplies(FilterType.GoverningBody))
             {
                 _logger.Verbose("Checking Governing Body filter");
-                filterString = GetCheckedValuesForFilter(clbGoverningBody, filterString, "Governing Body", true);
+                filterString = GetCheckedValuesForFilter(clbGoverningBody, filterString, "Governing Body", true, FilterType.GoverningBody);
             }
             else
             {
@@ -537,9 +553,9 @@ namespace SchoolDataImporter.Forms
             SetRowHighlighting();
         }
 
-        private string GetCheckedValuesForFilter(CheckedListBox clb, string filterString, string fieldName, bool firstValueForAll)
+        private string GetCheckedValuesForFilter(CheckedListBox clb, string filterString, string fieldName, bool firstValueForAll, FilterType? filterType = null)
         {
-            _logger.Verbose("Getting filter values for checked list box with field name {fieldName} and first value selected for all {firstForAll}", firstValueForAll); ;
+            _logger.Verbose("Getting filter values for checked list box with field name {fieldName} and first value selected for all {firstForAll}", firstValueForAll);
 
             // Don't filter if everything is selected
             if (clb.CheckedItems.Count == clb.Items.Count)
@@ -551,7 +567,7 @@ namespace SchoolDataImporter.Forms
             var values = new List<string>();
             if (firstValueForAll)
             {
-                if (clb.GetItemChecked(0))
+                if (filterType != null && clb.GetItemChecked(0))
                 {
                     values.Add(string.Empty);
                 }
@@ -563,7 +579,8 @@ namespace SchoolDataImporter.Forms
 
             foreach (var item in clb.CheckedItems)
             {
-                if (!item.ToString().Equals(AppConstants.Unassigned, StringComparison.InvariantCultureIgnoreCase))
+                var emptyValueString = filterType == null ? AppConstants.Unassigned : AppConstants.FilterEmptyValues[filterType.Value];
+                if (!item.ToString().Equals(emptyValueString, StringComparison.InvariantCultureIgnoreCase))
                 {
                     values.Add(item.ToString());
                 }

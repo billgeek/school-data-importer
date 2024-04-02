@@ -26,7 +26,7 @@ namespace SchoolDataImporter.Models
                 { "sName", "FirstName" },
                 { "sIDno", "IdNumber" },
                 { "sSell", "MobilePhoneNumber" },
-                { "pStatus", "Status" },
+                { "lStatus", "Status" },
                 { "BusRouteName", "BusRouteName" }
             };
         }

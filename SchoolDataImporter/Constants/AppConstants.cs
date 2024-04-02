@@ -1,4 +1,5 @@
-﻿using SchoolDataImporter.Enums;
+﻿using OfficeOpenXml.FormulaParsing.Excel.Functions.Logical;
+using SchoolDataImporter.Enums;
 using System.Collections.Generic;
 
 namespace SchoolDataImporter.Constants
@@ -40,6 +41,14 @@ namespace SchoolDataImporter.Constants
             { "F", "Future" }
         };
 
+        public static Dictionary<FilterType, string> FilterEmptyValues = new Dictionary<FilterType, string>
+        {
+            { FilterType.Houses, "Not in a house" },
+            { FilterType.BusRoutes, "Not in a bus route" },
+            { FilterType.Hostels, "Not in a hostel" },
+            { FilterType.GoverningBody, "Not Applicable / Blank" }
+        };
+
         public static Dictionary<FilterCategory, FilterType[]> FilterTypesPerCategory = new Dictionary<FilterCategory, FilterType[]>
         {
             {
@@ -58,7 +67,6 @@ namespace SchoolDataImporter.Constants
                 {
                     FilterType.Gender,
                     FilterType.Status,
-                    FilterType.Grades,
                     FilterType.Staff
                 }
             },
