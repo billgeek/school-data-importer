@@ -1,3 +1,19 @@
+# 1.0.1.6 - 2024-04-02
+
+## Useability Changes and Bug Fixes
+
+### Added
+
+### Changed
+- The "Grades/Classes" filter is no longer available for the Staff category
+- The labels for empty values in "Bus Routes", "Hostels" and "Houses" have been updated to "Not in a [bus route / hostel / house]"
+
+### Fixed
+- Spouses of Parent entities were still referencing the incorrect status column. All parent entities now make use of `lStatus` as required
+
+## Technical Changes
+No technical changes were made in this release.
+
 # 1.0.1.5 - 2024-03-26
 
 ## Useability Changes and Bug Fixes
