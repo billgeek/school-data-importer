@@ -141,6 +141,7 @@ namespace SchoolDataImporter.Forms
                 {
                     _gridsInitialized = true;
                 });
+                ShowAvailableList();
             }
         }
 
@@ -402,6 +403,7 @@ namespace SchoolDataImporter.Forms
             txtLastName.Text = string.Empty;
 
             SetRowHighlighting();
+            HideAvailableList();
         }
 
         private void cmdApplyFilters_Click(object sender, System.EventArgs e)
@@ -551,6 +553,7 @@ namespace SchoolDataImporter.Forms
             lblRowCount.Text = $"{filteredCount} rows"; // $"{filteredCount} / {_sourceDataCount} rows";
 
             SetRowHighlighting();
+            ShowAvailableList();
         }
 
         private string GetCheckedValuesForFilter(CheckedListBox clb, string filterString, string fieldName, bool firstValueForAll, FilterType? filterType = null)
@@ -1153,11 +1156,35 @@ namespace SchoolDataImporter.Forms
             expHostels.Visible = FilterApplies(FilterType.Hostels);
             expPersonnelCategory.Visible = FilterApplies(FilterType.Staff);
             expGoverningBody.Visible = FilterApplies(FilterType.GoverningBody);
+
+            HideAvailableList();
         }
 
         private bool FilterApplies(FilterType filter)
         {
             return AppConstants.FilterTypesPerCategory[_currentFilterCategory].Contains(filter);
+        }
+
+        private void clbGradesClasses_ItemCheck(object sender, ItemCheckEventArgs e)
+        {
+            HideAvailableList();
+        }
+
+        private void HideAvailableList()
+        {
+            dgAvailableData.Visible = false;
+            lblRowCount.Visible = false;
+        }
+
+        private void ShowAvailableList()
+        {
+            dgAvailableData.Visible = true;
+            lblRowCount.Visible = true;
+        }
+
+        private void chkGenderMale_CheckedChanged(object sender, EventArgs e)
+        {
+            HideAvailableList();
         }
     }
 }

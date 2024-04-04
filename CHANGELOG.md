@@ -1,8 +1,10 @@
+# 1.0.1.7 - 2024-04-04
+
+- When changing any filter selections, the available list will now be hidden. To view the list again, click on "Apply Filters".
+
 # 1.0.1.6 - 2024-04-02
 
 ## Useability Changes and Bug Fixes
-
-### Added
 
 ### Changed
 - The "Grades/Classes" filter is no longer available for the Staff category
@@ -11,9 +13,6 @@
 ### Fixed
 - Spouses of Parent entities were still referencing the incorrect status column. All parent entities now make use of `lStatus` as required
 
-## Technical Changes
-No technical changes were made in this release.
-
 # 1.0.1.5 - 2024-03-26
 
 ## Useability Changes and Bug Fixes
@@ -21,14 +20,9 @@ No technical changes were made in this release.
 ### Added
 - A new column has been introduced for the Learner Nick Name
 
-### Changed
-
 ### Fixed
 - When resetting filters, the Status for Unassigned is now also unchecked
 - The Parent entity was using the incorrect Status column and has now been rectified
-
-## Technical Changes
-No technical changes were made in this release.
 
 # 1.0.1.4 - 2024-03-25
 
@@ -64,7 +58,7 @@ The table below indicates which Filters (rows) are applied and are visible to wh
 | --- | :---: | :---: | :---: | 
 | Gender | &#10003; | &#10003; |  &#10003; |
 | Status | &#10003; | &#10003; |  &#10003; |
-| Grades / Classes | &#10003; | &#10003; |  &#x274C; |
+| Grades / Classes | &#10003; | &#x274C; |  &#x274C; |
 | Bus Routes | &#10003; | &#x274C; |  &#x274C; |
 | Houses | &#10003; | &#x274C; |  &#x274C; |
 | Hostels | &#10003; | &#x274C; | &#x274C; |
@@ -91,9 +85,6 @@ The table below indicates which Filters (rows) are applied and are visible to wh
 - An "index out of range" exception was thrown when importing certain DB's. This was caused by an incorrect reference to a Combo List control due to a copy and paste error.
 - Rows in the grids are now unique - A "Distinct" call was missing on the majority of data elements.
 
-## Technical Changes
-No technical changes were made in this release.
-
 # 1.0.0.3 - 2020-08-02
 
 ## Useability Changes and Bug Fixes
@@ -102,14 +93,8 @@ No technical changes were made in this release.
 - Tooltips were added to the Export and Copy buttons to assist the user in understanding the action they are about to perform.
 - Three additional columns were added to the Excel Export functionality to assist with Merge information.
 
-### Changed
-N/A
-
 ### Fixed
 - The label text for the selected number of rows will now show information consistently.
-
-## Technical Changes
-No technical changes were made in this release.
 
 # 1.0.0.2 - 2020-08-01
 

@@ -31,12 +31,12 @@ namespace SchoolDataImporter.Forms
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(fRenderData));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.pnlFilters = new System.Windows.Forms.Panel();
@@ -50,6 +50,19 @@ namespace SchoolDataImporter.Forms
             this.panel11 = new System.Windows.Forms.Panel();
             this.chkOnlyNonBlank = new System.Windows.Forms.CheckBox();
             this.label1 = new System.Windows.Forms.Label();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.dlgSave = new System.Windows.Forms.SaveFileDialog();
+            this.ttCopyData = new System.Windows.Forms.ToolTip(this.components);
+            this.ttExportData = new System.Windows.Forms.ToolTip(this.components);
+            this.ContentPanel = new System.Windows.Forms.Panel();
+            this.dgAvailableData = new System.Windows.Forms.DataGridView();
+            this.pnlAvailable = new System.Windows.Forms.Panel();
+            this.splitter1 = new System.Windows.Forms.Splitter();
+            this.panel7 = new System.Windows.Forms.Panel();
+            this.chkOnlySelected = new System.Windows.Forms.CheckBox();
+            this.cmdCopyToClipboard = new System.Windows.Forms.Button();
+            this.lblExportCount = new System.Windows.Forms.Label();
+            this.cmdExportData = new System.Windows.Forms.Button();
             this.dgSelected = new System.Windows.Forms.DataGridView();
             this.panel1 = new System.Windows.Forms.Panel();
             this.lblRowCount = new System.Windows.Forms.Label();
@@ -61,18 +74,6 @@ namespace SchoolDataImporter.Forms
             this.cmdAddSelected = new System.Windows.Forms.Button();
             this.pnlOnlyValid = new System.Windows.Forms.Panel();
             this.chkOnlyValidNumbers = new System.Windows.Forms.CheckBox();
-            this.splitter1 = new System.Windows.Forms.Splitter();
-            this.panel7 = new System.Windows.Forms.Panel();
-            this.chkOnlySelected = new System.Windows.Forms.CheckBox();
-            this.cmdCopyToClipboard = new System.Windows.Forms.Button();
-            this.lblExportCount = new System.Windows.Forms.Label();
-            this.cmdExportData = new System.Windows.Forms.Button();
-            this.dgAvailableData = new System.Windows.Forms.DataGridView();
-            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.dlgSave = new System.Windows.Forms.SaveFileDialog();
-            this.ttCopyData = new System.Windows.Forms.ToolTip(this.components);
-            this.ttExportData = new System.Windows.Forms.ToolTip(this.components);
-            this.ContentPanel = new System.Windows.Forms.Panel();
             this.expTextSearch = new SchoolDataImporter.Controls.ExpandingPanel();
             this.panel5 = new System.Windows.Forms.Panel();
             this.panel6 = new System.Windows.Forms.Panel();
@@ -138,12 +139,13 @@ namespace SchoolDataImporter.Forms
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.panel3.SuspendLayout();
             this.panel11.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgAvailableData)).BeginInit();
+            this.pnlAvailable.SuspendLayout();
+            this.panel7.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgSelected)).BeginInit();
             this.panel1.SuspendLayout();
             this.panel9.SuspendLayout();
             this.pnlOnlyValid.SuspendLayout();
-            this.panel7.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dgAvailableData)).BeginInit();
             this.expTextSearch.ContentPanel.SuspendLayout();
             this.expTextSearch.SuspendLayout();
             this.panel5.SuspendLayout();
@@ -179,6 +181,7 @@ namespace SchoolDataImporter.Forms
             // splitContainer1
             // 
             this.splitContainer1.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.splitContainer1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainer1.Location = new System.Drawing.Point(10, 10);
             this.splitContainer1.Name = "splitContainer1";
@@ -195,10 +198,10 @@ namespace SchoolDataImporter.Forms
             this.splitContainer1.Panel2.Controls.Add(this.panel1);
             this.splitContainer1.Panel2.Controls.Add(this.splitter1);
             this.splitContainer1.Panel2.Controls.Add(this.panel7);
-            this.splitContainer1.Panel2.Controls.Add(this.dgAvailableData);
+            this.splitContainer1.Panel2.Controls.Add(this.pnlAvailable);
             this.splitContainer1.Panel2.Padding = new System.Windows.Forms.Padding(4, 0, 0, 0);
-            this.splitContainer1.Size = new System.Drawing.Size(1112, 663);
-            this.splitContainer1.SplitterDistance = 249;
+            this.splitContainer1.Size = new System.Drawing.Size(1112, 573);
+            this.splitContainer1.SplitterDistance = 254;
             this.splitContainer1.TabIndex = 13;
             // 
             // pnlFilters
@@ -208,7 +211,7 @@ namespace SchoolDataImporter.Forms
             this.pnlFilters.Location = new System.Drawing.Point(0, 0);
             this.pnlFilters.Name = "pnlFilters";
             this.pnlFilters.Padding = new System.Windows.Forms.Padding(4);
-            this.pnlFilters.Size = new System.Drawing.Size(249, 663);
+            this.pnlFilters.Size = new System.Drawing.Size(252, 571);
             this.pnlFilters.TabIndex = 1;
             // 
             // pnlFilterContent
@@ -230,7 +233,7 @@ namespace SchoolDataImporter.Forms
             this.pnlFilterContent.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlFilterContent.Location = new System.Drawing.Point(4, 4);
             this.pnlFilterContent.Name = "pnlFilterContent";
-            this.pnlFilterContent.Size = new System.Drawing.Size(241, 655);
+            this.pnlFilterContent.Size = new System.Drawing.Size(244, 563);
             this.pnlFilterContent.TabIndex = 119;
             // 
             // txtTotalFilter
@@ -240,7 +243,7 @@ namespace SchoolDataImporter.Forms
             this.txtTotalFilter.Multiline = true;
             this.txtTotalFilter.Name = "txtTotalFilter";
             this.txtTotalFilter.ReadOnly = true;
-            this.txtTotalFilter.Size = new System.Drawing.Size(241, 194);
+            this.txtTotalFilter.Size = new System.Drawing.Size(244, 194);
             this.txtTotalFilter.TabIndex = 133;
             this.txtTotalFilter.Visible = false;
             // 
@@ -250,7 +253,7 @@ namespace SchoolDataImporter.Forms
             this.panel10.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel10.Location = new System.Drawing.Point(0, 466);
             this.panel10.Name = "panel10";
-            this.panel10.Size = new System.Drawing.Size(241, 31);
+            this.panel10.Size = new System.Drawing.Size(244, 31);
             this.panel10.TabIndex = 132;
             // 
             // pictureBox1
@@ -258,7 +261,7 @@ namespace SchoolDataImporter.Forms
             this.pictureBox1.Cursor = System.Windows.Forms.Cursors.Hand;
             this.pictureBox1.Dock = System.Windows.Forms.DockStyle.Right;
             this.pictureBox1.Image = global::SchoolDataImporter.Properties.Resources.Filter_12x_16x;
-            this.pictureBox1.Location = new System.Drawing.Point(211, 0);
+            this.pictureBox1.Location = new System.Drawing.Point(214, 0);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(30, 31);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
@@ -277,13 +280,13 @@ namespace SchoolDataImporter.Forms
             this.panel3.Location = new System.Drawing.Point(0, 400);
             this.panel3.Name = "panel3";
             this.panel3.Padding = new System.Windows.Forms.Padding(0, 0, 3, 0);
-            this.panel3.Size = new System.Drawing.Size(241, 66);
+            this.panel3.Size = new System.Drawing.Size(244, 66);
             this.panel3.TabIndex = 131;
             // 
             // cmdClearFilters
             // 
             this.cmdClearFilters.Dock = System.Windows.Forms.DockStyle.Right;
-            this.cmdClearFilters.Location = new System.Drawing.Point(50, 26);
+            this.cmdClearFilters.Location = new System.Drawing.Point(53, 26);
             this.cmdClearFilters.Name = "cmdClearFilters";
             this.cmdClearFilters.Size = new System.Drawing.Size(94, 40);
             this.cmdClearFilters.TabIndex = 4;
@@ -294,7 +297,7 @@ namespace SchoolDataImporter.Forms
             // cmdApplyFilters
             // 
             this.cmdApplyFilters.Dock = System.Windows.Forms.DockStyle.Right;
-            this.cmdApplyFilters.Location = new System.Drawing.Point(144, 26);
+            this.cmdApplyFilters.Location = new System.Drawing.Point(147, 26);
             this.cmdApplyFilters.Name = "cmdApplyFilters";
             this.cmdApplyFilters.Size = new System.Drawing.Size(94, 40);
             this.cmdApplyFilters.TabIndex = 3;
@@ -308,7 +311,7 @@ namespace SchoolDataImporter.Forms
             this.panel11.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel11.Location = new System.Drawing.Point(0, 0);
             this.panel11.Name = "panel11";
-            this.panel11.Size = new System.Drawing.Size(238, 26);
+            this.panel11.Size = new System.Drawing.Size(241, 26);
             this.panel11.TabIndex = 2;
             // 
             // chkOnlyNonBlank
@@ -331,11 +334,165 @@ namespace SchoolDataImporter.Forms
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.Location = new System.Drawing.Point(0, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(241, 30);
+            this.label1.Size = new System.Drawing.Size(244, 30);
             this.label1.TabIndex = 119;
             this.label1.Text = "Filters";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.label1.Click += new System.EventHandler(this.pictureBox1_Click);
+            // 
+            // toolTip1
+            // 
+            this.toolTip1.ToolTipTitle = "View Filter";
+            // 
+            // ttCopyData
+            // 
+            this.ttCopyData.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
+            this.ttCopyData.ToolTipTitle = "Copy Data";
+            // 
+            // ttExportData
+            // 
+            this.ttExportData.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
+            this.ttExportData.ToolTipTitle = "Export Data";
+            // 
+            // ContentPanel
+            // 
+            this.ContentPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.ContentPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ContentPanel.Location = new System.Drawing.Point(4, 35);
+            this.ContentPanel.Name = "ContentPanel";
+            this.ContentPanel.Padding = new System.Windows.Forms.Padding(4);
+            this.ContentPanel.Size = new System.Drawing.Size(233, 165);
+            this.ContentPanel.TabIndex = 1;
+            this.ContentPanel.Visible = false;
+            // 
+            // dgAvailableData
+            // 
+            this.dgAvailableData.AllowUserToAddRows = false;
+            this.dgAvailableData.AllowUserToDeleteRows = false;
+            this.dgAvailableData.AllowUserToOrderColumns = true;
+            this.dgAvailableData.AllowUserToResizeRows = false;
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgAvailableData.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle4;
+            this.dgAvailableData.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dgAvailableData.DefaultCellStyle = dataGridViewCellStyle5;
+            this.dgAvailableData.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dgAvailableData.Location = new System.Drawing.Point(0, 0);
+            this.dgAvailableData.Name = "dgAvailableData";
+            this.dgAvailableData.ReadOnly = true;
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle6.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgAvailableData.RowHeadersDefaultCellStyle = dataGridViewCellStyle6;
+            this.dgAvailableData.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dgAvailableData.Size = new System.Drawing.Size(848, 251);
+            this.dgAvailableData.TabIndex = 13;
+            this.dgAvailableData.ColumnDisplayIndexChanged += new System.Windows.Forms.DataGridViewColumnEventHandler(this.dgAvailableData_ColumnDisplayIndexChanged);
+            this.dgAvailableData.SelectionChanged += new System.EventHandler(this.dgAvailableData_SelectionChanged);
+            this.dgAvailableData.Sorted += new System.EventHandler(this.dgAvailableData_Sorted);
+            // 
+            // pnlAvailable
+            // 
+            this.pnlAvailable.Controls.Add(this.dgAvailableData);
+            this.pnlAvailable.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pnlAvailable.Location = new System.Drawing.Point(4, 0);
+            this.pnlAvailable.Name = "pnlAvailable";
+            this.pnlAvailable.Size = new System.Drawing.Size(848, 251);
+            this.pnlAvailable.TabIndex = 14;
+            // 
+            // splitter1
+            // 
+            this.splitter1.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.splitter1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.splitter1.Location = new System.Drawing.Point(4, 251);
+            this.splitter1.Name = "splitter1";
+            this.splitter1.Size = new System.Drawing.Size(848, 3);
+            this.splitter1.TabIndex = 21;
+            this.splitter1.TabStop = false;
+            // 
+            // panel7
+            // 
+            this.panel7.Controls.Add(this.chkOnlySelected);
+            this.panel7.Controls.Add(this.cmdCopyToClipboard);
+            this.panel7.Controls.Add(this.lblExportCount);
+            this.panel7.Controls.Add(this.cmdExportData);
+            this.panel7.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.panel7.Location = new System.Drawing.Point(4, 523);
+            this.panel7.Name = "panel7";
+            this.panel7.Padding = new System.Windows.Forms.Padding(0, 4, 0, 4);
+            this.panel7.Size = new System.Drawing.Size(848, 48);
+            this.panel7.TabIndex = 20;
+            // 
+            // chkOnlySelected
+            // 
+            this.chkOnlySelected.AutoSize = true;
+            this.chkOnlySelected.Location = new System.Drawing.Point(332, 17);
+            this.chkOnlySelected.Name = "chkOnlySelected";
+            this.chkOnlySelected.Size = new System.Drawing.Size(192, 17);
+            this.chkOnlySelected.TabIndex = 4;
+            this.chkOnlySelected.Text = "Only copy / export highlighted rows";
+            this.chkOnlySelected.UseVisualStyleBackColor = true;
+            this.chkOnlySelected.CheckedChanged += new System.EventHandler(this.chkOnlySelected_CheckedChanged);
+            // 
+            // cmdCopyToClipboard
+            // 
+            this.cmdCopyToClipboard.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.cmdCopyToClipboard.Dock = System.Windows.Forms.DockStyle.Right;
+            this.cmdCopyToClipboard.Enabled = false;
+            this.cmdCopyToClipboard.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cmdCopyToClipboard.Location = new System.Drawing.Point(660, 4);
+            this.cmdCopyToClipboard.Name = "cmdCopyToClipboard";
+            this.cmdCopyToClipboard.Size = new System.Drawing.Size(94, 40);
+            this.cmdCopyToClipboard.TabIndex = 3;
+            this.cmdCopyToClipboard.Text = "Copy";
+            this.ttCopyData.SetToolTip(this.cmdCopyToClipboard, "Copies the rows in the list above to the Clipboard");
+            this.cmdCopyToClipboard.UseVisualStyleBackColor = false;
+            this.cmdCopyToClipboard.Click += new System.EventHandler(this.cmdCopyToClipboard_Click);
+            // 
+            // lblExportCount
+            // 
+            this.lblExportCount.BackColor = System.Drawing.SystemColors.Info;
+            this.lblExportCount.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lblExportCount.Dock = System.Windows.Forms.DockStyle.Left;
+            this.lblExportCount.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblExportCount.Location = new System.Drawing.Point(0, 4);
+            this.lblExportCount.Margin = new System.Windows.Forms.Padding(3);
+            this.lblExportCount.Name = "lblExportCount";
+            this.lblExportCount.Size = new System.Drawing.Size(329, 40);
+            this.lblExportCount.TabIndex = 2;
+            this.lblExportCount.Text = "0 rows for export";
+            this.lblExportCount.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // cmdExportData
+            // 
+            this.cmdExportData.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.cmdExportData.Dock = System.Windows.Forms.DockStyle.Right;
+            this.cmdExportData.Enabled = false;
+            this.cmdExportData.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cmdExportData.Location = new System.Drawing.Point(754, 4);
+            this.cmdExportData.Name = "cmdExportData";
+            this.cmdExportData.Size = new System.Drawing.Size(94, 40);
+            this.cmdExportData.TabIndex = 1;
+            this.cmdExportData.Text = "Export";
+            this.ttExportData.SetToolTip(this.cmdExportData, "Exports the rows in the list above to a new Excel file");
+            this.cmdExportData.UseVisualStyleBackColor = false;
+            this.cmdExportData.Click += new System.EventHandler(this.cmdExportData_Click);
             // 
             // dgSelected
             // 
@@ -373,8 +530,8 @@ namespace SchoolDataImporter.Forms
             dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
             this.dgSelected.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
             this.dgSelected.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgSelected.Size = new System.Drawing.Size(855, 242);
-            this.dgSelected.TabIndex = 19;
+            this.dgSelected.Size = new System.Drawing.Size(848, 150);
+            this.dgSelected.TabIndex = 25;
             this.dgSelected.RowsAdded += new System.Windows.Forms.DataGridViewRowsAddedEventHandler(this.dgSelected_RowsAdded);
             this.dgSelected.RowsRemoved += new System.Windows.Forms.DataGridViewRowsRemovedEventHandler(this.dgSelected_RowsRemoved);
             this.dgSelected.SelectionChanged += new System.EventHandler(this.dgSelected_SelectionChanged);
@@ -388,17 +545,17 @@ namespace SchoolDataImporter.Forms
             this.panel1.Location = new System.Drawing.Point(4, 254);
             this.panel1.Name = "panel1";
             this.panel1.Padding = new System.Windows.Forms.Padding(0, 10, 0, 10);
-            this.panel1.Size = new System.Drawing.Size(855, 119);
-            this.panel1.TabIndex = 18;
+            this.panel1.Size = new System.Drawing.Size(848, 119);
+            this.panel1.TabIndex = 24;
             // 
             // lblRowCount
             // 
-            this.lblRowCount.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblRowCount.Dock = System.Windows.Forms.DockStyle.Right;
             this.lblRowCount.Location = new System.Drawing.Point(329, 10);
             this.lblRowCount.Name = "lblRowCount";
-            this.lblRowCount.Size = new System.Drawing.Size(526, 27);
+            this.lblRowCount.Size = new System.Drawing.Size(519, 27);
             this.lblRowCount.TabIndex = 2;
-            this.lblRowCount.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this.lblRowCount.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // label2
             // 
@@ -425,13 +582,13 @@ namespace SchoolDataImporter.Forms
             this.panel9.Location = new System.Drawing.Point(0, 37);
             this.panel9.Name = "panel9";
             this.panel9.Padding = new System.Windows.Forms.Padding(0, 4, 0, 0);
-            this.panel9.Size = new System.Drawing.Size(855, 72);
+            this.panel9.Size = new System.Drawing.Size(848, 72);
             this.panel9.TabIndex = 0;
             // 
             // cmdRemoveAll
             // 
             this.cmdRemoveAll.Dock = System.Windows.Forms.DockStyle.Right;
-            this.cmdRemoveAll.Location = new System.Drawing.Point(601, 37);
+            this.cmdRemoveAll.Location = new System.Drawing.Point(594, 37);
             this.cmdRemoveAll.Name = "cmdRemoveAll";
             this.cmdRemoveAll.Size = new System.Drawing.Size(127, 35);
             this.cmdRemoveAll.TabIndex = 14;
@@ -443,7 +600,7 @@ namespace SchoolDataImporter.Forms
             // 
             this.cmdRemoveSelected.Dock = System.Windows.Forms.DockStyle.Right;
             this.cmdRemoveSelected.Enabled = false;
-            this.cmdRemoveSelected.Location = new System.Drawing.Point(728, 37);
+            this.cmdRemoveSelected.Location = new System.Drawing.Point(721, 37);
             this.cmdRemoveSelected.Name = "cmdRemoveSelected";
             this.cmdRemoveSelected.Size = new System.Drawing.Size(127, 35);
             this.cmdRemoveSelected.TabIndex = 13;
@@ -480,7 +637,7 @@ namespace SchoolDataImporter.Forms
             this.pnlOnlyValid.Dock = System.Windows.Forms.DockStyle.Top;
             this.pnlOnlyValid.Location = new System.Drawing.Point(0, 4);
             this.pnlOnlyValid.Name = "pnlOnlyValid";
-            this.pnlOnlyValid.Size = new System.Drawing.Size(855, 33);
+            this.pnlOnlyValid.Size = new System.Drawing.Size(848, 33);
             this.pnlOnlyValid.TabIndex = 0;
             // 
             // chkOnlyValidNumbers
@@ -495,151 +652,7 @@ namespace SchoolDataImporter.Forms
             this.chkOnlyValidNumbers.Text = "Add only valid numbers";
             this.chkOnlyValidNumbers.UseVisualStyleBackColor = true;
             this.chkOnlyValidNumbers.Visible = false;
-            // 
-            // splitter1
-            // 
-            this.splitter1.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.splitter1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.splitter1.Location = new System.Drawing.Point(4, 251);
-            this.splitter1.Name = "splitter1";
-            this.splitter1.Size = new System.Drawing.Size(855, 3);
-            this.splitter1.TabIndex = 17;
-            this.splitter1.TabStop = false;
-            // 
-            // panel7
-            // 
-            this.panel7.Controls.Add(this.chkOnlySelected);
-            this.panel7.Controls.Add(this.cmdCopyToClipboard);
-            this.panel7.Controls.Add(this.lblExportCount);
-            this.panel7.Controls.Add(this.cmdExportData);
-            this.panel7.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel7.Location = new System.Drawing.Point(4, 615);
-            this.panel7.Name = "panel7";
-            this.panel7.Padding = new System.Windows.Forms.Padding(0, 4, 0, 4);
-            this.panel7.Size = new System.Drawing.Size(855, 48);
-            this.panel7.TabIndex = 16;
-            // 
-            // chkOnlySelected
-            // 
-            this.chkOnlySelected.AutoSize = true;
-            this.chkOnlySelected.Location = new System.Drawing.Point(332, 17);
-            this.chkOnlySelected.Name = "chkOnlySelected";
-            this.chkOnlySelected.Size = new System.Drawing.Size(192, 17);
-            this.chkOnlySelected.TabIndex = 4;
-            this.chkOnlySelected.Text = "Only copy / export highlighted rows";
-            this.chkOnlySelected.UseVisualStyleBackColor = true;
-            this.chkOnlySelected.CheckedChanged += new System.EventHandler(this.chkOnlySelected_CheckedChanged);
-            // 
-            // cmdCopyToClipboard
-            // 
-            this.cmdCopyToClipboard.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
-            this.cmdCopyToClipboard.Dock = System.Windows.Forms.DockStyle.Right;
-            this.cmdCopyToClipboard.Enabled = false;
-            this.cmdCopyToClipboard.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cmdCopyToClipboard.Location = new System.Drawing.Point(667, 4);
-            this.cmdCopyToClipboard.Name = "cmdCopyToClipboard";
-            this.cmdCopyToClipboard.Size = new System.Drawing.Size(94, 40);
-            this.cmdCopyToClipboard.TabIndex = 3;
-            this.cmdCopyToClipboard.Text = "Copy";
-            this.ttCopyData.SetToolTip(this.cmdCopyToClipboard, "Copies the rows in the list above to the Clipboard");
-            this.cmdCopyToClipboard.UseVisualStyleBackColor = false;
-            this.cmdCopyToClipboard.Click += new System.EventHandler(this.cmdCopyToClipboard_Click);
-            // 
-            // lblExportCount
-            // 
-            this.lblExportCount.BackColor = System.Drawing.SystemColors.Info;
-            this.lblExportCount.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.lblExportCount.Dock = System.Windows.Forms.DockStyle.Left;
-            this.lblExportCount.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblExportCount.Location = new System.Drawing.Point(0, 4);
-            this.lblExportCount.Margin = new System.Windows.Forms.Padding(3);
-            this.lblExportCount.Name = "lblExportCount";
-            this.lblExportCount.Size = new System.Drawing.Size(329, 40);
-            this.lblExportCount.TabIndex = 2;
-            this.lblExportCount.Text = "0 rows for export";
-            this.lblExportCount.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // cmdExportData
-            // 
-            this.cmdExportData.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
-            this.cmdExportData.Dock = System.Windows.Forms.DockStyle.Right;
-            this.cmdExportData.Enabled = false;
-            this.cmdExportData.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cmdExportData.Location = new System.Drawing.Point(761, 4);
-            this.cmdExportData.Name = "cmdExportData";
-            this.cmdExportData.Size = new System.Drawing.Size(94, 40);
-            this.cmdExportData.TabIndex = 1;
-            this.cmdExportData.Text = "Export";
-            this.ttExportData.SetToolTip(this.cmdExportData, "Exports the rows in the list above to a new Excel file");
-            this.cmdExportData.UseVisualStyleBackColor = false;
-            this.cmdExportData.Click += new System.EventHandler(this.cmdExportData_Click);
-            // 
-            // dgAvailableData
-            // 
-            this.dgAvailableData.AllowUserToAddRows = false;
-            this.dgAvailableData.AllowUserToDeleteRows = false;
-            this.dgAvailableData.AllowUserToOrderColumns = true;
-            this.dgAvailableData.AllowUserToResizeRows = false;
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgAvailableData.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle4;
-            this.dgAvailableData.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dgAvailableData.DefaultCellStyle = dataGridViewCellStyle5;
-            this.dgAvailableData.Dock = System.Windows.Forms.DockStyle.Top;
-            this.dgAvailableData.Location = new System.Drawing.Point(4, 0);
-            this.dgAvailableData.Name = "dgAvailableData";
-            this.dgAvailableData.ReadOnly = true;
-            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle6.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgAvailableData.RowHeadersDefaultCellStyle = dataGridViewCellStyle6;
-            this.dgAvailableData.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgAvailableData.Size = new System.Drawing.Size(855, 251);
-            this.dgAvailableData.TabIndex = 13;
-            this.dgAvailableData.ColumnDisplayIndexChanged += new System.Windows.Forms.DataGridViewColumnEventHandler(this.dgAvailableData_ColumnDisplayIndexChanged);
-            this.dgAvailableData.SelectionChanged += new System.EventHandler(this.dgAvailableData_SelectionChanged);
-            this.dgAvailableData.Sorted += new System.EventHandler(this.dgAvailableData_Sorted);
-            // 
-            // toolTip1
-            // 
-            this.toolTip1.ToolTipTitle = "View Filter";
-            // 
-            // ttCopyData
-            // 
-            this.ttCopyData.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
-            this.ttCopyData.ToolTipTitle = "Copy Data";
-            // 
-            // ttExportData
-            // 
-            this.ttExportData.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
-            this.ttExportData.ToolTipTitle = "Export Data";
-            // 
-            // ContentPanel
-            // 
-            this.ContentPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.ContentPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ContentPanel.Location = new System.Drawing.Point(4, 35);
-            this.ContentPanel.Name = "ContentPanel";
-            this.ContentPanel.Padding = new System.Windows.Forms.Padding(4);
-            this.ContentPanel.Size = new System.Drawing.Size(233, 165);
-            this.ContentPanel.TabIndex = 1;
-            this.ContentPanel.Visible = false;
+            this.chkOnlyValidNumbers.CheckedChanged += new System.EventHandler(this.chkOnlySelected_CheckedChanged);
             // 
             // expTextSearch
             // 
@@ -666,7 +679,7 @@ namespace SchoolDataImporter.Forms
             this.expTextSearch.Location = new System.Drawing.Point(0, 363);
             this.expTextSearch.Name = "expTextSearch";
             this.expTextSearch.Padding = new System.Windows.Forms.Padding(4);
-            this.expTextSearch.Size = new System.Drawing.Size(241, 37);
+            this.expTextSearch.Size = new System.Drawing.Size(244, 37);
             this.expTextSearch.TabIndex = 128;
             // 
             // panel5
@@ -805,7 +818,7 @@ namespace SchoolDataImporter.Forms
             this.expGoverningBody.Location = new System.Drawing.Point(0, 326);
             this.expGoverningBody.Name = "expGoverningBody";
             this.expGoverningBody.Padding = new System.Windows.Forms.Padding(4);
-            this.expGoverningBody.Size = new System.Drawing.Size(241, 37);
+            this.expGoverningBody.Size = new System.Drawing.Size(244, 37);
             this.expGoverningBody.TabIndex = 127;
             // 
             // clbGoverningBody
@@ -817,6 +830,7 @@ namespace SchoolDataImporter.Forms
             this.clbGoverningBody.Name = "clbGoverningBody";
             this.clbGoverningBody.Size = new System.Drawing.Size(223, 125);
             this.clbGoverningBody.TabIndex = 155;
+            this.clbGoverningBody.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.clbGradesClasses_ItemCheck);
             // 
             // panel14
             // 
@@ -874,7 +888,7 @@ namespace SchoolDataImporter.Forms
             this.expPersonnelCategory.Location = new System.Drawing.Point(0, 289);
             this.expPersonnelCategory.Name = "expPersonnelCategory";
             this.expPersonnelCategory.Padding = new System.Windows.Forms.Padding(4);
-            this.expPersonnelCategory.Size = new System.Drawing.Size(241, 37);
+            this.expPersonnelCategory.Size = new System.Drawing.Size(244, 37);
             this.expPersonnelCategory.TabIndex = 126;
             // 
             // clbPersonnelCategory
@@ -886,6 +900,7 @@ namespace SchoolDataImporter.Forms
             this.clbPersonnelCategory.Name = "clbPersonnelCategory";
             this.clbPersonnelCategory.Size = new System.Drawing.Size(223, 125);
             this.clbPersonnelCategory.TabIndex = 156;
+            this.clbPersonnelCategory.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.clbGradesClasses_ItemCheck);
             // 
             // panel15
             // 
@@ -943,7 +958,7 @@ namespace SchoolDataImporter.Forms
             this.expHostels.Location = new System.Drawing.Point(0, 252);
             this.expHostels.Name = "expHostels";
             this.expHostels.Padding = new System.Windows.Forms.Padding(4);
-            this.expHostels.Size = new System.Drawing.Size(241, 37);
+            this.expHostels.Size = new System.Drawing.Size(244, 37);
             this.expHostels.TabIndex = 125;
             // 
             // clbHostels
@@ -955,6 +970,7 @@ namespace SchoolDataImporter.Forms
             this.clbHostels.Name = "clbHostels";
             this.clbHostels.Size = new System.Drawing.Size(223, 125);
             this.clbHostels.TabIndex = 151;
+            this.clbHostels.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.clbGradesClasses_ItemCheck);
             // 
             // panel16
             // 
@@ -1012,7 +1028,7 @@ namespace SchoolDataImporter.Forms
             this.expHouses.Location = new System.Drawing.Point(0, 215);
             this.expHouses.Name = "expHouses";
             this.expHouses.Padding = new System.Windows.Forms.Padding(4);
-            this.expHouses.Size = new System.Drawing.Size(241, 37);
+            this.expHouses.Size = new System.Drawing.Size(244, 37);
             this.expHouses.TabIndex = 124;
             // 
             // clbHouses
@@ -1024,6 +1040,7 @@ namespace SchoolDataImporter.Forms
             this.clbHouses.Name = "clbHouses";
             this.clbHouses.Size = new System.Drawing.Size(223, 125);
             this.clbHouses.TabIndex = 150;
+            this.clbHouses.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.clbGradesClasses_ItemCheck);
             // 
             // panel13
             // 
@@ -1081,7 +1098,7 @@ namespace SchoolDataImporter.Forms
             this.expBusRoutes.Location = new System.Drawing.Point(0, 178);
             this.expBusRoutes.Name = "expBusRoutes";
             this.expBusRoutes.Padding = new System.Windows.Forms.Padding(4);
-            this.expBusRoutes.Size = new System.Drawing.Size(241, 37);
+            this.expBusRoutes.Size = new System.Drawing.Size(244, 37);
             this.expBusRoutes.TabIndex = 125;
             // 
             // clbBusRoutes
@@ -1093,6 +1110,7 @@ namespace SchoolDataImporter.Forms
             this.clbBusRoutes.Name = "clbBusRoutes";
             this.clbBusRoutes.Size = new System.Drawing.Size(223, 125);
             this.clbBusRoutes.TabIndex = 149;
+            this.clbBusRoutes.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.clbGradesClasses_ItemCheck);
             // 
             // panel12
             // 
@@ -1150,7 +1168,7 @@ namespace SchoolDataImporter.Forms
             this.expGradesClasses.Location = new System.Drawing.Point(0, 141);
             this.expGradesClasses.Name = "expGradesClasses";
             this.expGradesClasses.Padding = new System.Windows.Forms.Padding(4);
-            this.expGradesClasses.Size = new System.Drawing.Size(241, 37);
+            this.expGradesClasses.Size = new System.Drawing.Size(244, 37);
             this.expGradesClasses.TabIndex = 123;
             // 
             // clbGradesClasses
@@ -1162,6 +1180,7 @@ namespace SchoolDataImporter.Forms
             this.clbGradesClasses.Name = "clbGradesClasses";
             this.clbGradesClasses.Size = new System.Drawing.Size(223, 125);
             this.clbGradesClasses.TabIndex = 146;
+            this.clbGradesClasses.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.clbGradesClasses_ItemCheck);
             // 
             // panel8
             // 
@@ -1221,7 +1240,7 @@ namespace SchoolDataImporter.Forms
             this.expStatus.Location = new System.Drawing.Point(0, 104);
             this.expStatus.Name = "expStatus";
             this.expStatus.Padding = new System.Windows.Forms.Padding(4);
-            this.expStatus.Size = new System.Drawing.Size(241, 37);
+            this.expStatus.Size = new System.Drawing.Size(244, 37);
             this.expStatus.TabIndex = 122;
             // 
             // chkStatusFuture
@@ -1234,6 +1253,7 @@ namespace SchoolDataImporter.Forms
             this.chkStatusFuture.TabIndex = 7;
             this.chkStatusFuture.Text = "Future";
             this.chkStatusFuture.UseVisualStyleBackColor = true;
+            this.chkStatusFuture.CheckedChanged += new System.EventHandler(this.chkGenderMale_CheckedChanged);
             // 
             // chkStatusArchived
             // 
@@ -1245,6 +1265,7 @@ namespace SchoolDataImporter.Forms
             this.chkStatusArchived.TabIndex = 6;
             this.chkStatusArchived.Text = "Archived";
             this.chkStatusArchived.UseVisualStyleBackColor = true;
+            this.chkStatusArchived.CheckedChanged += new System.EventHandler(this.chkGenderMale_CheckedChanged);
             // 
             // chkStatusCurrent
             // 
@@ -1258,6 +1279,7 @@ namespace SchoolDataImporter.Forms
             this.chkStatusCurrent.TabIndex = 5;
             this.chkStatusCurrent.Text = "Current";
             this.chkStatusCurrent.UseVisualStyleBackColor = true;
+            this.chkStatusCurrent.CheckedChanged += new System.EventHandler(this.chkGenderMale_CheckedChanged);
             // 
             // chkStatusUnassigned
             // 
@@ -1269,6 +1291,7 @@ namespace SchoolDataImporter.Forms
             this.chkStatusUnassigned.TabIndex = 4;
             this.chkStatusUnassigned.Text = "Unassigned";
             this.chkStatusUnassigned.UseVisualStyleBackColor = true;
+            this.chkStatusUnassigned.CheckedChanged += new System.EventHandler(this.chkGenderMale_CheckedChanged);
             // 
             // expGender
             // 
@@ -1284,7 +1307,7 @@ namespace SchoolDataImporter.Forms
             this.expGender.ContentPanel.Location = new System.Drawing.Point(4, 35);
             this.expGender.ContentPanel.Name = "ContentPanel";
             this.expGender.ContentPanel.Padding = new System.Windows.Forms.Padding(4);
-            this.expGender.ContentPanel.Size = new System.Drawing.Size(399, 57);
+            this.expGender.ContentPanel.Size = new System.Drawing.Size(233, 57);
             this.expGender.ContentPanel.TabIndex = 1;
             this.expGender.ContentPanel.Visible = false;
             this.expGender.Dock = System.Windows.Forms.DockStyle.Top;
@@ -1294,7 +1317,7 @@ namespace SchoolDataImporter.Forms
             this.expGender.Location = new System.Drawing.Point(0, 67);
             this.expGender.Name = "expGender";
             this.expGender.Padding = new System.Windows.Forms.Padding(4);
-            this.expGender.Size = new System.Drawing.Size(241, 37);
+            this.expGender.Size = new System.Drawing.Size(244, 37);
             this.expGender.TabIndex = 121;
             // 
             // chkGenderUnassigned
@@ -1305,10 +1328,11 @@ namespace SchoolDataImporter.Forms
             this.chkGenderUnassigned.Dock = System.Windows.Forms.DockStyle.Top;
             this.chkGenderUnassigned.Location = new System.Drawing.Point(4, 38);
             this.chkGenderUnassigned.Name = "chkGenderUnassigned";
-            this.chkGenderUnassigned.Size = new System.Drawing.Size(389, 17);
+            this.chkGenderUnassigned.Size = new System.Drawing.Size(223, 17);
             this.chkGenderUnassigned.TabIndex = 3;
             this.chkGenderUnassigned.Text = "Unassigned";
             this.chkGenderUnassigned.UseVisualStyleBackColor = true;
+            this.chkGenderUnassigned.CheckedChanged += new System.EventHandler(this.chkGenderMale_CheckedChanged);
             // 
             // chkGenderFemale
             // 
@@ -1318,10 +1342,11 @@ namespace SchoolDataImporter.Forms
             this.chkGenderFemale.Dock = System.Windows.Forms.DockStyle.Top;
             this.chkGenderFemale.Location = new System.Drawing.Point(4, 21);
             this.chkGenderFemale.Name = "chkGenderFemale";
-            this.chkGenderFemale.Size = new System.Drawing.Size(389, 17);
+            this.chkGenderFemale.Size = new System.Drawing.Size(223, 17);
             this.chkGenderFemale.TabIndex = 2;
             this.chkGenderFemale.Text = "Female";
             this.chkGenderFemale.UseVisualStyleBackColor = true;
+            this.chkGenderFemale.CheckedChanged += new System.EventHandler(this.chkGenderMale_CheckedChanged);
             // 
             // chkGenderMale
             // 
@@ -1331,10 +1356,11 @@ namespace SchoolDataImporter.Forms
             this.chkGenderMale.Dock = System.Windows.Forms.DockStyle.Top;
             this.chkGenderMale.Location = new System.Drawing.Point(4, 4);
             this.chkGenderMale.Name = "chkGenderMale";
-            this.chkGenderMale.Size = new System.Drawing.Size(389, 17);
+            this.chkGenderMale.Size = new System.Drawing.Size(223, 17);
             this.chkGenderMale.TabIndex = 1;
             this.chkGenderMale.Text = "Male";
             this.chkGenderMale.UseVisualStyleBackColor = true;
+            this.chkGenderMale.CheckedChanged += new System.EventHandler(this.chkGenderMale_CheckedChanged);
             // 
             // expType
             // 
@@ -1361,7 +1387,7 @@ namespace SchoolDataImporter.Forms
             this.expType.Location = new System.Drawing.Point(0, 30);
             this.expType.Name = "expType";
             this.expType.Padding = new System.Windows.Forms.Padding(4);
-            this.expType.Size = new System.Drawing.Size(241, 37);
+            this.expType.Size = new System.Drawing.Size(244, 37);
             this.expType.TabIndex = 120;
             // 
             // chkTypeGoverningBody
@@ -1418,7 +1444,7 @@ namespace SchoolDataImporter.Forms
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1132, 683);
+            this.ClientSize = new System.Drawing.Size(1132, 593);
             this.Controls.Add(this.splitContainer1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "fRenderData";
@@ -1440,14 +1466,15 @@ namespace SchoolDataImporter.Forms
             this.panel3.ResumeLayout(false);
             this.panel11.ResumeLayout(false);
             this.panel11.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgAvailableData)).EndInit();
+            this.pnlAvailable.ResumeLayout(false);
+            this.panel7.ResumeLayout(false);
+            this.panel7.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgSelected)).EndInit();
             this.panel1.ResumeLayout(false);
             this.panel9.ResumeLayout(false);
             this.pnlOnlyValid.ResumeLayout(false);
             this.pnlOnlyValid.PerformLayout();
-            this.panel7.ResumeLayout(false);
-            this.panel7.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dgAvailableData)).EndInit();
             this.expTextSearch.ContentPanel.ResumeLayout(false);
             this.expTextSearch.ResumeLayout(false);
             this.panel5.ResumeLayout(false);
@@ -1498,10 +1525,6 @@ namespace SchoolDataImporter.Forms
         private System.Windows.Forms.TextBox txtLastName;
         private System.Windows.Forms.ComboBox cmbLastNameOperator;
         private System.Windows.Forms.Label label11;
-        private System.Windows.Forms.Panel panel2;
-        private System.Windows.Forms.Panel panel4;
-        private System.Windows.Forms.TextBox txtFirstName;
-        private System.Windows.Forms.ComboBox cmbFirstNameOperator;
         private System.Windows.Forms.Label label10;
         private ExpandingPanel expGoverningBody;
         private ExpandingPanel expPersonnelCategory;
@@ -1519,32 +1542,15 @@ namespace SchoolDataImporter.Forms
         private System.Windows.Forms.CheckBox chkGenderMale;
         private ExpandingPanel expType;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.DataGridView dgSelected;
-        private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Label lblRowCount;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Panel panel9;
-        private System.Windows.Forms.Splitter splitter1;
-        private System.Windows.Forms.Panel panel7;
-        private System.Windows.Forms.Label lblExportCount;
-        private System.Windows.Forms.Button cmdExportData;
-        private System.Windows.Forms.DataGridView dgAvailableData;
         private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.CheckBox chkStatusFuture;
         private System.Windows.Forms.CheckBox chkStatusArchived;
         private System.Windows.Forms.CheckBox chkStatusCurrent;
         private System.Windows.Forms.CheckBox chkStatusUnassigned;
-        private System.Windows.Forms.Button cmdRemoveAll;
-        private System.Windows.Forms.Button cmdRemoveSelected;
-        private System.Windows.Forms.Button cmdAddAll;
-        private System.Windows.Forms.Button cmdAddSelected;
-        private System.Windows.Forms.Panel pnlOnlyValid;
-        private System.Windows.Forms.CheckBox chkOnlyValidNumbers;
         private System.Windows.Forms.Panel panel3;
         private System.Windows.Forms.TextBox txtTotalFilter;
         private System.Windows.Forms.Panel panel10;
         private System.Windows.Forms.PictureBox pictureBox1;
-        private System.Windows.Forms.Button cmdCopyToClipboard;
         private System.Windows.Forms.SaveFileDialog dlgSave;
         private System.Windows.Forms.ToolTip ttCopyData;
         private System.Windows.Forms.ToolTip ttExportData;
@@ -1552,7 +1558,6 @@ namespace SchoolDataImporter.Forms
         private System.Windows.Forms.CheckBox chkOnlyNonBlank;
         private System.Windows.Forms.Button cmdClearFilters;
         private System.Windows.Forms.Button cmdApplyFilters;
-        private System.Windows.Forms.CheckBox chkOnlySelected;
         private System.Windows.Forms.Panel ContentPanel;
         private ExpandingPanel expBusRoutes;
         private System.Windows.Forms.CheckedListBox clbBusRoutes;
@@ -1579,5 +1584,28 @@ namespace SchoolDataImporter.Forms
         private System.Windows.Forms.Panel panel16;
         private System.Windows.Forms.Button cmdHostelsSelNone;
         private System.Windows.Forms.Button cmdHostelsSelAll;
+        private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.Panel panel4;
+        private System.Windows.Forms.TextBox txtFirstName;
+        private System.Windows.Forms.ComboBox cmbFirstNameOperator;
+        private System.Windows.Forms.Splitter splitter1;
+        private System.Windows.Forms.Panel panel7;
+        private System.Windows.Forms.CheckBox chkOnlySelected;
+        private System.Windows.Forms.Button cmdCopyToClipboard;
+        private System.Windows.Forms.Label lblExportCount;
+        private System.Windows.Forms.Button cmdExportData;
+        private System.Windows.Forms.Panel pnlAvailable;
+        private System.Windows.Forms.DataGridView dgAvailableData;
+        private System.Windows.Forms.DataGridView dgSelected;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Label lblRowCount;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Panel panel9;
+        private System.Windows.Forms.Button cmdRemoveAll;
+        private System.Windows.Forms.Button cmdRemoveSelected;
+        private System.Windows.Forms.Button cmdAddAll;
+        private System.Windows.Forms.Button cmdAddSelected;
+        private System.Windows.Forms.Panel pnlOnlyValid;
+        private System.Windows.Forms.CheckBox chkOnlyValidNumbers;
     }
 }
