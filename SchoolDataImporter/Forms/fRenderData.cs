@@ -904,7 +904,11 @@ namespace SchoolDataImporter.Forms
             _logger.Information("User selected to copy data to clipboard");
 
             var sb = new StringBuilder();
-            sb.Append($"Name\tMobile\tmerge1{Environment.NewLine}");
+            // 2025-05-22 : Do not produce headers if the VCard check is selected
+            if (!chkVcard.Checked)
+            {
+                sb.Append($"Name\tMobile\tmerge1{Environment.NewLine}");
+            }
 
             var (data, count) = CollectExportData();
             foreach(var line in data)
@@ -929,8 +933,7 @@ namespace SchoolDataImporter.Forms
         private (List<List<string>>, int) CollectExportData()
         {
             var result = new List<List<string>>();
-            var count = 0;
-
+            int count;
             if (chkOnlySelected.Checked)
             {
                 count = dgSelected.SelectedRows.Count;
@@ -938,12 +941,26 @@ namespace SchoolDataImporter.Forms
                 {
                     var item = row as DataGridViewRow;
 
-                    result.Add(new List<string>
-                {
-                    $"{item.Cells[AppConstants.FirstNameCellName].Value} {item.Cells[AppConstants.LastNameCellName].Value}",
-                    item.Cells[AppConstants.MobileNumberCellName].Value.ToString(),
-                    item.Cells[AppConstants.ChildInformationCellName].Value.ToString()
-                });
+                    // 2025-05-22 : Do not produce headers if the VCard check is selected
+                    if (chkVcard.Checked)
+                    {
+                        result.Add(new List<string>
+                        {
+                            item.Cells[AppConstants.FirstNameCellName].Value.ToString(),
+                            item.Cells[AppConstants.LastNameCellName].Value.ToString(),
+                            item.Cells[AppConstants.MobileNumberCellName].Value.ToString(),
+                            item.Cells[AppConstants.ChildInformationCellName].Value.ToString()
+                        });
+                    }
+                    else
+                    {
+                        result.Add(new List<string>
+                        {
+                            $"{item.Cells[AppConstants.FirstNameCellName].Value} {item.Cells[AppConstants.LastNameCellName].Value}",
+                            item.Cells[AppConstants.MobileNumberCellName].Value.ToString(),
+                            item.Cells[AppConstants.ChildInformationCellName].Value.ToString()
+                        });
+                    }
                 }
             }
             else
@@ -952,13 +969,26 @@ namespace SchoolDataImporter.Forms
                 foreach (var row in dgSelected.Rows)
                 {
                     var item = row as DataGridViewRow;
-
-                    result.Add(new List<string>
-                {
-                    $"{item.Cells[AppConstants.FirstNameCellName].Value} {item.Cells[AppConstants.LastNameCellName].Value}",
-                    item.Cells[AppConstants.MobileNumberCellName].Value.ToString(),
-                    item.Cells[AppConstants.ChildInformationCellName].Value.ToString()
-                });
+                    // 2025-05-22 : Do not produce headers if the VCard check is selected
+                    if (chkVcard.Checked)
+                    {
+                        result.Add(new List<string>
+                        {
+                            item.Cells[AppConstants.FirstNameCellName].Value.ToString(),
+                            item.Cells[AppConstants.LastNameCellName].Value.ToString(),
+                            item.Cells[AppConstants.MobileNumberCellName].Value.ToString(),
+                            item.Cells[AppConstants.ChildInformationCellName].Value.ToString()
+                        });
+                    }
+                    else
+                    {
+                        result.Add(new List<string>
+                        {
+                            $"{item.Cells[AppConstants.FirstNameCellName].Value} {item.Cells[AppConstants.LastNameCellName].Value}",
+                            item.Cells[AppConstants.MobileNumberCellName].Value.ToString(),
+                            item.Cells[AppConstants.ChildInformationCellName].Value.ToString()
+                        });
+                    }
                 }
             }
             
