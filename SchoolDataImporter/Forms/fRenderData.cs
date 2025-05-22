@@ -946,8 +946,8 @@ namespace SchoolDataImporter.Forms
                     {
                         result.Add(new List<string>
                         {
-                            item.Cells[AppConstants.FirstNameCellName].Value.ToString(),
                             item.Cells[AppConstants.LastNameCellName].Value.ToString(),
+                            item.Cells[AppConstants.FirstNameCellName].Value.ToString(),
                             item.Cells[AppConstants.MobileNumberCellName].Value.ToString(),
                             item.Cells[AppConstants.ChildInformationCellName].Value.ToString()
                         });
@@ -974,8 +974,8 @@ namespace SchoolDataImporter.Forms
                     {
                         result.Add(new List<string>
                         {
-                            item.Cells[AppConstants.FirstNameCellName].Value.ToString(),
                             item.Cells[AppConstants.LastNameCellName].Value.ToString(),
+                            item.Cells[AppConstants.FirstNameCellName].Value.ToString(),
                             item.Cells[AppConstants.MobileNumberCellName].Value.ToString(),
                             item.Cells[AppConstants.ChildInformationCellName].Value.ToString()
                         });
