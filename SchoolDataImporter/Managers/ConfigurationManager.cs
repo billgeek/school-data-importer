@@ -74,7 +74,7 @@ namespace SchoolDataImporter.Managers
             );
 
             var pathCheck = new System.IO.DirectoryInfo(basePath);
-            if (!pathCheck.Exists())
+            if (!pathCheck.Exists)
             {
                 _logger.Debug("Attempting to create directory {path}", basePath);
                 Directory.CreateDirectory(basePath);
