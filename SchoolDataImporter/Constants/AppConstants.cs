@@ -1,5 +1,4 @@
-﻿using OfficeOpenXml.FormulaParsing.Excel.Functions.Logical;
-using SchoolDataImporter.Enums;
+﻿using SchoolDataImporter.Enums;
 using System.Collections.Generic;
 
 namespace SchoolDataImporter.Constants

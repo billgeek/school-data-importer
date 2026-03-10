@@ -1,4 +1,4 @@
-﻿using OfficeOpenXml;
+﻿using MiniExcelLibs;
 using SchoolDataImporter.Bll.Interfaces;
 using Serilog;
 using System;
@@ -19,37 +19,31 @@ namespace SchoolDataImporter.Bll
         public byte[] ExportResultsToExcel(IList<string> columnHeadings, List<List<string>> exportData, string sheetName)
         {
             _logger.Information("Call to ExportResultsToExcelAsync with sheetName {sheetName}", sheetName);
-
-            byte[] result;
             using (var ms = new MemoryStream())
             {
-                using (var pkg = new ExcelPackage(ms))
+
+                // Combine column headers + data into a single enumerable
+                var allRows = new List<IDictionary<string, object>>();
+
+                foreach (var row in exportData)
                 {
-                    var sheet = pkg.Workbook.Worksheets.Add(sheetName);
-
-                    // Render columns
-                    for (var i = 0; i < columnHeadings.Count; i++)
+                    var dict = new Dictionary<string, object>();
+                    for (int i = 0; i < columnHeadings.Count; i++)
                     {
-                        var colName = columnHeadings[i];
-                        sheet.SetValue(1, i + 1, colName);
+                        // If row has fewer columns, leave blank
+                        object value = i < row.Count ? row[i] : null;
+                        dict[columnHeadings[i]] = value;
                     }
-
-                    // Render data
-                    for (var i = 0; i < exportData.Count; i++)
-                    {
-                        var dataRow = exportData[i];
-                        for (var j = 0; j < dataRow.Count; j++)
-                        {
-                            sheet.SetValue(i + 2, j + 1, dataRow[j]);
-                        }
-                    }
-
-                    pkg.Save();
-                    result = ms.ToArray();
+                    allRows.Add(dict);
                 }
-            }
 
-            return result;
+                // MiniExcel writes the data to the stream
+                // sheetName parameter is optional
+                ms.Position = 0;
+                MiniExcel.SaveAs(ms, allRows, sheetName: sheetName);
+
+                return ms.ToArray();
+            }
         }
     }
 }

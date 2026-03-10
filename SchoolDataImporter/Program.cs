@@ -9,8 +9,6 @@ using System;
 using System.Windows.Forms;
 using SchoolDataImporter.Managers.Interfaces;
 using SchoolDataImporter.Forms.Interfaces;
-using System.Collections.Generic;
-using System.Threading;
 using System.IO;
 
 namespace SchoolDataImporter

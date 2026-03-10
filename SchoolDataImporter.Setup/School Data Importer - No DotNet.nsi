@@ -302,7 +302,7 @@ InstallDir "$PROGRAMFILES\School Data Importer"
 
 !insertmacro MUI_PAGE_INSTFILES
 
-!define MUI_FINISHPAGE_RUN "$INSTDIR\${MAIN_APP_EXE}"
+!define MUI_FINISHPAGE_NO_RUN
 !insertmacro MUI_PAGE_FINISH
 
 !insertmacro MUI_UNPAGE_CONFIRM
@@ -318,24 +318,20 @@ Section -MainProgram
 ${INSTALL_TYPE}
 SetOverwrite ifnewer
 SetOutPath "$INSTDIR"
-!insertmacro MakeDirBase $INSTDIR\logs
 File "D:\Development\school-data-importer\SchoolDataImporter\bin\Release\DefaultQueries.json"
 File "D:\Development\school-data-importer\SchoolDataImporter\bin\Release\DeviceId.dll"
-File "D:\Development\school-data-importer\SchoolDataImporter\bin\Release\EPPlus.dll"
 File "D:\Development\school-data-importer\SchoolDataImporter\bin\Release\Meziantou.Framework.Win32.CredentialManager.dll"
 File "D:\Development\school-data-importer\SchoolDataImporter\bin\Release\Microsoft.Bcl.AsyncInterfaces.dll"
 File "D:\Development\school-data-importer\SchoolDataImporter\bin\Release\Microsoft.Extensions.DependencyInjection.Abstractions.dll"
 File "D:\Development\school-data-importer\SchoolDataImporter\bin\Release\Microsoft.Extensions.DependencyInjection.dll"
+File "D:\Development\school-data-importer\SchoolDataImporter\bin\Release\MiniExcel.dll"
 File "D:\Development\school-data-importer\SchoolDataImporter\bin\Release\Newtonsoft.Json.dll"
 File "D:\Development\school-data-importer\SchoolDataImporter\bin\Release\SchoolDataImporter.exe"
 File "D:\Development\school-data-importer\SchoolDataImporter\bin\Release\SchoolDataImporter.exe.config"
 File "D:\Development\school-data-importer\SchoolDataImporter\bin\Release\Serilog.dll"
-File "D:\Development\school-data-importer\SchoolDataImporter\bin\Release\Serilog.Filters.Expressions.dll"
-File "D:\Development\school-data-importer\SchoolDataImporter\bin\Release\Serilog.Settings.AppSettings.dll"
 File "D:\Development\school-data-importer\SchoolDataImporter\bin\Release\Serilog.Sinks.File.dll"
 File "D:\Development\school-data-importer\SchoolDataImporter\bin\Release\SerilogMetrics.dll"
 File "D:\Development\school-data-importer\SchoolDataImporter\bin\Release\settings.json"
-File "D:\Development\school-data-importer\SchoolDataImporter\bin\Release\Superpower.dll"
 File "D:\Development\school-data-importer\SchoolDataImporter\bin\Release\System.Runtime.CompilerServices.Unsafe.dll"
 File "D:\Development\school-data-importer\SchoolDataImporter\bin\Release\System.Threading.Tasks.Extensions.dll"
 SectionEnd
