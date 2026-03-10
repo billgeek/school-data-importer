@@ -68,8 +68,19 @@ namespace SchoolDataImporter.Managers
 
         private string GetConfigFileName()
         {
-            var appPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            return Path.Combine(appPath, "settings.json");
+            var basePath = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                "SchoolDataImport"
+            );
+
+            var pathCheck = new System.IO.DirectoryInfo(basePath);
+            if (!pathCheck.Exists())
+            {
+                _logger.Debug("Attempting to create directory {path}", basePath);
+                Directory.CreateDirectory(basePath);
+            }
+
+            return Path.Combine(basePath, "settings.json");
         }
     }
 }

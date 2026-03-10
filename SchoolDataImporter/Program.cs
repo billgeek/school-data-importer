@@ -53,8 +53,21 @@ namespace SchoolDataImporter
             var services = new ServiceCollection();
 
             // Setup logger
+            var logPath = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                "SchoolDataImport",
+                "Logs",
+                "log-.txt"
+            );
+
+            Directory.CreateDirectory(Path.GetDirectoryName(logPath));
+
             _logger = new LoggerConfiguration()
-                .ReadFrom.AppSettings()
+                .WriteTo.File(
+                    logPath,
+                    rollingInterval: RollingInterval.Day,
+                    fileSizeLimitBytes: 5242880,
+                    retainedFileCountLimit: 30)
                 .CreateLogger();
 
             Log.Logger = _logger;
