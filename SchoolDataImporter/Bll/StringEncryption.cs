@@ -1,7 +1,6 @@
 ﻿using DeviceId;
 using SchoolDataImporter.Bll.Interfaces;
 using Serilog;
-using Serilog.Events;
 using System;
 using System.IO;
 using System.Security.Cryptography;

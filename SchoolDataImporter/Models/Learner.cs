@@ -1,7 +1,6 @@
 ﻿using SchoolDataImporter.Constants;
 using SchoolDataImporter.Helpers;
 using System.Collections.Generic;
-using System.Text;
 
 namespace SchoolDataImporter.Models
 {
