@@ -88,7 +88,7 @@ namespace SchoolDataImporter
             services.AddTransient<IStringEncryption, StringEncryption>();
 
             // Setup dependencies: Managers
-            services.AddTransient<IConfigurationManager, ConfigurationManager>();
+            services.AddSingleton<IConfigurationManager, ConfigurationManager>();
             services.AddTransient<IAdoDbConnectionManager, AdoDbConnectionManager>();
 
             // Create the service provider
