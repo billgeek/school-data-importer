@@ -19,6 +19,8 @@ namespace SchoolDataImporter.Managers
 
         private readonly ILogger _logger;
 
+        private readonly object _lock = new object();
+
         public ConfigurationManager(ILogger logger)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
@@ -62,7 +64,11 @@ namespace SchoolDataImporter.Managers
             _logger.Debug("Call to StoreConfiguration");
 
             var settingsFile = GetConfigFileName();
-            File.WriteAllText(settingsFile, JsonConvert.SerializeObject(Settings));
+
+            lock (_lock)
+            {
+                File.WriteAllText(settingsFile, JsonConvert.SerializeObject(Settings));
+            }
         }
 
         private string GetConfigFileName()
