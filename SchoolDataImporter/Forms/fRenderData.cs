@@ -190,7 +190,7 @@ namespace SchoolDataImporter.Forms
             foreach (var house in houses)
             {
                 clbHouses.Items.Add(house);
-                clbHouses.SetItemChecked(clbHouses.Items.Count - 1, false);
+                clbHouses.SetItemChecked(clbHouses.Items.Count - 1, true);
                 _logger.Verbose("Filter item added: House - {house}", house);
             }
 
@@ -207,7 +207,7 @@ namespace SchoolDataImporter.Forms
             foreach (var route in routes)
             {
                 clbBusRoutes.Items.Add(route);
-                clbBusRoutes.SetItemChecked(clbBusRoutes.Items.Count - 1, false);
+                clbBusRoutes.SetItemChecked(clbBusRoutes.Items.Count - 1, true);
                 _logger.Verbose("Filter item added: Bus Route - {route}", route);
             }
 
@@ -224,7 +224,7 @@ namespace SchoolDataImporter.Forms
             foreach (var hostel in hostels)
             {
                 clbHostels.Items.Add(hostel);
-                clbHostels.SetItemChecked(clbHostels.Items.Count - 1, false);
+                clbHostels.SetItemChecked(clbHostels.Items.Count - 1, true);
                 _logger.Verbose("Filter item added: Hostel - {hostel}", hostel);
             }
 
