@@ -35,39 +35,52 @@ namespace SchoolDataImporter.Managers
 
         private void ReadConfiguration()
         {
-            _logger.Debug("Call to ReadConfiguration");
-
-            var settingsFile = GetConfigFileName();
-            var fi = new FileInfo(settingsFile);
-            if (!fi.Exists)
+            lock (_lock)
             {
-                _logger.Warning("Settings file not found in application path. New settings file will be created when required.");
-                Settings = new AppSettings
+                _logger.Debug("Call to ReadConfiguration");
+
+                var settingsFile = GetConfigFileName();
+                var fi = new FileInfo(settingsFile);
+                if (!fi.Exists)
                 {
-                    QueryApiUri = QueryApiUri,
-                    FetchRemoteQueries = FetchRemoteQueries,
-                    Databases = new List<AppSettingsDatabase>(),
-                    ColumnNames = AppConstants.ColumnNames
-                };
-                return;
-            }
+                    _logger.Warning("Settings file not found in application path. New settings file will be created when required.");
+                    Settings = new AppSettings
+                    {
+                        QueryApiUri = QueryApiUri,
+                        FetchRemoteQueries = FetchRemoteQueries,
+                        Databases = new List<AppSettingsDatabase>(),
+                        ColumnNames = AppConstants.ColumnNames
+                    };
+                    return;
+                }
 
-            Settings = JsonConvert.DeserializeObject<AppSettings>(File.ReadAllText(settingsFile));
-            if (Settings.ColumnNames == null || Settings.ColumnNames.Length == 0)
-            {
-                Settings.ColumnNames = AppConstants.ColumnNames;
+                Settings = JsonConvert.DeserializeObject<AppSettings>(File.ReadAllText(settingsFile));
+                if (Settings.ColumnNames == null || Settings.ColumnNames.Length == 0)
+                {
+                    Settings.ColumnNames = AppConstants.ColumnNames;
+                }
             }
         }
 
         public void StoreConfiguration()
         {
-            _logger.Debug("Call to StoreConfiguration");
-
-            var settingsFile = GetConfigFileName();
-
-            lock (_lock)
+            _logger.Warning("*** STORING CONFIGURATION ***");
+            try
             {
-                File.WriteAllText(settingsFile, JsonConvert.SerializeObject(Settings));
+                _logger.Debug("Call to StoreConfiguration");
+
+                var settingsFile = GetConfigFileName();
+
+                lock (_lock)
+                {
+                    File.WriteAllText(settingsFile, JsonConvert.SerializeObject(Settings));
+                }
+                _logger.Warning("*** CONFIGURATION STORED DONE ***");
+            }
+            catch(Exception e)
+            {
+                _logger.Warning("*** CONFIGURATION EXCEPTION ***");
+                _logger.Error(e, "Could not store config");
             }
         }
 

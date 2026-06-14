@@ -54,6 +54,7 @@ namespace SchoolDataImporter.Forms
         private void fMain_Load(object sender, EventArgs e)
         {
             _logger.Debug("Call to fMain_Load");
+            Text = $"School Data Importer - [v{Application.ProductVersion}]";
             LoadRecentConnections();
         }
 
